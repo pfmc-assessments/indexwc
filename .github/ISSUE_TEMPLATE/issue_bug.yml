@@ -1,7 +1,7 @@
 name: 🐞 Bug
 description: File a bug/issue
 title: "[BUG] <title>"
-labels: [type:Bug, status:Pretriage]
+labels: [type--Bug, status--Pretriage]
 body:
 - type: checkboxes
   attributes:
