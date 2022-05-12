@@ -40,8 +40,8 @@ settings <- FishStatsUtils::make_settings(
 
 # Create the mesh for VAST
 survey <- VASTWestCoast::convert_survey4vast(survey = "WCGBTS")
-mesh <- VASTWestCoast::VAST_mesh(data = data, 
-		survey = survey, 
+mesh <- VASTWestCoast::VAST_mesh(data = data,
+		survey = survey,
 		numknots = as.numeric(settings['n_x']))
 
 # Set the data to the updated data frame create within the VAST_mesh fxn
@@ -61,8 +61,8 @@ fit <- fit_model(
 	#Q2_formulat = ~ Pass,
 	catchability_data = catchability_data,
 	extrapolation_args = c(
-		settings['zone'], 
-		settings['Region'], 
+		settings['zone'],
+		settings['Region'],
 		settings['strata.limits'],
 		suveyname = survey,
 		input_grid = list(mesh[['inputgrid']]))
@@ -72,10 +72,10 @@ fit <- fit_model(
 index_vast <- suppressWarnings(FishStatsUtils::plot_biomass_index(
   fit = fit,
   DirName = file.path(getwd(), .Platform$file.sep),
-  TmbData = fit$data_list, 
+  TmbData = fit$data_list,
   Sdreport = fit$parameter_estimates$SD,
   use_biascorr = TRUE,
-  Year_Set = fit$year_labels, 
+  Year_Set = fit$year_labels,
   Years2Include = fit$years_to_plot,
   strata_names = fit$settings$strata.limits$STRATA
 ))
@@ -94,29 +94,32 @@ indexdata <- data.frame(
 )
 utils::write.csv(x = indexdata, file = fileindex, row.names = FALSE)
 
-save(fit, index_vast, mesh, settings, 
+save(fit, index_vast, mesh, settings,
 	file = file.path(getwd(), "vast_save.RData"))
 
 ########################################################################
-# sdmTMB   
+# sdmTMB
 ########################################################################
 
 # create mesh for sdmTMB from mesh used by VAST
 mesh <- sdmTMB::make_mesh(
-	data = subdata, 
-	xy_cols = c("X","Y"), 
+	data = subdata,
+	xy_cols = c("X","Y"),
 	mesh = fit$spatial_list$MeshList$isotropic_mesh)
 plot(mesh)
 
 # Run simplified model structure for sdmTMB
 fit_sdmTMB <- sdmTMB::sdmTMB(
-  cpue_kg_km2 ~ 0 + as.factor(Year), # + as.factor(Pass) + (1 | Vessel),
+  Catch_KG ~ 0 + as.factor(Year), # + as.factor(Pass) + (1 | Vessel),
   time = "Year",
+  offset = log(subdata$AreaSwept_km2),
   data = subdata,
   mesh = mesh,
   family = tweedie(link = "log"),
   spatial = "on",
-  spatialtemporal = 'iid'
+  spatiotemporal = 'iid', # SA: was misspelled here; latest sdmTMB no longer has `...` in sdmTMB()
+  control = sdmTMBcontrol(newton_loops = 1), # match VAST
+  silent = FALSE
 )
 
 # Create predictions
@@ -126,9 +129,9 @@ pred <- predict(
 		return_tmb_object = TRUE)
 
 # Create index without bias correction
-index_sdmTMB <- sdmTMB::get_index(pred, bias_correct = FALSE)	
+index_sdmTMB <- sdmTMB::get_index(pred, bias_correct = FALSE)
 
-save(mesh, fit_sdmTMB, pred, index_sdmTMB, 
+save(mesh, fit_sdmTMB, pred, index_sdmTMB,
 	file = file.path(getwd(), "sdmTMB_save.RData"))
 
 ###########################################################################
@@ -136,7 +139,7 @@ save(mesh, fit_sdmTMB, pred, index_sdmTMB,
 ###########################################################################
 
 fit$parameter_estimates$SD
-s1 <- fit$ParHat$beta1_ft[fit$ParHat$beta2_ft != 0] 
+s1 <- fit$ParHat$beta1_ft[fit$ParHat$beta2_ft != 0]
 s2 <- fit$ParHat$beta2_ft[fit$ParHat$beta2_ft != 0]
 b_VAST <- as.numeric(s1 + s2)
 
