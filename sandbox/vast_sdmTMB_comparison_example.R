@@ -130,7 +130,7 @@ pred <- predict(
 		return_tmb_object = TRUE)
 
 # Create index without bias correction
-index_sdmTMB <- sdmTMB::get_index(pred, bias_correct = FALSE)
+index_sdmTMB <- sdmTMB::get_index(pred, bias_correct = TRUE)
 
 save(mesh, fit_sdmTMB, pred, index_sdmTMB,
 	file = file.path(getwd(), "sdmTMB_save.RData"))
