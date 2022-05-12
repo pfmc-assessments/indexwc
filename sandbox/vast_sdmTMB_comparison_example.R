@@ -129,7 +129,7 @@ pred <- predict(
 		newdata = subdata,
 		return_tmb_object = TRUE)
 
-# Create index without bias correction
+# Create index with bias correction
 index_sdmTMB <- sdmTMB::get_index(pred, bias_correct = TRUE)
 
 save(mesh, fit_sdmTMB, pred, index_sdmTMB,
