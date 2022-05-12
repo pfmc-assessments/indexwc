@@ -121,6 +121,7 @@ fit_sdmTMB <- sdmTMB::sdmTMB(
   control = sdmTMBcontrol(newton_loops = 1), # match VAST
   silent = FALSE
 )
+sanity(fit_sdmTMB) # experimental... function name may change
 
 # Create predictions
 pred <- predict(
