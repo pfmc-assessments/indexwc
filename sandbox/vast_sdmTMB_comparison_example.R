@@ -25,7 +25,7 @@ FieldConfig <- matrix(c("0", "0", "IID", "Identity", "IID", "IID", "IID", "Ident
 RhoConfig <- c("Beta1" = 3, "Beta2" = 0, "Epsilon1" = 0, "Epsilon2" = 0)
 
 settings <- FishStatsUtils::make_settings(
-	n_x = 500, # number of vertices in the SPDE mesh
+	n_x = 300, # number of vertices in the SPDE mesh
 	Region = "User",
 	purpose = "index2", # use recommended defaults for an index of abundance
 	fine_scale = TRUE, # use bilinear interpolation from the INLA 'A' matrix
@@ -40,29 +40,32 @@ settings <- FishStatsUtils::make_settings(
 
 # Create the mesh for VAST
 survey <- VASTWestCoast::convert_survey4vast(survey = "WCGBTS")
-mesh <- VASTWestCoast::VAST_mesh(data = data, 
-		survey = survey, 
+mesh <- VASTWestCoast::VAST_mesh(data = data,
+		survey = survey,
 		numknots = as.numeric(settings['n_x']))
 
 # Set the data to the updated data frame create within the VAST_mesh fxn
 subdata <- mesh$mesh$data.inner
 
-# Run VAST with simpliefied model structure
+# Run VAST with simplified model structure
+
+subdata$effort <- 1
+
 fit <- fit_model(
 	settings = settings,
 	Lat_i = subdata[, "Lat"],
 	Lon_i = subdata[, "Lon"],
 	t_i = subdata[, "Year"],
-	b_i = subdata[, "Catch_KG"],
-	a_i = subdata[, "AreaSwept_km2"],
+	b_i = subdata[, "cpue_kg_km2"],
+	a_i = subdata[, "effort"],
 	#v_i = as.numeric(subdata[, "Vessel"], as.is = FALSE) - 1,
 	working_dir = getwd(),
 	#Q1_formula = ~ Pass,
 	#Q2_formulat = ~ Pass,
 	catchability_data = catchability_data,
 	extrapolation_args = c(
-		settings['zone'], 
-		settings['Region'], 
+		settings['zone'],
+		settings['Region'],
 		settings['strata.limits'],
 		suveyname = survey,
 		input_grid = list(mesh[['inputgrid']]))
@@ -72,10 +75,10 @@ fit <- fit_model(
 index_vast <- suppressWarnings(FishStatsUtils::plot_biomass_index(
   fit = fit,
   DirName = file.path(getwd(), .Platform$file.sep),
-  TmbData = fit$data_list, 
+  TmbData = fit$data_list,
   Sdreport = fit$parameter_estimates$SD,
   use_biascorr = TRUE,
-  Year_Set = fit$year_labels, 
+  Year_Set = fit$year_labels,
   Years2Include = fit$years_to_plot,
   strata_names = fit$settings$strata.limits$STRATA
 ))
@@ -94,17 +97,17 @@ indexdata <- data.frame(
 )
 utils::write.csv(x = indexdata, file = fileindex, row.names = FALSE)
 
-save(fit, index_vast, mesh, settings, 
+save(fit, index_vast, mesh, settings,
 	file = file.path(getwd(), "vast_save.RData"))
 
 ########################################################################
-# sdmTMB   
+# sdmTMB
 ########################################################################
 
 # create mesh for sdmTMB from mesh used by VAST
 mesh <- sdmTMB::make_mesh(
-	data = subdata, 
-	xy_cols = c("X","Y"), 
+	data = subdata,
+	xy_cols = c("X","Y"),
 	mesh = fit$spatial_list$MeshList$isotropic_mesh)
 plot(mesh)
 
@@ -112,23 +115,27 @@ plot(mesh)
 fit_sdmTMB <- sdmTMB::sdmTMB(
   cpue_kg_km2 ~ 0 + as.factor(Year), # + as.factor(Pass) + (1 | Vessel),
   time = "Year",
+  # offset = log(subdata$AreaSwept_km2),
   data = subdata,
   mesh = mesh,
   family = tweedie(link = "log"),
   spatial = "on",
-  spatialtemporal = 'iid'
+  spatiotemporal = 'iid', # SA: was misspelled here; latest sdmTMB no longer has `...` in sdmTMB()
+  control = sdmTMBcontrol(newton_loops = 1), # match VAST
+  silent = FALSE
 )
+sanity(fit_sdmTMB) # experimental... function name may change
 
 # Create predictions
 pred <- predict(
 		fit_sdmTMB,
-		newdata = subdata,
+		newdata = subdata, # SA: fix this!
 		return_tmb_object = TRUE)
 
-# Create index without bias correction
-index_sdmTMB <- sdmTMB::get_index(pred, bias_correct = FALSE)	
+# Create index with bias correction
+index_sdmTMB <- sdmTMB::get_index(pred, bias_correct = TRUE)
 
-save(mesh, fit_sdmTMB, pred, index_sdmTMB, 
+save(mesh, fit_sdmTMB, pred, index_sdmTMB,
 	file = file.path(getwd(), "sdmTMB_save.RData"))
 
 ###########################################################################
@@ -136,7 +143,7 @@ save(mesh, fit_sdmTMB, pred, index_sdmTMB,
 ###########################################################################
 
 fit$parameter_estimates$SD
-s1 <- fit$ParHat$beta1_ft[fit$ParHat$beta2_ft != 0] 
+s1 <- fit$ParHat$beta1_ft[fit$ParHat$beta2_ft != 0]
 s2 <- fit$ParHat$beta2_ft[fit$ParHat$beta2_ft != 0]
 b_VAST <- as.numeric(s1 + s2)
 
@@ -144,6 +151,7 @@ b_sdmTMB <- tidy(fit_sdmTMB)
 b_only_sdmTMB <- b_sdmTMB$estimate[b_sdmTMB$term != "as.factor(Pass)2"]
 
 plot(b_only_sdmTMB, b_VAST, ylim = c(-2,0), xlim = c(-2,0)); abline(0, 1)
+plot(b_only_sdmTMB, b_VAST); abline(0, 1)
 
 cor(b_sdmTMB$estimate, b_VAST)
 # 0.9957409
