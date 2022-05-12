@@ -25,7 +25,7 @@ FieldConfig <- matrix(c("0", "0", "IID", "Identity", "IID", "IID", "IID", "Ident
 RhoConfig <- c("Beta1" = 3, "Beta2" = 0, "Epsilon1" = 0, "Epsilon2" = 0)
 
 settings <- FishStatsUtils::make_settings(
-	n_x = 500, # number of vertices in the SPDE mesh
+	n_x = 300, # number of vertices in the SPDE mesh
 	Region = "User",
 	purpose = "index2", # use recommended defaults for an index of abundance
 	fine_scale = TRUE, # use bilinear interpolation from the INLA 'A' matrix
@@ -47,14 +47,17 @@ mesh <- VASTWestCoast::VAST_mesh(data = data,
 # Set the data to the updated data frame create within the VAST_mesh fxn
 subdata <- mesh$mesh$data.inner
 
-# Run VAST with simpliefied model structure
+# Run VAST with simplified model structure
+
+subdata$effort <- 1
+
 fit <- fit_model(
 	settings = settings,
 	Lat_i = subdata[, "Lat"],
 	Lon_i = subdata[, "Lon"],
 	t_i = subdata[, "Year"],
-	b_i = subdata[, "Catch_KG"],
-	a_i = subdata[, "AreaSwept_km2"],
+	b_i = subdata[, "cpue_kg_km2"],
+	a_i = subdata[, "effort"],
 	#v_i = as.numeric(subdata[, "Vessel"], as.is = FALSE) - 1,
 	working_dir = getwd(),
 	#Q1_formula = ~ Pass,
@@ -110,9 +113,9 @@ plot(mesh)
 
 # Run simplified model structure for sdmTMB
 fit_sdmTMB <- sdmTMB::sdmTMB(
-  Catch_KG ~ 0 + as.factor(Year), # + as.factor(Pass) + (1 | Vessel),
+  cpue_kg_km2 ~ 0 + as.factor(Year), # + as.factor(Pass) + (1 | Vessel),
   time = "Year",
-  offset = log(subdata$AreaSwept_km2),
+  # offset = log(subdata$AreaSwept_km2),
   data = subdata,
   mesh = mesh,
   family = tweedie(link = "log"),
@@ -126,7 +129,7 @@ sanity(fit_sdmTMB) # experimental... function name may change
 # Create predictions
 pred <- predict(
 		fit_sdmTMB,
-		newdata = subdata,
+		newdata = subdata, # SA: fix this!
 		return_tmb_object = TRUE)
 
 # Create index with bias correction
@@ -148,6 +151,7 @@ b_sdmTMB <- tidy(fit_sdmTMB)
 b_only_sdmTMB <- b_sdmTMB$estimate[b_sdmTMB$term != "as.factor(Pass)2"]
 
 plot(b_only_sdmTMB, b_VAST, ylim = c(-2,0), xlim = c(-2,0)); abline(0, 1)
+plot(b_only_sdmTMB, b_VAST); abline(0, 1)
 
 cor(b_sdmTMB$estimate, b_VAST)
 # 0.9957409
