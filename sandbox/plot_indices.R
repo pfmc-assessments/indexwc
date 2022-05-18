@@ -107,7 +107,7 @@ plot_indices <- function(data, main_name, save_loc, ymax = NULL) {
       main = "", cex.axis = cex.axis)
 
   graphics::mtext(side = 1 , "Year", cex = cex.lab, line = 3)
-  graphics::mtext(side = 2, "Index", cex = cex.lab, line = 2.5)
+  graphics::mtext(side = 2, "Mean Standardized Index", cex = cex.lab, line = 2.5)
   graphics::mtext(side = 3, text = main_name,
     font = 2, cex = cex.lab, line = 0.25)
   graphics::mtext(side = 3, text = "",
