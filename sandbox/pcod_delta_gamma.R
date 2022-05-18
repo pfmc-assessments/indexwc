@@ -109,11 +109,16 @@ ind <- get_index(p, bias_correct = FALSE, area = 4)
 sdm_i$index <- "sdmTMB"
 both_i <- bind_rows(sdm_i, vast_i)
 
-g <- ggplot(both_i, aes(x = year, y = est, ymin = lwr, ymax = upr, colour = index)) +
-  geom_ribbon(alpha = 0.1) +
-  geom_line(alpha = 0.8) +
+g <- ggplot(both_i, aes(x = year, y = est, ymin = lwr, ymax = upr, colour = index, fill = index)) +
+  geom_ribbon(alpha = 0.1, position = position_dodge(width = 0.04), lty = 3) +
+  geom_line(alpha = 0.8, position = position_dodge(width = 0.04), lwd = 1) +
   ylim(0, max(both_i$upr)) +
-  coord_cartesian(expand = FALSE)
+  coord_cartesian(expand = FALSE) +
+  theme_light() +
+  scale_colour_brewer(palette = "Set1") +
+  scale_fill_brewer(palette = "Set1") +
+  ylab("Relative biomass estimate") + xlab("Year") +
+  labs(colour = "Package", fill = "Package")
 print(g)
 
 # relative error:
