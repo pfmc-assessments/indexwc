@@ -1,1 +1,3 @@
 ^sandbox$
+^.*\.Rproj$
+^\.Rproj\.user$
