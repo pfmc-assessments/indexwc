@@ -42,8 +42,8 @@ extract_vast_index <- function(x, dir_name = paste0(tempdir(), "/")) {
   lwr <- exp(log(est) + qnorm(0.025) * vi$Table$`Std. Error for ln(Estimate)`)
   upr <- exp(log(est) + qnorm(0.975) * vi$Table$`Std. Error for ln(Estimate)`)
   vast_i <- data.frame(est, lwr, upr)
-  vast_i <- filter(vast_i, est > 0)
-  vast_i$year <- sort(unique(pcod$year))
+  vast_i$year <- fit$year_labels
+  vast_i <- dplyr::filter(vast_i, est > 0)
   vast_i$index <- "VAST"
   vast_i
 }
