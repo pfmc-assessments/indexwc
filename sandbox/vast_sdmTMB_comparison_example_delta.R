@@ -1,3 +1,4 @@
+
 library(VAST)
 library(VASTWestCoast)
 #devtools::load_all("C:/Users/Chantel.Wetzel/Documents/GitHub/VASTWestCoast")
@@ -8,50 +9,28 @@ library(here)
 library(dplyr)
 library(ggplot2)
 
+run <- "catch_mt~year_with_areaswept_in_offset"
+run <- "catch_mt~year_with_no_areaswept_in_offset"
+run <- "catch_mt~year_with_areaswept(vast)_offset_effort(sdmtmb)"
+
 setwd("C:/Users/Chantel.Wetzel/Documents/GitHub/indexwc/sandbox")
 here::i_am("vast_sdmTMB_comparison_example.R")
 data_dir = here("Catch__NWFSC.Combo_2022-04-09.rdata")
-dir.create(here(paste0("gamma_example/vessel_year_main")))
-dir = here(paste0("gamma_example/vessel_year_main"))
+dir.create(here(paste0("gamma_example/", run)))
+dir.create(here(paste0("gamma_example/", run, "/dover")))
+dir = here(paste0("gamma_example/", run, "/dover"))
+file.copy(from = here(paste0("gamma_example/doverKmeans-knots-300.RData")),
+  to = here(paste0("gamma_example/", run, "/doverKmeans-knots-300.RData")))
+
+source(here("do_vast_settings.R"))
+source(here("format_data.R"))
 
 # Load catch data file for dover sole in the "dover_example" folder
 load("Catch__NWFSC.Combo_2022-04-09.rdata")
-# clean and add needed columns to the data
-data <- VASTWestCoast::clean_data(data = Out)
-# add catch and cpue in terms of metric tons
-data[,"Catch_mt"] <- data[,"Catch_KG"] / 1000
-data[,"cpue_mt_km2"] <- data[,"Catch_mt"] / data[,"AreaSwept_km2"]
-units(data[, "Catch_mt"]) <- 't'
-# add effort = 1 column for specific VAST / sdmTMB comparisons
-data$effort <- 1
-# add factors and random effects terms
-data[,"pass_scaled"] <- data[,"Pass", drop = FALSE] - mean(range(data[,"Pass"]))
-data[,"vessel_scaled"] <- as.numeric(data[, "Vessel"], as.is = FALSE) - 1
-
+data <- format_data(Out = Out)
 
 # Set up the Field and Rho Configuration for VAST
-FieldConfig <- matrix(c("IID", "IID", "IID", "IID", "IID", "IID"),
-  ncol = 2, nrow = 3,
-  dimnames = list(
-    c("Omega", "Epsilon", "Beta"),
-    c("Component_1", "Component_2")
-  )
-)
-RhoConfig <- c("Beta1" = 0, "Beta2" = 0, "Epsilon1" = 0, "Epsilon2" = 0)
-
-settings <- FishStatsUtils::make_settings(
-  n_x = 300, # number of vertices in the SPDE mesh
-  Region = "User",
-  purpose = "index2", # use recommended defaults for an index of abundance
-  fine_scale = TRUE, # use bilinear interpolation from the INLA 'A' matrix
-  FieldConfig = FieldConfig,
-  RhoConfig = RhoConfig,
-  ObsModel = c(2, 0), # conventional logit-linked delta-Gamma; c(10, 2) for Tweedie
-  bias.correct = FALSE,
-  use_anisotropy = FALSE,
-  max_cells = Inf, # use all grid cells from the extrapolation grid
-  knot_method = "samples" # "samples" or "grid"
-)
+settings <- do_vast_settings(knots = 300, obs_model = c(2, 0))
 
 # Create the mesh for VAST
 survey <- VASTWestCoast::convert_survey4vast(survey = "WCGBTS")
@@ -72,7 +51,7 @@ fit <- fit_model(
   t_i = subdata[, "Year"],
   b_i = subdata[,'Catch_mt'], #subdata[,'cpue_kg_km2'], 
   a_i = subdata[, "AreaSwept_km2"], #subdata[,"effort"]
-  v_i = subdata[, "vessel_scaled"],
+  #v_i = subdata[, "vessel_scaled"],
   #Q1_formula = ~ Pass,
   #Q2_formula = ~ Pass,
   working_dir = dir,
@@ -98,6 +77,10 @@ index_vast <- suppressWarnings(FishStatsUtils::plot_biomass_index(
   strata_names = fit$settings$strata.limits$STRATA
 ))
 
+########################################################################
+# Save VAST and data objects
+########################################################################
+
 save(fit, index_vast, vast_mesh, settings,
   file = file.path(dir, "vast_save.RData"))
 
@@ -118,12 +101,14 @@ mesh_sdmTMB <- sdmTMB::make_mesh(
 
 # Run simplified model structure for sdmTMB
 subdata$catch_mt <- drop_units(subdata$Catch_mt)
+subdata$vessel_scaled <- as.factor(subdata$vessel_scaled)
+subdata$pass_scaled <- as.factor(subdata$pass_scaled)
 
 tictoc::tic()
 fit_sdmTMB <- sdmTMB::sdmTMB(
-  catch_mt ~ 0 + as.factor(Year) +  as.factor(1 | vessel_scaled),
+  catch_mt ~ 0 + as.factor(Year),
   time = "Year",
-  offset = log(subdata$AreaSwept_km2),
+  offset = log(subdata$effort),
   data = subdata,
   mesh = mesh_sdmTMB,
   family = delta_gamma(),
@@ -134,9 +119,9 @@ fit_sdmTMB <- sdmTMB::sdmTMB(
 )
 tictoc::toc()
 
-print(fit_sdmTMB)
-print_iid_re(fit_dg, model = 1)
-print_iid_re(fit_dg, model = 2)
+# print(fit_sdmTMB)
+# tidy(fit_sdmTMB, model = 1)
+# tidy(fit_sdmTMB, model = 2)
 # sanity(fit_sdmTMB) # experimental... function name may change
 
 ###########################################################################
@@ -191,14 +176,15 @@ vast_grid$X <- grid_trans[,"Lon"] / 1000 # convert to km
 vast_grid$Y <- grid_trans[,"Lat"] / 1000 # convert to km
 
 # Random setting to test - but definitely not correct
-vast_grid$vessel_scaled <- factor(mean(subdata$vessel_scaled))
-vast_grid$pass_scaled <- factor(mean(subdata$pass_scaled))
+vast_grid$vessel_scaled <- factor(median(as.numeric(subdata$vessel_scaled)))
+vast_grid$pass_scaled <- factor(median(as.numeric(subdata$pass_scaled)))
 
 # Create a grid for each year with all factors included
 year_grid <- NULL
 for(y in c(2003:2019, 2021)){
   vast_grid$Year <- y
-  year_grid <- rbind(year_grid, data.frame(vast_grid[, c("X", "Y", "Year", "Area_km2", "vessel_scaled", "pass_scaled")]))
+  year_grid <- rbind(year_grid, 
+    data.frame(vast_grid[, c("X", "Y", "Year", "Area_km2", "vessel_scaled", "pass_scaled")]))
 }
 
 ###########################################################################
@@ -217,9 +203,8 @@ index_sdmTMB <- sdmTMB::get_index(pred,
   area = year_grid$Area_km2)
 tictoc::toc()
 
-
 save(mesh_sdmTMB, fit_sdmTMB, year_grid, pred, index_sdmTMB,
-  file = file.path(dir, "sdmTMB_save_error_in_predict.RData")
+  file = file.path(dir, "sdmTMB_save.RData")
 )
 
 ###########################################################################
@@ -236,43 +221,42 @@ plot_indices(data = both_i,
   save_loc = dir, 
   ymax = NULL) 
 
-
 ###########################################################################
 # More Parameter Comparisons
 ###########################################################################
 
-s <- fit$parameter_estimates$SD
-vast_est1 <- as.list(s, "Estimate", report = FALSE)
-vast_est2 <- as.list(s, "Estimate", report = TRUE)
-vast_sd1 <- as.list(s, "Std. Error", report = FALSE)
-vast_sd2 <- as.list(s, "Std. Error", report = TRUE)
-sdmtmb_est1 <- tidy(fit_sdmTMB, "ran_pars", model = 1)
-sdmtmb_est2 <- tidy(fit_sdmTMB, "ran_pars", model = 2)
+# s <- fit$parameter_estimates$SD
+# vast_est1 <- as.list(s, "Estimate", report = FALSE)
+# vast_est2 <- as.list(s, "Estimate", report = TRUE)
+# vast_sd1 <- as.list(s, "Std. Error", report = FALSE)
+# vast_sd2 <- as.list(s, "Std. Error", report = TRUE)
+# sdmtmb_est1 <- tidy(fit_sdmTMB, "ran_pars", model = 1)
+# sdmtmb_est2 <- tidy(fit_sdmTMB, "ran_pars", model = 2)
+# 
+## range
+# sdmtmb_est1$estimate[sdmtmb_est1$term == "range"]
+# vast_est2$Range_raw1
+# 
+# sdmtmb_est2$estimate[sdmtmb_est2$term == "range"]
+# vast_est2$Range_raw2
 
-# range
-sdmtmb_est1$estimate[sdmtmb_est1$term == "range"]
-vast_est2$Range_raw1
+## sigma_O
+# sdmtmb_est1$estimate[sdmtmb_est1$term == "sigma_O"]
+# vast_est1$L_omega1_z
+# 
+# sdmtmb_est2$estimate[sdmtmb_est2$term == "sigma_O"]
+# vast_est1$L_omega2_z
 
-sdmtmb_est2$estimate[sdmtmb_est2$term == "range"]
-vast_est2$Range_raw2
-
-# sigma_O
-sdmtmb_est1$estimate[sdmtmb_est1$term == "sigma_O"]
-vast_est1$L_omega1_z
-
-sdmtmb_est2$estimate[sdmtmb_est2$term == "sigma_O"]
-vast_est1$L_omega2_z
-
-# sigma_E
-sdmtmb_est1$estimate[sdmtmb_est1$term == "sigma_E"]
-vast_est1$L_epsilon1_z
-
-sdmtmb_est2$estimate[sdmtmb_est2$term == "sigma_E"]
-vast_est1$L_epsilon2_z
-
-# Gamma shape parameter:
-sdmtmb_est2$estimate[sdmtmb_est2$term == "phi"]
-
-# VAST: shape = 1/CV^2
-1/exp(vast_est1$logSigmaM[1,1])^2
+## sigma_E
+#sdmtmb_est1$estimate[sdmtmb_est1$term == "sigma_E"]
+#vast_est1$L_epsilon1_z
+#
+#sdmtmb_est2$estimate[sdmtmb_est2$term == "sigma_E"]
+#vast_est1$L_epsilon2_z
+#
+## Gamma shape parameter:
+#sdmtmb_est2$estimate[sdmtmb_est2$term == "phi"]
+#
+## VAST: shape = 1/CV^2
+#1/exp(vast_est1$logSigmaM[1,1])^2
 
