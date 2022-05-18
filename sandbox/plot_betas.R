@@ -1,4 +1,5 @@
-plot_betas <- function(vast_model, sdmTMB_model, vast_par = "beta1_ft", sdmTMB_pars = 1, years) {
+plot_betas <- function(vast_model, sdmTMB_model, vast_par = "beta1_ft", 
+  sdmTMB_pars = 1, years, version = 'main') {
   s <- vast_model$parameter_estimates$SD
   vast_est1 <- as.list(s, "Estimate", report = FALSE)
   vast_est2 <- as.list(s, "Estimate", report = TRUE)
@@ -14,17 +15,25 @@ plot_betas <- function(vast_model, sdmTMB_model, vast_par = "beta1_ft", sdmTMB_p
   plot(years, b_year_vast, ylim = range(c(lwr_vast, upr_vast)))
   segments(years, lwr_vast, years, upr_vast)
   years <- years + 0.05
-  if (sdmTMB_pars == 1) {
-   points(years, sdmTMB_est$b_j)
-   segments(years, sdmTMB_est$b_j - 2 * sdmTMB_sd$b_j, 
-   years, sdmTMB_est$b_j + 2 * sdmTMB_sd$b_j,
-   col = "red")
+  if (version == "main"){
+     points(years, sdmTMB_est$b_j[,sdmTMB_pars])
+     segments(years, sdmTMB_est$b_j[,sdmTMB_pars] - 2 * sdmTMB_sd$b_j[,sdmTMB_pars], 
+     years, sdmTMB_est$b_j[,sdmTMB_pars] + 2 * sdmTMB_sd$b_j[,sdmTMB_pars],
+     col = "red")
   } else {
-    points(years, sdmTMB_est$b_j2)
-       segments(years, sdmTMB_est$b_j2 - 2 * sdmTMB_sd$b_j2, 
-    years, sdmTMB_est$b_j2 + 2 * sdmTMB_sd$b_j2,
-    col = "red")
+    if (sdmTMB_pars == 1) {
+     points(years, sdmTMB_est$b_j)
+     segments(years, sdmTMB_est$b_j - 2 * sdmTMB_sd$b_j, 
+     years, sdmTMB_est$b_j + 2 * sdmTMB_sd$b_j,
+     col = "red")
+    } else {
+      points(years, sdmTMB_est$b_j2)
+         segments(years, sdmTMB_est$b_j2 - 2 * sdmTMB_sd$b_j2, 
+      years, sdmTMB_est$b_j2 + 2 * sdmTMB_sd$b_j2,
+      col = "red")
+    }    
   }
+
   legend("topright", legend = c("VAST", "sdmTMB"), 
     col = c("black", "red"), bty = "n", lty = c(1, 1))
 }
