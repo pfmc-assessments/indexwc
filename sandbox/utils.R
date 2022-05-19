@@ -12,7 +12,8 @@ plot_betas_delta <- function(vast_model, sdmTMB_model, vast_par = "beta1_ft", sd
 
   lwr_vast <- b_year_vast - 2 * b_year_vast_se
   upr_vast <- b_year_vast + 2 * b_year_vast_se
-  plot(years, b_year_vast, ylim = range(c(lwr_vast, upr_vast)))
+  plot(years, b_year_vast, ylim = range(c(lwr_vast, upr_vast)),
+     xlab = "Year", ylab = "Parameter Estimates")
   segments(years, lwr_vast, years, upr_vast)
   years <- years + 0.05
 
@@ -40,10 +41,12 @@ plot_betas_delta <- function(vast_model, sdmTMB_model, vast_par = "beta1_ft", sd
 }
 
 extract_vast_index <- function(x, dir_name = paste0(tempdir(), "/")) {
+
   suppressWarnings({
     vi <- FishStatsUtils::plot_biomass_index(x,
       DirName = dir_name)
   })
+
   est <- vi$Table$Estimate
   lwr <- exp(log(est) + qnorm(0.025) * vi$Table$`Std. Error for ln(Estimate)`)
   upr <- exp(log(est) + qnorm(0.975) * vi$Table$`Std. Error for ln(Estimate)`)
