@@ -114,7 +114,7 @@ g <- ggplot(both_i, aes(x = year, y = est, ymin = lwr, ymax = upr, colour = inde
   geom_line(alpha = 0.8, position = position_dodge(width = 0.04), lwd = 1) +
   ylim(0, max(both_i$upr)) +
   coord_cartesian(expand = FALSE) +
-  theme_light() +
+  theme_bw() +
   scale_colour_brewer(palette = "Set1") +
   scale_fill_brewer(palette = "Set1") +
   ylab("Relative biomass estimate") + xlab("Year") +
