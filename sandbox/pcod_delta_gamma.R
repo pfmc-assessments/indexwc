@@ -70,7 +70,7 @@ fit_vast <- fit_model(
   working_dir = paste0(here("doc", "appendix-VAST"), "/"),
   run_model = FALSE
 )
-upperbounds <- fit_vast$Upper
+upperbounds <- fit_vast$tmb_list$Upper
 upperbounds["logkappa2"] <- 10
 fit_vast <- fit_model(
   settings = settings,
