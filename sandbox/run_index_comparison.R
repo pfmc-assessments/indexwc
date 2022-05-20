@@ -20,7 +20,7 @@ species = c("arrowtooth_flounder",
 			"darkblotched_rockfish",
 			"aurora_rockfish",
 			"bocaccio",
-			"sablefish", 
+			"sablefish",
 			"rougheye_rockfish",
 			"canary_rockfish",
 			"pacific_ocean_perch",
@@ -53,7 +53,7 @@ load(file.path(getwd(), "data", paste0(sp, "_catch_data.rdata")))
 data <- format_data(Out = Out)
 
 # Set up the Field and Rho Configuration for VAST
-settings <- do_vast_settings(knots = 150, obs_model = c(2, 0), 
+settings <- do_vast_settings(knots = 150, obs_model = c(2, 0),
 	anis = anis, bias = bias_correct)
 
 # Create the mesh for VAST
@@ -72,7 +72,7 @@ fit <- fit_model(
   Lat_i = subdata[, "Lat"],
   Lon_i = subdata[, "Lon"],
   t_i = subdata[, "Year"],
-  b_i = subdata[,'Catch_mt'], 
+  b_i = subdata[,'Catch_mt'],
   a_i = subdata[, "AreaSwept_km2"],
   v_i = subdata[, "vessel_scaled"],
   Q1_formula = ~ pass_scaled,
@@ -93,6 +93,24 @@ save(fit, index_vast, vast_mesh, settings,
 
 save(data, subdata,
   file = file.path(dir, "data.RData"))
+
+###########################################################################
+# Create the same grid used by vast for sdmTMB
+###########################################################################
+
+survey <- VASTWestCoast::convert_survey4vast(survey = "WCGBTS")
+grid <- VASTWestCoast::get_inputgrid(survey = survey)
+vast_grid <- grid
+vast_grid <- vast_grid[vast_grid$Area_km2 > 0, ]
+vast_grid <- sdmTMB::add_utm_columns(vast_grid, c("Lon", "Lat"), utm_crs = 32610) # UTM 10
+vast_grid$pass_scaled <- 0
+vast_grid$vessel_scaled <- subdata$vessel_scaled[1]
+vast_grid <- dplyr::select(vast_grid, X, Y, Area_km2, pass_scaled, vessel_scaled)
+
+year_grid <- purrr::map_dfr(c(2003:2019, 2021), function(yr) {
+  vast_grid$Year <- yr
+  vast_grid
+})
 
 ########################################################################
 # Run sdmTMB
@@ -123,10 +141,13 @@ fit_sdmTMB <- sdmTMB(
   mesh = mesh_sdmTMB,
   family = delta_gamma(),
   spatial = "on",
-  anisotropy = anis, 
   spatiotemporal = "iid",
+  anisotropy = anis,
   silent = FALSE,
-  control = sdmTMBcontrol(newton_loops = 1L)
+  control = sdmTMBcontrol(newton_loops = 1L),
+  do_index = TRUE,
+  predict_args = list(newdata = year_grid, re_form_iid = NA),
+  index_args = list(area = year_grid$Area_km2)
 )
 
 # print(fit_sdmTMB)
@@ -164,56 +185,41 @@ plot(s2, b2$estimate[yr_i], xlab = "VAST s2", ylab = "sdmTMB b2");abline(0, 1)
 dev.off()
 
 ###########################################################################
-# Create the same grid used by vast for sdmTMB
-###########################################################################
-
-survey <- VASTWestCoast::convert_survey4vast(survey = "WCGBTS")
-grid <- VASTWestCoast::get_inputgrid(survey = survey)
-vast_grid <- grid
-vast_grid <- vast_grid[vast_grid$Area_km2 > 0, ]
-vast_grid <- sdmTMB::add_utm_columns(vast_grid, c("Lon", "Lat"), utm_crs = 32610) # UTM 10
-vast_grid$pass_scaled <- 0
-vast_grid$vessel_scaled <- subdata$vessel_scaled[1]
-vast_grid <- dplyr::select(vast_grid, X, Y, Area_km2, pass_scaled, vessel_scaled)
-
-year_grid <- purrr::map_dfr(c(2003:2019, 2021), function(yr) {
-  vast_grid$Year <- yr
-  vast_grid
-})
-
-###########################################################################
 # Create predictions and index using grid
 ###########################################################################
 
+# pred <- predict(
+#   fit_sdmTMB,
+#   re_form_iid = NA,
+#   newdata = year_grid,
+#   return_tmb_object = TRUE
+# )
+#
+# out_file = file.path(dir, "prediction_maps.png")
+# grDevices::png(filename = out_file,
+#   width = 10, height = 7, units = "in", res = 300, pointsize = 12)
+# par(mfrow = c(1, 2), cex = 0.8, mar = c(1.5, 1, 1, 1), oma = c(2, 3, 1, 1))
+# filter(pred$data, Year == 2021) %>%
+#   ggplot(aes(X, Y, colour = plogis(est1))) + geom_point() +
+#   scale_colour_viridis_c()
+#
+# filter(pred$data, Year == 2021) %>%
+#   ggplot(aes(X, Y, colour = exp(est2))) + geom_point() +
+#   scale_colour_viridis_c(trans = "log10")
+# dev.off()
 
-pred <- predict(
-  fit_sdmTMB,
-  re_form_iid = NA,
-  newdata = year_grid,
-  return_tmb_object = TRUE
-)
-
-out_file = file.path(dir, "prediction_maps.png")
-grDevices::png(filename = out_file,
-  width = 10, height = 7, units = "in", res = 300, pointsize = 12)
-par(mfrow = c(1, 2), cex = 0.8, mar = c(1.5, 1, 1, 1), oma = c(2, 3, 1, 1))
-filter(pred$data, Year == 2021) %>%
-  ggplot(aes(X, Y, colour = plogis(est1))) + geom_point() +
-  scale_colour_viridis_c()
-
-filter(pred$data, Year == 2021) %>%
-  ggplot(aes(X, Y, colour = exp(est2))) + geom_point() +
-  scale_colour_viridis_c(trans = "log10")
-dev.off()
+# p <- pred$data
+# ind <- group_by(p, Year) %>%
+#   summarise(total = sum(plogis(est1) * exp(est2) * Area_km2))
 
 # Create index:
 index_sdmTMB <- sdmTMB::get_index(
-  pred,
+  fit_sdmTMB, # skipping prediction step
   bias_correct = bias_correct,
   area = year_grid$Area_km2
 )
 
-save(mesh_sdmTMB, fit_sdmTMB, year_grid, pred, index_sdmTMB,
+save(mesh_sdmTMB, fit_sdmTMB, year_grid, index_sdmTMB,
   file = file.path(dir, "sdmTMB_save.RData")
 )
 
