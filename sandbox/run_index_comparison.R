@@ -185,7 +185,6 @@ year_grid <- purrr::map_dfr(c(2003:2019, 2021), function(yr) {
 # Create predictions and index using grid
 ###########################################################################
 
-fit_sdmTMB$tmb_data$simulate_t <- rep(0L, length(unique(subdata$Year)))
 
 pred <- predict(
   fit_sdmTMB,
@@ -206,10 +205,6 @@ filter(pred$data, Year == 2021) %>%
   ggplot(aes(X, Y, colour = exp(est2))) + geom_point() +
   scale_colour_viridis_c(trans = "log10")
 dev.off()
-
-p <- pred$data
-ind <- group_by(p, Year) %>%
-  summarise(total = sum(plogis(est1) * exp(est2) * Area_km2))
 
 # Create index:
 index_sdmTMB <- sdmTMB::get_index(
