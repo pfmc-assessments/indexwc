@@ -4,6 +4,7 @@ library(sdmTMB)
 library(here)
 library(dplyr)
 library(ggplot2)
+library(sp)
 
 # parallel TMB:
 TMB::openmp(n = 4L) # because VAST may be picking this up now with TMBad?
