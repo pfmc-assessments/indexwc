@@ -107,8 +107,8 @@ ind <- get_index(p, bias_correct = FALSE, area = 4)
 
 # save(fit_sdmTMB, ind, file = here("doc/appendix-VAST/sdmTMB_out.Rdata"))
 
-sdm_i$index <- "sdmTMB"
-both_i <- bind_rows(sdm_i, vast_i)
+ind$index <- "sdmTMB"
+both_i <- bind_rows(ind, vast_i)
 
 g <- ggplot(both_i, aes(x = year, y = est, ymin = lwr, ymax = upr, colour = index, fill = index)) +
   geom_ribbon(alpha = 0.1, position = position_dodge(width = 0.04), lty = 3) +
