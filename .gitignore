@@ -9,6 +9,7 @@ sandbox/tweedie_example
 sandbox/doc
 sandbox/comparisons
 sandbox/anisotropy
-sandbox/bias_correction
+sandbox/bias_correct
+sandbox/spatiotemporal_off
 
 
