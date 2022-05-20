@@ -123,8 +123,8 @@ fit_sdmTMB <- sdmTMB(
   mesh = mesh_sdmTMB,
   family = delta_gamma(),
   spatial = "on",
-  spatiotemporal = "off",
   anisotropy = anis, 
+  spatiotemporal = "iid",
   silent = FALSE,
   control = sdmTMBcontrol(newton_loops = 1L)
 )
