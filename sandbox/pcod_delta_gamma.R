@@ -67,7 +67,21 @@ fit_vast <- fit_model(
   b_i = pcod[, "density"],
   a_i = pcod[, "effort"],
   input_grid = input_grid,
-  working_dir = paste0(here("doc", "appendix-VAST"), "/")
+  working_dir = paste0(here("doc", "appendix-VAST"), "/"),
+  run_model = FALSE
+)
+upperbounds <- fit_vast$Upper
+upperbounds["logkappa2"] <- 10
+fit_vast <- fit_model(
+  settings = settings,
+  Lat_i = pcod[, "lat"],
+  Lon_i = pcod[, "lon"],
+  t_i = pcod[, "year"],
+  b_i = pcod[, "density"],
+  a_i = pcod[, "effort"],
+  input_grid = input_grid,
+  working_dir = paste0(here("doc", "appendix-VAST"), "/"),
+  upper = upperbounds
 )
 #   saveRDS(fit_vast, file = f)
 # } else {
