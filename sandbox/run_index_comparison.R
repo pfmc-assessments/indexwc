@@ -16,34 +16,82 @@ source("plot_indices.R")
 
 species = c("arrowtooth_flounder",
 			"big_skate",
-			"chilipper",
+      "dover_sole",
+			#"chilipper_rockfish",
 			"darkblotched_rockfish",
-			"aurora_rockfish",
-			"bocaccio",
-			"sablefish",
-			"rougheye_rockfish",
-			"canary_rockfish",
-			"pacific_ocean_perch",
-			"shortspine_thornyhead",
+			#"aurora_rockfish",
+			#"bocaccio",
+			#"sablefish",
+			#"rougheye_rockfish",
+      #"rex_sole",
+			#"canary_rockfish",
+			#"pacific_ocean_perch",
+			#"shortspine_thornyhead",
 			"petrale_sole",
-			"pacific_spiny_dogfish",
-			"widow_rockfish",
-			"yelloweye_rockfish")
+			"pacific_spiny_dogfish")#,
+			#"widow_rockfish",
+			#"yelloweye_rockfish")
 
-anis = FALSE
-bias_correct = FALSE
+anis = TRUE
+bias_correct = TRUE
+re = FALSE
+dist = "gamma"
 
 for (sp in species) {
 
 # May need to add a remove call here to clear workspace of previous estimates
+rm(index_vast, both, index_sdmTMB)
+
+formula = list(
+    catch_mt ~ 0 + as.factor(Year) + pass_scaled + (1 | vessel_scaled),
+    catch_mt ~ 0 + as.factor(Year) + pass_scaled + (1 | vessel_scaled))
+eta1 = 1; eta2 = 0
+if (re == FALSE) {
+  formula = list(
+    catch_mt ~ 0 + as.factor(Year) + pass_scaled,
+    catch_mt ~ 0 + as.factor(Year) + pass_scaled)
+  eta1 = 0; eta2 = 0
+}
+
+obs_model = c(2,0)
+family = delta_gamma()
+FieldConfig <- matrix(c("IID", "IID", "IID", "IID", "IID", "IID"),
+  ncol = 2, nrow = 3,
+  dimnames = list(
+    c("Omega", "Epsilon", "Beta"),
+    c("Component_1", "Component_2")
+  )
+)
+RhoConfig <- c("Beta1" = 0, "Beta2" = 0, "Epsilon1" = 0, "Epsilon2" = 0)
+
+if (dist == "lognormal"){
+  obs_model =  c(1,0) 
+  family = delta_lognormal() }
+if (dist == "tweedie"){
+  obs_model = c(10, 2)
+  family = tweedie()
+  FieldConfig <- matrix(c("0", "0", "IID", "Identity", "IID", "IID", "IID", "Identity"),
+    ncol = 2, nrow = 4,
+    dimnames = list(
+    c("Omega", "Epsilon", "Beta", "Epsilon_year"),
+    c("Component_1", "Component_2")
+    )
+    )
+  RhoConfig <- c("Beta1" = 3, "Beta2" = 0, "Epsilon1" = 0, "Epsilon2" = 0)
+}
 
 dir <- file.path(getwd(), "comparisons", sp)
 if (anis){
-	dir <- file.path(getwd(), "anisotropy", sp) }
+	dir <- file.path(getwd(), paste0("anisotropy_", dist), sp) }
 if (bias_correct){
-	dir <- file.path(getwd(), "bias_correct", sp)  }
+	dir <- file.path(getwd(), paste0("bias_correct_", dist), sp)  }
 if (bias_correct & anis){
-	dir <- file.path(getwd(), "anisotropy_bias_correct", sp) }
+	dir <- file.path(getwd(), paste0("anisotropy_bias_correct_", dist), sp) }
+if (re){
+  dir = paste0(dir, "_re=TRUE")
+} else {
+  dir = paste0(dir, "_re=FALSE")
+}
 
 #dir <- file.path(getwd(), "spatiotemporal_off", sp)
 dir.create(dir, showWarnings = FALSE)
@@ -53,8 +101,15 @@ load(file.path(getwd(), "data", paste0(sp, "_catch_data.rdata")))
 data <- format_data(Out = Out)
 
 # Set up the Field and Rho Configuration for VAST
-settings <- do_vast_settings(knots = 150, obs_model = c(2, 0),
-	anis = anis, bias = bias_correct)
+settings <- do_vast_settings(
+  knots = 150, 
+  obs_model = obs_model,
+  eta1 = eta1,
+  eta2 = eta2,
+	anis = anis, 
+  RhoConfig = RhoConfig,
+  FieldConfig = FieldConfig,
+  bias = bias_correct)
 
 # Create the mesh for VAST
 survey <- VASTWestCoast::convert_survey4vast(survey = "WCGBTS")
@@ -67,6 +122,7 @@ vast_mesh <- VASTWestCoast::VAST_mesh(data = data,
 # this adds the X and Y coordinates
 subdata <- vast_mesh$mesh$data.inner
 
+tictoc::tic()
 fit <- fit_model(
   settings = settings,
   Lat_i = subdata[, "Lat"],
@@ -81,6 +137,7 @@ fit <- fit_model(
   catchability_data = subdata,
   input_grid = vast_mesh[['inputgrid']]
 )
+vast_time = tictoc::toc()
 
 index_vast <- extract_vast_index(x = fit)
 
@@ -133,22 +190,46 @@ mesh_sdmTMB <- sdmTMB::make_mesh(
 subdata$catch_mt <- drop_units(subdata$Catch_mt)
 subdata$vessel_scaled <- as.factor(subdata$vessel_scaled)
 
+tictoc::tic()
 fit_sdmTMB <- sdmTMB(
-  catch_mt ~ 0 + as.factor(Year) + pass_scaled + (1 | vessel_scaled),
+  formula = formula,
   time = "Year",
   offset = log(subdata$AreaSwept_km2),
   data = subdata,
   mesh = mesh_sdmTMB,
-  family = delta_gamma(),
+  family = family,
   spatial = "on",
-  spatiotemporal = "iid",
+  spatiotemporal = list("iid", "iid"),
   anisotropy = anis,
-  silent = FALSE,
-  control = sdmTMBcontrol(newton_loops = 1L),
+  silent = TRUE,
+  control = sdmTMBcontrol(
+    newton_loops = 1L, #),  
+    map = list(ln_H_input = factor(c(1, 2, 1, 2))) # <- force sdmTMB to share anisotropy parametrs across the two delta models 
+  ), 
   do_index = TRUE,
   predict_args = list(newdata = year_grid, re_form_iid = NA),
   index_args = list(area = year_grid$Area_km2)
 )
+
+# Create index:
+index_sdmTMB <- sdmTMB::get_index(
+  fit_sdmTMB, # skipping prediction step
+  bias_correct = bias_correct,
+  area = year_grid$Area_km2
+)
+
+sdmTMB_time = tictoc::toc()
+
+#pred <- predict(
+#  fit_sdmTMB,
+#  re_form_iid = NA,
+#  newdata = year_grid,
+#  return_tmb_object = TRUE
+#)
+#
+#p <- pred$data
+#ind <- group_by(p, Year) %>%
+#  summarise(total = sum(plogis(est1) * exp(est2) * Area_km2))
 
 # print(fit_sdmTMB)
 # tidy(fit_sdmTMB, model = 1)
@@ -185,45 +266,6 @@ plot(s2, b2$estimate[yr_i], xlab = "VAST s2", ylab = "sdmTMB b2");abline(0, 1)
 dev.off()
 
 ###########################################################################
-# Create predictions and index using grid
-###########################################################################
-
-# pred <- predict(
-#   fit_sdmTMB,
-#   re_form_iid = NA,
-#   newdata = year_grid,
-#   return_tmb_object = TRUE
-# )
-#
-# out_file = file.path(dir, "prediction_maps.png")
-# grDevices::png(filename = out_file,
-#   width = 10, height = 7, units = "in", res = 300, pointsize = 12)
-# par(mfrow = c(1, 2), cex = 0.8, mar = c(1.5, 1, 1, 1), oma = c(2, 3, 1, 1))
-# filter(pred$data, Year == 2021) %>%
-#   ggplot(aes(X, Y, colour = plogis(est1))) + geom_point() +
-#   scale_colour_viridis_c()
-#
-# filter(pred$data, Year == 2021) %>%
-#   ggplot(aes(X, Y, colour = exp(est2))) + geom_point() +
-#   scale_colour_viridis_c(trans = "log10")
-# dev.off()
-
-# p <- pred$data
-# ind <- group_by(p, Year) %>%
-#   summarise(total = sum(plogis(est1) * exp(est2) * Area_km2))
-
-# Create index:
-index_sdmTMB <- sdmTMB::get_index(
-  fit_sdmTMB, # skipping prediction step
-  bias_correct = bias_correct,
-  area = year_grid$Area_km2
-)
-
-save(mesh_sdmTMB, fit_sdmTMB, year_grid, index_sdmTMB,
-  file = file.path(dir, "sdmTMB_save.RData")
-)
-
-###########################################################################
 # Bind and plot indices
 ###########################################################################
 
@@ -251,5 +293,12 @@ plot_indices(data = both,
   main_name = sp,
   save_loc = dir,
   ymax = NULL)
+
+save(mesh_sdmTMB, fit_sdmTMB, year_grid, index_sdmTMB,
+  file = file.path(dir, "sdmTMB_save.RData")
+)
+
+save(vast_time, sdmTMB_time,
+  file = file.path(dir, "run_time.Rdata"))
 
 } # end species loop
