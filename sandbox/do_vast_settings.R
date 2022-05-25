@@ -1,14 +1,6 @@
 
-do_vast_settings <- function(knots = 300, obs_model = c(2, 0), anis = FALSE, bias = FALSE){
-
-	FieldConfig <- matrix(c("IID", "IID", "IID", "IID", "IID", "IID"),
-	  ncol = 2, nrow = 3,
-	  dimnames = list(
-	    c("Omega", "Epsilon", "Beta"),
-	    c("Component_1", "Component_2")
-	  )
-	)
-	RhoConfig <- c("Beta1" = 0, "Beta2" = 0, "Epsilon1" = 0, "Epsilon2" = 0)
+do_vast_settings <- function(knots = 300, obs_model = c(2, 0), 
+	eta1 = 1, eta2, anis = FALSE, bias = FALSE, FieldConfig, RhoConfig){
 
 	settings <- FishStatsUtils::make_settings(
 	  n_x = knots, # number of vertices in the SPDE mesh
@@ -18,7 +10,7 @@ do_vast_settings <- function(knots = 300, obs_model = c(2, 0), anis = FALSE, bia
 	  FieldConfig = FieldConfig,
 	  RhoConfig = RhoConfig,
 	  ObsModel = obs_model, # conventional logit-linked delta-Gamma; c(10, 2) for Tweedie
-	  OverdispersionConfig = c(Eta1 = 1, Eta2 = 1),
+	  OverdispersionConfig = c(Eta1 = eta1, Eta2 = eta2),
 	  bias.correct = bias,
 	  use_anisotropy = anis,
 	  max_cells = Inf, # use all grid cells from the extrapolation grid
