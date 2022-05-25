@@ -22,7 +22,7 @@ species = c("arrowtooth_flounder",
 			"big_skate",
       "dover_sole",
 			#"chilipper_rockfish",
-			"darkblotched_rockfish",
+			"darkblotched_rockfish")#,
 			#"aurora_rockfish",
 			#"bocaccio",
 			#"sablefish",
@@ -31,8 +31,8 @@ species = c("arrowtooth_flounder",
 			#"canary_rockfish",
 			#"pacific_ocean_perch",
 			#"shortspine_thornyhead",
-			"petrale_sole",
-			"pacific_spiny_dogfish")#,
+			#"petrale_sole",
+			#"pacific_spiny_dogfish")#,
 			#"widow_rockfish",
 			#"yelloweye_rockfish")
 
@@ -46,12 +46,12 @@ for (sp in species) {
 # May need to add a remove call here to clear workspace of previous estimates
 rm(index_vast, both, index_sdmTMB)
 
-
 # SA: obviously no need for the list if shared:
 formula = list(
     catch_mt ~ 0 + as.factor(Year) + pass_scaled + (1 | vessel_scaled),
     catch_mt ~ 0 + as.factor(Year) + pass_scaled + (1 | vessel_scaled))
 eta1 = 1; eta2 = 0
+
 if (re == FALSE) {
   formula = list(
     catch_mt ~ 0 + as.factor(Year) + pass_scaled,
@@ -108,16 +108,17 @@ data <- format_data(Out = Out)
 
 # Set up the Field and Rho Configuration for VAST
 settings <- do_vast_settings(
-  knots = 150,
+  knots = 250,
   obs_model = obs_model,
   eta1 = eta1,
   eta2 = eta2,
 	anis = anis,
   RhoConfig = RhoConfig,
   FieldConfig = FieldConfig,
-  bias = bias_correct,
+  bias = FALSE, # will be done with apply_epsilon() below
   Version = "VAST_v14_0_1"
 )
+#settings$bias.correct <- FALSE 
 
 # Create the mesh for VAST
 survey <- VASTWestCoast::convert_survey4vast(survey = "WCGBTS")
@@ -129,8 +130,6 @@ vast_mesh <- VASTWestCoast::VAST_mesh(data = data,
 # Set the data to the updated data frame create within the VAST_mesh fxn
 # this adds the X and Y coordinates
 subdata <- vast_mesh$mesh$data.inner
-
-settings$bias.correct <- FALSE # will be done with apply_epsilon() below
 
 tictoc::tic()
 fit <- fit_model(
@@ -147,11 +146,12 @@ fit <- fit_model(
   catchability_data = subdata,
   input_grid = vast_mesh[['inputgrid']]
 )
-vast_time = tictoc::toc()
+vast_time <- tictoc::toc()
 
 tictoc::tic()
 if (bias_correct) {
-  sdv <- VAST::apply_epsilon(fit, data_function = strip_units)
+  #sdv <- VAST::apply_epsilon(fit, data_function = strip_units)
+  sdv <- my_apply_epsilon(fit, data_function = strip_units)
   index_vast <- extract_vast_index(x = fit)
   unbiased_vast <- sdv$unbiased$value[names(sdv$unbiased$value) == "Index_ctl"]
   suppressWarnings({ # just to figure out which > 0:
@@ -159,7 +159,11 @@ if (bias_correct) {
       DirName = tempdir())
   })
   est <- vi$Table$Estimate
+  lwr <- exp(log(unbiased_vast) + qnorm(0.025) * vi$Table$`Std. Error for ln(Estimate)`)
+  upr <- exp(log(unbiased_vast) + qnorm(0.975) * vi$Table$`Std. Error for ln(Estimate)`)
   index_vast$est <- unbiased_vast[est > 0]
+  index_vast$lwr <- lwr[est > 0]
+  index_vast$upr <- upr[est > 0]
 } else {
   index_vast <- extract_vast_index(x = fit)
 }
@@ -239,21 +243,10 @@ sdmTMB_time = tictoc::toc()
 tictoc::tic()
 index_sdmTMB <- sdmTMB::get_index(
   fit_sdmTMB, # skipping prediction step
-  bias_correct = bias_correct,
-  area = year_grid$Area_km2 # SA: doesn't actually do anything given index_args above
+  bias_correct = bias_correct
+  #area = year_grid$Area_km2 # SA: doesn't actually do anything given index_args above
 )
 sdmTMB_index_time = tictoc::toc()
-
-#pred <- predict(
-#  fit_sdmTMB,
-#  re_form_iid = NA,
-#  newdata = year_grid,
-#  return_tmb_object = TRUE
-#)
-#
-#p <- pred$data
-#ind <- group_by(p, Year) %>%
-#  summarise(total = sum(plogis(est1) * exp(est2) * Area_km2))
 
 # print(fit_sdmTMB)
 # tidy(fit_sdmTMB, model = 1)
