@@ -124,7 +124,7 @@ survey <- VASTWestCoast::convert_survey4vast(survey = "WCGBTS")
 vast_mesh <- VASTWestCoast::VAST_mesh(data = data,
   survey = survey,
   numknots = as.numeric(settings['n_x']),
-  savedir = dir)
+  savedir = paste0(dir, "/"))
 
 # Set the data to the updated data frame create within the VAST_mesh fxn
 # this adds the X and Y coordinates
@@ -143,7 +143,7 @@ fit <- fit_model(
   v_i = subdata[, "vessel_scaled"],
   Q1_formula = ~ pass_scaled,
   Q2_formula = ~ pass_scaled,
-  working_dir = dir,
+  working_dir = paste0(dir, "/"),
   catchability_data = subdata,
   input_grid = vast_mesh[['inputgrid']]
 )
