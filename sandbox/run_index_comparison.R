@@ -71,7 +71,7 @@ FieldConfig <- matrix(c("IID", "IID", "IID", "IID", "IID", "IID"),
 RhoConfig <- c("Beta1" = 0, "Beta2" = 0, "Epsilon1" = 0, "Epsilon2" = 0)
 
 if (dist == "lognormal"){
-  obs_model =  c(1,0) 
+  obs_model =  c(1,0)
   family = delta_lognormal() }
 if (dist == "tweedie"){
   obs_model = c(10, 2)
@@ -108,11 +108,11 @@ data <- format_data(Out = Out)
 
 # Set up the Field and Rho Configuration for VAST
 settings <- do_vast_settings(
-  knots = 150, 
+  knots = 150,
   obs_model = obs_model,
   eta1 = eta1,
   eta2 = eta2,
-	anis = anis, 
+	anis = anis,
   RhoConfig = RhoConfig,
   FieldConfig = FieldConfig,
   bias = bias_correct,
@@ -129,6 +129,8 @@ vast_mesh <- VASTWestCoast::VAST_mesh(data = data,
 # Set the data to the updated data frame create within the VAST_mesh fxn
 # this adds the X and Y coordinates
 subdata <- vast_mesh$mesh$data.inner
+
+settings$bias.correct <- FALSE # will be done with apply_epsilon() below
 
 tictoc::tic()
 fit <- fit_model(
@@ -148,15 +150,19 @@ fit <- fit_model(
 vast_time = tictoc::toc()
 
 tictoc::tic()
-sdv <- VAST::apply_epsilon(fit, data_function = strip_units)
-index_vast <- extract_vast_index(x = fit)
-unbiased_vast <- sdv$unbiased$value[names(sdv$unbiased$value) == "Index_ctl"]
-suppressWarnings({ # just to figure out which > 0:
-  vi <- FishStatsUtils::plot_biomass_index(fit,
-    DirName = tempdir())
-})
-est <- vi$Table$Estimate
-index_vast$est <- unbiased_vast[est > 0]
+if (bias_correct) {
+  sdv <- VAST::apply_epsilon(fit, data_function = strip_units)
+  index_vast <- extract_vast_index(x = fit)
+  unbiased_vast <- sdv$unbiased$value[names(sdv$unbiased$value) == "Index_ctl"]
+  suppressWarnings({ # just to figure out which > 0:
+    vi <- FishStatsUtils::plot_biomass_index(fit,
+      DirName = tempdir())
+  })
+  est <- vi$Table$Estimate
+  index_vast$est <- unbiased_vast[est > 0]
+} else {
+  index_vast <- extract_vast_index(x = fit)
+}
 vast_index_time <- tictoc::toc()
 
 ########################################################################
@@ -221,9 +227,9 @@ fit_sdmTMB <- sdmTMB(
   anisotropy = anis,
   silent = TRUE,
   control = sdmTMBcontrol(
-    newton_loops = 1L,  
-    map = list(ln_H_input = factor(c(1, 2, 1, 2))) # <- force sdmTMB to share anisotropy parameters across the two delta models 
-  ), 
+    newton_loops = 1L,
+    map = list(ln_H_input = factor(c(1, 2, 1, 2))) # <- force sdmTMB to share anisotropy parameters across the two delta models
+  ),
   do_index = TRUE,
   predict_args = list(newdata = year_grid, re_form_iid = NA),
   index_args = list(area = year_grid$Area_km2)
