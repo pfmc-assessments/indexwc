@@ -18,39 +18,28 @@ source("format_data.R")
 source("utils.R")
 source("plot_indices.R")
 
-species = c("arrowtooth_flounder",
-			"big_skate",
-      "dover_sole",
-			#"chilipper_rockfish",
-			"darkblotched_rockfish")#,
-			#"aurora_rockfish",
-			#"bocaccio",
-			#"sablefish",
-			#"rougheye_rockfish",
-      #"rex_sole",
-			#"canary_rockfish",
-			#"pacific_ocean_perch",
-			#"shortspine_thornyhead",
-			#"petrale_sole",
-			#"pacific_spiny_dogfish")#,
-			#"widow_rockfish",
-			#"yelloweye_rockfish")
+sp = c("arrowtooth_flounder",
+       "aurora_rockfish",
+       "bocaccio",
+       "big_skate",
+       "dover_sole",
+       "sablefish",
+       "shortspine_thornyhead",
+       "widow_rockfish")
 
 anis = TRUE
 bias_correct = TRUE
 re = FALSE
-dist = "gamma"
+dist = c("lognormal","gamma","tweedie")[2]
 
 for (sp in species) {
 
-# May need to add a remove call here to clear workspace of previous estimates
 rm(index_vast, both, index_sdmTMB)
 
-# SA: obviously no need for the list if shared:
 formula = list(
     catch_mt ~ 0 + as.factor(Year) + pass_scaled + (1 | vessel_scaled),
     catch_mt ~ 0 + as.factor(Year) + pass_scaled + (1 | vessel_scaled))
-eta1 = 1; eta2 = 0
+eta1 = 1; eta2 = 1
 
 if (re == FALSE) {
   formula = list(
@@ -99,7 +88,6 @@ if (re){
   dir = paste0(dir, "_re=FALSE")
 }
 
-#dir <- file.path(getwd(), "spatiotemporal_off", sp)
 dir.create(dir, showWarnings = FALSE)
 
 # Load catch data file
@@ -118,7 +106,6 @@ settings <- do_vast_settings(
   bias = FALSE, # will be done with apply_epsilon() below
   Version = "VAST_v14_0_1"
 )
-#settings$bias.correct <- FALSE 
 
 # Create the mesh for VAST
 survey <- VASTWestCoast::convert_survey4vast(survey = "WCGBTS")
@@ -244,14 +231,13 @@ tictoc::tic()
 index_sdmTMB <- sdmTMB::get_index(
   fit_sdmTMB, # skipping prediction step
   bias_correct = bias_correct
-  #area = year_grid$Area_km2 # SA: doesn't actually do anything given index_args above
 )
 sdmTMB_index_time = tictoc::toc()
 
 # print(fit_sdmTMB)
 # tidy(fit_sdmTMB, model = 1)
 # tidy(fit_sdmTMB, model = 2)
-# sanity(fit_sdmTMB) # experimental... function name may change
+# sanity(fit_sdmTMB) 
 
 ###########################################################################
 # Compare parameter estimates between VAST and sdmTMB
@@ -265,7 +251,6 @@ plot_betas_delta(vast_model = fit, sdmTMB_model = fit_sdmTMB, "beta1_ft", sdmTMB
 plot_betas_delta(vast_model = fit, sdmTMB_model = fit_sdmTMB, "beta2_ft", sdmTMB_pars = 2)
 dev.off()
 
-# fit$parameter_estimates$SD
 s1 <- fit$ParHat$beta1_ft[fit$ParHat$beta1_ft != 0]
 s2 <- fit$ParHat$beta2_ft[fit$ParHat$beta2_ft != 0]
 
@@ -281,6 +266,19 @@ par(mfrow = c(2, 1), cex = 0.8, mar = c(1.5, 1, 1, 1), oma = c(2, 3, 1, 1))
 plot(s1, b1$estimate[yr_i], xlab = "VAST s1", ylab = "sdmTMB b1");abline(0, 1)
 plot(s2, b2$estimate[yr_i], xlab = "VAST s2", ylab = "sdmTMB b2");abline(0, 1)
 dev.off()
+
+# Tweedie Comparison
+#s1 <- fit$ParHat$beta1_ft[fit$ParHat$beta2_ft != 0]
+#s2 <- fit$ParHat$beta2_ft[fit$ParHat$beta2_ft != 0]
+#b_VAST <- as.numeric(s1 + s2)
+#b_sdmTMB <- tidy(fit_sdmTMB)
+#
+#out_file = file.path(dir, "s1_b1.png")
+#grDevices::png(filename = out_file,
+#  width = 10, height = 7, units = "in", res = 300, pointsize = 12)
+#plot(b_VAST, b_sdmTMB[1:18,"estimate"], xlab = "VAST", ylab = "sdmTMB")
+#abline(0, 1)
+#dev.off()
 
 ###########################################################################
 # Bind and plot indices
