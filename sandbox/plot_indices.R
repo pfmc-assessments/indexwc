@@ -5,11 +5,6 @@ plot_indices <- function(data, main_name, save_loc, ymax = NULL) {
   vast_est = data[data$index == "VAST","est"]
   sdmtmb_est = data[data$index == "sdmTMB","est"]
 
-  #hi_sdmtmb <- exp(log(sdmtmb_est) + 1.96 * data[data$index == "sdmTMB","se"])
-  #lo_sdmtmb <- exp(log(sdmtmb_est) - 1.96 * data[data$index == "sdmTMB","se"])
-  #hi_vast <- stats::qlnorm(0.975, meanlog = log(vast_est), sdlog = data[data$index == "VAST", "se"])
-  #lo_vast <- stats::qlnorm(0.025, meanlog = log(vast_est), sdlog = data[data$index == "VAST", "se"]) 
-
   hi_sdmtmb <- data[data$index == "sdmTMB", "upr"]
   lo_sdmtmb <- data[data$index == "sdmTMB", "lwr"]
   hi_vast <- data[data$index == "VAST", "upr"]
@@ -46,15 +41,18 @@ plot_indices <- function(data, main_name, save_loc, ymax = NULL) {
   graphics::arrows(x0 = years, y0 = lo_vast, x1 = years, y1 = hi_vast, 
     angle = 90, code = 3, length = 0.01, col = "darkgrey")
   graphics::points(years, vast_est, pch = 17, bg = 1, cex = 1.6)
-  graphics::lines(years,  vast_est, col = 1, cex = 1)
+  graphics::lines(years,  vast_est, col = 1, cex = 1, lwd = 2)
 
   graphics::arrows(x0 = years + x, y0 = lo_sdmtmb, x1 = years + x, y1 = hi_sdmtmb, 
-    angle = 90, code = 3, length = 0.01, col = "blue", #"lightskyblue4", 
+    angle = 90, code = 3, length = 0.01, col = "red", #"lightskyblue4", 
     lty = 2)
-  graphics::points(years + x, sdmtmb_est, pch = 16, bg = 1, cex = 1.6, col = 'blue')
-  graphics::lines(years + x,  sdmtmb_est, cex = 1, col = 'blue', lty = 2)
+  graphics::points(years + x, sdmtmb_est, pch = 16, bg = 1, cex = 1.6, col = 'red')
+  graphics::lines(years + x,  sdmtmb_est, cex = 1, col = 'red', lty = 2, lwd = 2)
 
-  legend("topright", bty = 'n', legend = c("sdmTMB", "VAST"), col = c('blue', 'black'), 
+  legend("topright", bty = 'n', 
+    lty = c(1,2),
+    legend = c("VAST", "sdmTMB"), 
+    col = c('black', 'red'), 
     lwd = 2)
   dev.off()
 
