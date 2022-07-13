@@ -17,6 +17,7 @@ source("do_vast_settings.R")
 source("format_data.R")
 source("utils.R")
 source("plot_indices.R")
+source("my_apply_epsilon.R")
 
 sp = c("arrowtooth_flounder",
        "aurora_rockfish",
