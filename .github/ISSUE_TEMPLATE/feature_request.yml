@@ -33,7 +33,7 @@ body:
       placeholder: Other solutions include ...
     validations:
       required: true
-   - type: textarea
+  - type: textarea
     id: context
     attributes:
       label: Additional context
