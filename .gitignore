@@ -1,9 +1,6 @@
 
-=== 
 .Rproj.user
-=== 
 .Rhistory
-=== 
 sandbox/gamma_example
 sandbox/tweedie_example
 sandbox/doc
@@ -16,4 +13,7 @@ sandbox/spatiotemporal_off
 sandbox/anisotropy_bias_correct_gamma
 sandbox/anisotropy_bias_correct_lognormal
 sandbox/anisotropy_bias_correct_tweedie
+*.RData
+*.rds
+*.rda
 
