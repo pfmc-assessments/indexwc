@@ -1,6 +1,6 @@
 name: 🐞 Bug
 description: File a bug/issue
-title: "[BUG] <title>"
+title: "[BUG]: "
 labels: [type--Bug, status--Pretriage]
 body:
 - type: checkboxes
@@ -27,10 +27,10 @@ body:
     label: Steps To Reproduce
     description: Steps to reproduce the behavior.
     placeholder: |
-      1. In this environment...
-      2. With this config...
+      1. In this environment ...
+      2. With this config ...
       3. Run '...'
-      4. See error...
+      4. See error ...
   validations:
     required: false
 - type: textarea
