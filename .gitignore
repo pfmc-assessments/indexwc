@@ -1,18 +1,6 @@
 
 .Rproj.user
 .Rhistory
-sandbox/gamma_example
-sandbox/tweedie_example
-sandbox/doc
-sandbox/dover_example
-sandbox/comparisons
-sandbox/anisotropy
-sandbox/bias_correct
-sandbox/bias_correct_lognormal
-sandbox/spatiotemporal_off
-sandbox/anisotropy_bias_correct_gamma
-sandbox/anisotropy_bias_correct_lognormal
-sandbox/anisotropy_bias_correct_tweedie
 *.RData
 *.rds
 *.rda
