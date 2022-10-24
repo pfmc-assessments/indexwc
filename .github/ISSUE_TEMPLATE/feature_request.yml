@@ -1,0 +1,42 @@
+---
+name: Feature Request
+description: Request new features or changes to features
+title: "[Feature]: "
+labels: ["New_Request"]
+assignees:
+  - kellijohnson-NOAA
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this feature request!
+  - type: textarea
+    id: problem
+    attributes:
+      label: Describe the problem your feature request is related to.
+      description: E.g., I'm always frustrated when [...].
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Describe the solution you'd like
+      description: A clear and concise description of a solution or feature(s) you have considered.
+      placeholder: Solutions include ...
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Describe alternatives you have considered
+      description: A clear and concise description of any alternative solutions or features you have considered.
+      placeholder: Other solutions include ...
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Add any other context or screenshots about the feature request here.
+    validations:
+      required: false
