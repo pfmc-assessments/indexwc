@@ -1,12 +1,50 @@
 Package: indexwc
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
-Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+Title: Run indices for West Coast Groundfish stock assessments
+Version: 0.1
+Authors@R: c(
+    person(given = c("Kelli", "F."),
+      family = "Johnson",
+      role = c("aut", "cre"),
+      email = "kelli.johnson@noaa.gov",
+      comment = c(ORCID = "0000-0002-5149-451X")),
+    person(given = c("Chantel", "R."),
+      family = "Wetzel",
+      role = "aut",
+      email = "chantel.wetzel@noaa.gov",
+      comment = c(ORCID = "0000-0002-7573-8240"))
+    )
+Maintainer: Kelli F. Johnson <kelli.johnson@noaa.gov.
+Description: Runs indices of abundance for survey data from the NWFSC
+	and fishery-dependent catch-per-unit-effort.
+License: MIT + file LICENSE
 Encoding: UTF-8
+LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.2
+RoxygenNote: 7.1.1
+Depends:
+  R (>= 4.0)
+Imports:
+  sdmTMB,
+  r4ss,
+  nwfscSurvey,
+  VASTWestCoast,
+  sa4ss,
+  dplyr,
+  ggplot2,
+  knitr,
+  kableExtra,
+  pkgload,
+  rmarkdown,
+  rticles,
+  viridis,
+  stringr
+Suggests:
+  nmfspalette,
+  testthat
+Remotes:
+  github::r4ss/r4ss,
+  github::pbs-assess/sdmTMB,
+  github::pfmc-assessments/nwfscSurvey,
+  github::pfmc-assessments/VASTWestCoast,
+  github::pfmc-assessments/sa4ss,
+  github::nmfs-general-modeling-tools/nmfspalette
