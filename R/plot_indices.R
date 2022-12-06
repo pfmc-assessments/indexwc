@@ -63,19 +63,19 @@ plot_indices <- function(data, plot_info, save_loc,
   graphics::lines(years,  est,cex = 1, lwd = 2, col = colors[1])
 
   # Area
-  legend <- NULL; aa <- 2
-  for (area in unique(data[data$area != "coastwide", "area"])){
-
+  legend <- NULL; aa <- 2;  x <- 0.05
+  for (area in unique(data[data$area != "coastwide", "area"])){  
     hi  <- data[data$area == area, "upr"]
     lo  <- data[data$area == area, "lwr"]
     est <- data[data$area == area, "est"]
-    graphics::arrows(x0 = years, y0 = lo, x1 = years, y1 = hi, 
+    graphics::arrows(x0 = years + x, y0 = lo, x1 = years + x, y1 = hi, 
       angle = 90, code = 3, length = 0.01, col = colors[aa], 
       lty = 1)
     graphics::points(years + x, est, pch = 16, bg = 1, cex = 1.6, col = colors[aa])
-    graphics::lines(years + x,  est, cex = 1, col = colors[aa], lty = 2, lwd = 2)
+    graphics::lines( years + x,  est, cex = 1, col = colors[aa], lty = 2, lwd = 2)
     legend <- c(legend, toupper(area))
     aa <- aa + 1
+    x  <- x + 0.05
   }
 
   legend(legend_loc, bty = 'n', 

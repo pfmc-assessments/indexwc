@@ -11,8 +11,8 @@
 #' 
 #' devtools::load_all("C:/Users/Chantel.Wetzel/Documents/GitHub/nwfscSurvey")
 #' run_sdmtmb( dir = "C:/Assessments/2022/sdmTMB/create_run_code",
-#' 	species = "petrale sole",
-#' 	dist = c("lognormal", "gamma")
+#' 	species = "canary rockfish",
+#' 	dist = c("lognormal", "gamma"))
 #' 
 #' 
 #'  options to build in
@@ -20,24 +20,29 @@
 #'  2) add input to turn on/off vessel effects
 #'  3) if vessel effects included determine if sd > 0 (model convergence)
 #'  4) option to turn off area estimates and plotting
+#'  5) add settings approach to pass in
 
 run_sdmtmb <- function(dir, species, dist = c("lognormal", "gamma")){
 
 knots <- 250
+
 #### Get species, survey, and strata info
 info <- nwfscSurvey::GetSpp.fn(species)
+
+# Change here to remove the selection of only the WCGBT survey
 survey_list <- rev(grep("Tri|Combo|Slope",
   nwfscSurvey::createMatrix()[, 1], value = TRUE))[2]
 
 strata_limits <- VASTWestCoast::convert_strata4vast(
 	overridedepth = TRUE,
-  strata = nwfscSurvey::GetStrata.fn(info[, "strata"])
+  strata = nwfscSurvey::GetStrata.fn(area = info[, "strata"])
 )
 
 sppdir <- file.path(normalizePath(dir, mustWork = FALSE),
   info[, "common_name"])
 dir.create(sppdir,recursive = TRUE, showWarnings = FALSE)
 
+# Loop over selected surveys
 for (survey in survey_list){
 
 	dir.create(file.path(sppdir, survey), recursive = TRUE, showWarnings = FALSE)
@@ -63,14 +68,31 @@ for (survey in survey_list){
 	spp <- paste(survey, info[, "scientific_name"], sep = "_")
 
 	# Pull survey data
-	data <- nwfscSurvey::pull_catch(
+	raw_catch_data <- nwfscSurvey::pull_catch(
 		common_name = info$common,
 		survey = survey,
 		dir = file.path(sppdir, survey, "data"))
+	catch_data <- format_data(data = raw_catch_data)
+	catch_data$area <- "coastwide"
 
-	catch_data <- format_data(data = data)
+	# Rounding is dealing with a WCGBT tow at 31.99861 latitude that was getting dropped
+	if(dim(strata_limits)[1] > 1) {
+		for (a in 2:dim(strata_limits)[1]) {
+			ind <- which(round(catch_data$Lat, 2) < strata_limits[a, "north_border"] & 
+				round(catch_data$Lat, 2) >= strata_limits[a, "south_border"])
+			catch_data$area[ind] <- strata_limits[a, "STRATA"] 
+		}
+	}
+
+	# Summarize tows by year and area
+	cw_tows <- aggregate(Tow ~ Year, catch_data, length, drop = FALSE)
+	area_tows <- aggregate(Tow ~ Year + area, catch_data, length, drop = FALSE)
+	
+
+
+	# Summarize available data
 	surveyspp <- VASTWestCoast::get_spp(input = spp)
-	data_years <- sort(unique(data$Year))
+	data_years <- sort(unique(catch_data$Year))
 
 	for (obs in dist) {
 
@@ -152,8 +174,11 @@ for (survey in survey_list){
 		)
 		index$area <- "coastwide" 
 
-		loglike <- logLik(fit)
-		aic <- AIC(fit)
+		get_diagnostics(
+			dir = file.path(sppdir, survey, "index", obs), 
+			fit = fit, 
+			prediction_grid = year_grid
+		)
 
 		# Create indices by area
 		area_indices <- NULL 
@@ -187,27 +212,8 @@ for (survey in survey_list){
 			save_loc = file.path(sppdir, survey, "index", obs), 
 			ymax = NULL)
 
-		# Add diagnostics
-		# 1) QQ plot
-		# 2) Residuals by year
-		resids <- residuals(fit)
-    grDevices::png(filename = file.path(sppdir, survey, "index", obs, "qq.png"),
-      width = 7, height = 7, units = "in", res = 300, pointsize = 12)
-    qqnorm(resids); qqline(resids)
-    dev.off()
-
-    catch_data$resids <- resids
-    grDevices::png(filename = file.path(sppdir, survey, "index", obs, "residuals.png"),
-      width = 14, height = 7, units = "in", res = 300, pointsize = 12)
-    ggplot(catch_data, aes(Lon, Lat, colour = resids)) + 
-    	geom_point() + 
-    	facet_wrap(~Year) +
-    	scale_colour_gradient2() + 
-    	coord_fixed()
-    dev.off()
-
     save(data_mesh, mesh, year_grid, index, fit, area_indices, all_indices,
-			loglike, aic, catch_data, plot_info,
+			loglike, aic, catch_data, #plot_info,
   		file = file.path(sppdir, survey, "index", obs, "sdmTMB_save.RData")
 		)
 
