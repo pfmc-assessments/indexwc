@@ -1,7 +1,7 @@
 #' Plot the estimated model residuals from
 #' the model fit parameters.
 #'
-#' @param data
+#' @param data List created by the sdmTMB:: fit function
 #' @template dir 
 #' @template nrow
 #' @template ncol
