@@ -1,6 +1,6 @@
 #' Plot the QQ and 1:1 line
 #'
-#' @param resids
+#' @param data List created by the sdmTMB:: fit function
 #' @template dir 
 #'
 #' 
@@ -10,7 +10,9 @@
 #'
 #' 
 #'	
-plot_qq <- function(resids, dir){
+plot_qq <- function(data, dir){
+
+    resids <- fit$data$residuals
 
 	grDevices::png(
 		filename = file.path(dir, "qq.png"),

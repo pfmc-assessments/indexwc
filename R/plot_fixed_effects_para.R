@@ -1,7 +1,7 @@
 #' Plot the annual parameter estimates from the fit model
 #'
 #'
-#' @template data
+#' @param data List created by the sdmTMB:: fit function
 #' @template dir 
 #'
 #' @import sdmTMB
