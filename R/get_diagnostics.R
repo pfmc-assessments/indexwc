@@ -14,7 +14,7 @@
 #' sigma_E: Standard deviation of the spatiotemporal process (“Epsilon”).
 #'
 #' @template dir  
-#' @template fit
+#' @param fit List created by the sdmTMB:: fit function.
 #' @param prediction_grid The prediction grid for the survey that sdmTMB will use
 #' to make model predictions to. 
 #'
@@ -35,7 +35,7 @@
 #' 
 #'
 #'	
-get_diagnostics <- function(dir, fit, prediction_grid,){
+get_diagnostics <- function(dir, fit, prediction_grid){
 
 
 	run_diagnostics <- list()
@@ -96,7 +96,7 @@ get_diagnostics <- function(dir, fit, prediction_grid,){
 	fit$data$residuals <- residuals(fit)
 	
 	plot_qq(
-		resids = fit$data$residuals,
+		data = fit,
 		dir = dir
 	)
 
