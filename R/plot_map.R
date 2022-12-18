@@ -15,7 +15,14 @@
 #' @export
 #' 
 plot_map <- function(data, column) {
+
+	lon_range <- c(min(data$lon), max(data$lon))
+  	lat_range <- c(min(data$lat), max(data$lat))
+
 	ggplot2::ggplot(data, aes(lon, lat, fill = {{ column }})) +
 		geom_raster() +
-		coord_fixed() 
+		coord_fixed() +
+		nwfscSurvey::draw_theme() +
+      	nwfscSurvey::draw_land() +
+      	nwfscSurvey::draw_USEEZ(lon_range, lat_range) 
 }
