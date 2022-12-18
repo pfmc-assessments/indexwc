@@ -25,11 +25,17 @@ plot_residuals<- function(data, dir, nrow = 3, ncol = 4){
 		ceiling(seq_along(num_years) / (ncol * nrow))
 	)
 
+	lon_range <- c(min(df$Lon), max(df$Lon))
+  	lat_range <- c(min(df$Lat), max(df$Lat))
+
 	for(page in 1:length(g)) {
     	ggplot2::ggplot(df[df$Year %in% g[[page]], ], 
     		aes(Lon, Lat, colour = residuals)) + 
     		geom_point() + 
     		scale_colour_viridis_c() +
+    		nwfscSurvey::draw_theme() +
+      		nwfscSurvey::draw_land() +
+      		nwfscSurvey::draw_USEEZ(lon_range, lat_range)  + 
     		facet_wrap(~Year, ncol = ncol, nrow = nrow) +
     		#scale_colour_gradient2() + 
     		labs(x = "Longitude", y = "Latitude", colour = "Residuals") 
