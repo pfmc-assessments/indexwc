@@ -1,3 +1,4 @@
+^.history$
 ^sandbox$
 ^.*\.Rproj$
 ^\.Rproj\.user$
