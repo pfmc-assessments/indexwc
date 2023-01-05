@@ -20,31 +20,30 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.2.2
 Depends:
   R (>= 4.0)
 Imports:
-  sdmTMB,
-  r4ss,
-  nwfscSurvey,
-  VASTWestCoast,
-  sa4ss,
-  dplyr,
-  ggplot2,
-  knitr,
-  kableExtra,
-  pkgload,
-  rmarkdown,
-  rticles,
-  viridis,
-  stringr
+    sdmTMB,
+    r4ss,
+    nwfscSurvey,
+    dplyr,
+    fs,
+    ggplot2,
+    knitr,
+    kableExtra,
+    magrittr,
+    methods,
+    pkgload,
+    rmarkdown,
+    viridis,
+    stringr
 Suggests:
+  VASTWestCoast,
   nmfspalette,
   testthat
 Remotes:
   github::r4ss/r4ss,
   github::pbs-assess/sdmTMB,
   github::pfmc-assessments/nwfscSurvey,
-  github::pfmc-assessments/VASTWestCoast,
-  github::pfmc-assessments/sa4ss,
   github::nmfs-general-modeling-tools/nmfspalette
