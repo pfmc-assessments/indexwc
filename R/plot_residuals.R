@@ -1,49 +1,44 @@
-#' Plot the estimated model residuals from
-#' the model fit parameters.
+#' Plot the residuals from a model fit by [sdmTMB::smdTMB()]
 #'
-#' @param data List created by the sdmTMB:: fit function
+#' @param data A list returned from [sdmTMB::smdTMB()].
 #' @template dir 
 #' @template nrow
 #' @template ncol
 #'
-#' @import ggplot2
-#' 
-#'
-#' @author Chantel Wetzel
+#' @author Chantel R. Wetzel
 #' @export
-#' 
 #'
-#' 
-#'
-plot_residuals<- function(data, dir, nrow = 3, ncol = 4){
-	
-	year <- data$time
-	df <- data$data
-	num_years <- sort(unique(df[, year]))
-	g <- split(
-		num_years, 
-		ceiling(seq_along(num_years) / (ncol * nrow))
-	)
-
-	lon_range <- c(min(df$Lon), max(df$Lon))
-  	lat_range <- c(min(df$Lat), max(df$Lat))
-
-	for(page in 1:length(g)) {
-    	ggplot2::ggplot(df[df$Year %in% g[[page]], ], 
-    		aes(Lon, Lat, colour = residuals)) + 
-    		geom_point() + 
-    		scale_colour_viridis_c() +
-    		nwfscSurvey::draw_theme() +
-      		nwfscSurvey::draw_land() +
-      		nwfscSurvey::draw_USEEZ(lon_range, lat_range)  + 
-    		facet_wrap(~Year, ncol = ncol, nrow = nrow) +
-    		#scale_colour_gradient2() + 
-    		labs(x = "Longitude", y = "Latitude", colour = "Residuals") 
-
-    	height <- ifelse(
-    		length(g[[page]]) == nrow * ncol, 10, 7)
-    	ggsave(
-    	  filename = file.path(dir, paste0("residuals_page", page, ".png")), 
-    	  width = 14, height = height, units = 'in')
-    }
+plot_residuals <- function(data, dir, nrow = 3, ncol = 4){
+  gg <- purrr::map(
+    .x = dplyr::group_by(
+      data[["data"]],
+      bin = ggplot2::cut_number(
+        year,
+        ceiling(length(unique(dplyr::pull(df, year))) / (ncol * nrow))
+      )
+    ) %>%
+      dplyr::group_split(),
+    .f = ~ ggplot2::ggplot(
+        data = .x, 
+    		ggplot2::aes(longitude, latitude, colour = residuals)
+      ) + 
+    		ggplot2::geom_point(alpha = 0.5) + 
+    		ggplot2::scale_colour_viridis_c() +
+    		# ggplot2::scale_colour_gradient2() + 
+    		ggplot2::facet_wrap(. ~ year, ncol = ncol, nrow = nrow) +
+    		ggplot2::labs(
+          x = "Longitude (decimal degrees)",
+          y = "Latitude (decimal degrees)",
+          colour = "Residuals"
+        ) +
+        ggplot2::coord_fixed() +
+        ggplot2::theme_bw()
+  )
+  purrr::map2(
+    .x = fs::path(dir, sprintf("residuals_page%d.png", seq_along(gg))),
+    .y = gg,
+    .f = ggsave,
+    width = 14,
+    height = ifelse(length(gg) == nrow * ncol, 10, 7)
+  )
 }
