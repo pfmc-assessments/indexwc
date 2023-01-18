@@ -12,7 +12,7 @@
 #'	
 plot_qq <- function(data, dir){
 
-    resids <- fit$data$residuals
+    resids <- data$data$residuals
 
 	grDevices::png(
 		filename = file.path(dir, "qq.png"),
