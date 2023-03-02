@@ -2,23 +2,39 @@
 % Please edit documentation in R/format_data.R
 \name{format_data}
 \alias{format_data}
-\title{Format data pull from the data warehouse}
+\title{Format \code{data} by standardizing column names and units}
 \usage{
-format_data(data)
+format_data(data, ...)
 }
 \arguments{
-\item{data}{Catch data pulled from the data warehouse}
+\item{data}{A data frame containing tow-level information on catch weight
+and effort. Additional columns can be present such as depth.}
 }
 \value{
-A dataframe of formatted catch data.
+A data frame with all lower case column names.
+\itemize{
+\item \code{year}
+\item \code{survey_name}
+\item \code{common_name}
+\item \code{catch_numbers}
+\item \code{catch_wt} (mt)
+\item \code{effort} ($km^2$)
+\item \code{pass_scaled} after subtracting the mean
+\item \code{vessel_year} pasted together, made numeric, and subtract 1
+\item \code{longitude} (decimal degrees)
+\item \code{latitude} (decimal degrees)
+\item \code{x} and \code{y} are in Universal Transverse Mercator (UTM)
+\item \code{depth} (m) with positive entries representing measurements above sea
+level and negative entries representing measurements below sea level
+}
 }
 \description{
-Format data pull from the data warehouse
+Format \code{data} by standardizing column names and units
 }
 \examples{
 formatted_data <- format_data(data = catch_data)
 
 }
 \author{
-Chantel Wetzel
+Chantel R. Wetzel and Kelli F. Johnson
 }
