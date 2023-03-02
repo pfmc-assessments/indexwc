@@ -10,14 +10,14 @@ plot_qq <- function(data, dir) {
 
 	grDevices::png(
 		filename = file.path(dir, "qq.png"),
-    width = 7, 
-    height = 7, 
-    units = "in", 
-    res = 300, 
+    width = 7,
+    height = 7,
+    units = "in",
+    res = 300,
     pointsize = 12
   )
-  on.exit(dev.off)
-  stats::qqnorm(residuals) 
+  on.exit(dev.off())
+  stats::qqnorm(residuals)
   stats::qqline(residuals)
 
 }

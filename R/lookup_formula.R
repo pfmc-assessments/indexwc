@@ -2,7 +2,7 @@ lookup_formula <- function(x) {
   purrr::map(
     .x = x,
     .f = ~ dplyr::case_when(
-      grepl("Slope and Shelf Combination", .x) ~ list(
+      grepl("WCGBTS", .x) ~ list(
         catch_weight ~ 0 + as.factor(year) + pass_scaled + (1 | vessel_year),
         catch_weight ~ 0 + as.factor(year) + pass_scaled + (1 | vessel_year)
       ),

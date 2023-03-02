@@ -65,6 +65,12 @@ format_data.nwfscSurvey <- function(data, ...) {
       survey_name = project,
     ) %>%
     dplyr::mutate(
+      # TODO: complete the case_when statement for all known survey names
+      #       make them match the sa4ss glossary
+      survey_name = dplyr::case_when(
+        survey_name == "Groundfish Slope and Shelf Combination Survey" ~ "WCGBTS",
+        TRUE ~ "unknown survey"
+      ),
       # Catches are needed in mt for stock synthesis
       catch_weight = total_catch_wt_kg * 0.001,
       effort = area_swept_ha_der * 0.01,
@@ -87,7 +93,8 @@ format_data.nwfscSurvey <- function(data, ...) {
       vessel_year,
       longitude,
       latitude,
-      depth
+      depth,
+      formula
     ) %>%
     dplyr::filter(
       # TODO: fix the survey  names
