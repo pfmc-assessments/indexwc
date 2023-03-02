@@ -8,13 +8,16 @@
 #' @author Chantel R. Wetzel
 #' @export
 #'
-plot_residuals <- function(data, dir, nrow = 3, ncol = 4){
+plot_residuals <- function(data, dir, nrow = 3, ncol = 4) {
+  n_groups <- ceiling(length(unique(
+    dplyr::pull(data[["data"]], year)
+  )) / (ncol * nrow))
   gg <- purrr::map(
     .x = dplyr::group_by(
       data[["data"]],
       bin = ggplot2::cut_number(
         year,
-        ceiling(length(unique(dplyr::pull(df, year))) / (ncol * nrow))
+        n = n_groups
       )
     ) %>%
       dplyr::group_split(),

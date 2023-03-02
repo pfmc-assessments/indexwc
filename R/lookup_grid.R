@@ -1,6 +1,13 @@
-lookup_grid <- function(x, years, data = california_current_grid) {
+lookup_grid <- function(x,
+                        years,
+                        min_longitude,
+                        max_depth = Inf,
+                        data = california_current_grid) {
+  if (missing(min_longitude)) {
+    min_longitude <- min(data[["longitude"]])
+  }
   column <- dplyr::case_when(
-    grepl("Slope and Shelf Combination", x) ~ "area_km2_WCGBTS",
+    grepl("WCGBTS", x) ~ "area_km2_WCGBTS",
     grepl("Triennial", x) ~ "area_km2_Triennial",
     # TODO: not sure about this one
     grepl("AFSC Slope", x) ~ "area_km2_Slope98_00"
@@ -15,8 +22,13 @@ lookup_grid <- function(x, years, data = california_current_grid) {
     dplyr::filter(
       area_km2 > 0
     )
+
+  out_truncated <- out %>%
+    dplyr::filter(longitude > min_longitude)
+
+  # Transform the coordinates to UTM
   out_utm <- sdmTMB::add_utm_columns(
-    out,
+    out_truncated,
     c("longitude", "latitude"),
     utm_crs = 32610
   ) %>%
