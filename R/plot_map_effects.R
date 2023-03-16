@@ -1,21 +1,16 @@
-#' Plot the fixed and spatial effect from the 
-#' fit predictions.
+#' Plot the fixed and spatial effects from the fit predictions
 #'
 #'
 #' @template predictions
-#' @template dir 
+#' @template dir
 #' @template verbose
 #'
 #' @import ggplot2
-#' @imports gridExtra
+#' @import gridExtra
 #'
-#' @author Chantel Wetzel
+#' @author Chantel R. Wetzel
 #' @export
-#' 
-#'
-#'
 plot_map_effects <- function(predictions, dir, verbose = FALSE){
-
 	column <- ifelse(
 		"est_non_rf2" %in% colnames(predictions),
 		"est_non_rf2",

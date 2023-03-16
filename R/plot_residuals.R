@@ -1,7 +1,7 @@
-#' Plot the residuals from a model fit by [sdmTMB::smdTMB()]
+#' Plot the residuals from a model fit by [sdmTMB::sdmTMB()]
 #'
-#' @param data A list returned from [sdmTMB::smdTMB()].
-#' @template dir 
+#' @param data A list returned from [sdmTMB::sdmTMB()].
+#' @template dir
 #' @template nrow
 #' @template ncol
 #'

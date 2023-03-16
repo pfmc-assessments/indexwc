@@ -1,22 +1,20 @@
+#' Retrieve model estimates and plot diagnostics
 #'
-#' Function to retreive model estimates and plot diagnositcs for sdmTMB
-#' index of abundance model runs. 
-#'
-#' @ details
+#' @details
 #' Parameter definitions:
-#' Range: A derived parameter that defines the distance at which two 
+#' * Range: A derived parameter that defines the distance at which two 
 #' points are effectively independent (actually about 13% correlated). 
 #' If the share_range argument is changed to FALSE then the spatial 
 #' and spatiotemporal ranges will be unique, otherwise the default is 
 #' for both to share the same range.
-#' Phi: Observation error scale parameter (e.g., SD in Gaussian).
-#' sigma_O: Standard deviation of the spatial process ("Omega").
-#' sigma_E: Standard deviation of the spatiotemporal process ("Epsilon").
+#' * Phi: Observation error scale parameter (e.g., SD in Gaussian).
+#' * sigma_O: Standard deviation of the spatial process ("Omega").
+#' * sigma_E: Standard deviation of the spatiotemporal process ("Epsilon").
 #'
-#' @template dir  
+#' @template dir
 #' @param fit List created by the sdmTMB:: fit function.
 #' @param prediction_grid The prediction grid for the survey that sdmTMB will use
-#' to make model predictions to. 
+#' to make model predictions to.
 #'
 #' @import sdmTMB
 #'

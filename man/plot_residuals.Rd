@@ -2,13 +2,12 @@
 % Please edit documentation in R/plot_residuals.R
 \name{plot_residuals}
 \alias{plot_residuals}
-\title{Plot the estimated model residuals from
-the model fit parameters.}
+\title{Plot the residuals from a model fit by \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}}}
 \usage{
 plot_residuals(data, dir, nrow = 3, ncol = 4)
 }
 \arguments{
-\item{data}{List created by the sdmTMB:: fit function}
+\item{data}{A list returned from \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}}.}
 
 \item{dir}{A directory location where results and figures will be saved.}
 
@@ -17,9 +16,8 @@ plot_residuals(data, dir, nrow = 3, ncol = 4)
 \item{ncol}{The number of columns to plot for multi-year figures.}
 }
 \description{
-Plot the estimated model residuals from
-the model fit parameters.
+Plot the residuals from a model fit by \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}}
 }
 \author{
-Chantel Wetzel
+Chantel R. Wetzel
 }

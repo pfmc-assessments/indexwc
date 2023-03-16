@@ -1,9 +1,5 @@
-#' 
+#' Plot the indices
 #'
-#' 
-#' 
-#' 
-#' 
 #' @details
 #' TODO
 #' * Think about adding some plotting information back in to have a title
@@ -24,9 +20,9 @@
 #'
 #' @export
 #' @author Chantel R. Wetzel
-#' @return Creates and saves a plot of the abundance indices
-#' in the directory location specified by the save_loc function 
-#' input.
+#' @return
+#' Creates and saves a plot of the abundance indices in the directory location
+#' specified by the save_loc function input.
 #'
 plot_indices <- function(data,
                          save_loc = getwd(),
