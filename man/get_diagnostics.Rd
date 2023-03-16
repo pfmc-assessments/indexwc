@@ -30,20 +30,6 @@ for both to share the same range.
 \item sigma_E: Standard deviation of the spatiotemporal process ("Epsilon").
 }
 }
-\examples{
-\dontrun{
-	get_diagnostics(
-		sppdir = 'directory location for species specific run', 
-		fit = fit, # object created by sdmTMB::fit function 
-		prediction_grid = year, 
-		survey = survey, # e.g. NWFSC.Combo 
-		obs = 'lognormal')
-}
-
-
-
-
-}
 \author{
 Chantel R. Wetzel
 }

@@ -19,33 +19,21 @@
 #' @import sdmTMB
 #'
 #' @author Chantel R. Wetzel
-#'
-#' @examples
-#' \dontrun{
-#' 	get_diagnostics(
-#' 		sppdir = 'directory location for species specific run', 
-#' 		fit = fit, # object created by sdmTMB::fit function 
-#' 		prediction_grid = year, 
-#' 		survey = survey, # e.g. NWFSC.Combo 
-#' 		obs = 'lognormal')
-#' }
-#'
-#' 
-#'
-#'	
-get_diagnostics <- function(dir, fit, prediction_grid){
+get_diagnostics <- function(dir,
+                            fit,
+                            prediction_grid) {
+  sdmTMB::sanity(fit)
 
-
-	run_diagnostics <- list()
-	run_diagnostics$model <- fit$family$clean_name
-	run_diagnostics$formula <- fit$formula[[1]]
-	run_diagnostics$loglike <- logLik(fit)
-	run_diagnostics$aic <- AIC(fit)
-	write.table(
-		rbind(c("AIC", run_diagnostics$aic), c("NLL", run_diagnostics$loglike)), 
-		file = file.path(dir, "aic_nll.txt"),
-		row.names = FALSE, col.names = FALSE
-	)
+  run_diagnostics <- list()
+  run_diagnostics$model <- fit$family$clean_name
+  run_diagnostics$formula <- fit$formula[[1]]
+  run_diagnostics$loglike <- logLik(fit)
+  run_diagnostics$aic <- AIC(fit)
+  write.table(
+    rbind(c("AIC", run_diagnostics$aic), c("NLL", run_diagnostics$loglike)),
+    file = file.path(dir, "aic_nll.txt"),
+    row.names = FALSE, col.names = FALSE
+  )
 
   all_combos <- tidyr::expand_grid(x = 1:2, y = c("fixed", "ran_pars"))
   run_diagnostics[["effects"]] <- purrr::map2_dfr(
@@ -57,24 +45,24 @@ get_diagnostics <- function(dir, fit, prediction_grid){
     dplyr::mutate(
       model = unlist(all_combos[model, "x"])
     )
-	
-	save(
-		run_diagnostics, 
-		file = file.path(dir, "run_diagnostics_and_estimates.rdata")
-	)
 
-	# Calculate the residuals
-	fit[["data"]][["residuals"]] <- stats::residuals(fit)
-	
-	plot_qq(
-		data = fit,
-		dir = dir
-	)
+  save(
+    run_diagnostics, 
+    file = file.path(dir, "run_diagnostics_and_estimates.rdata")
+  )
 
-	plot_residuals(
-		data = fit,
-		dir = dir
-	)
+  # Calculate the residuals
+  fit[["data"]][["residuals"]] <- stats::residuals(fit)
+
+  plot_qq(
+    data = fit,
+    dir = dir
+  )
+
+  plot_residuals(
+    data = fit,
+    dir = dir
+  )
 
   gg <- sdmTMB::plot_anisotropy(
     object = fit
@@ -84,40 +72,40 @@ get_diagnostics <- function(dir, fit, prediction_grid){
     filename = fs::path(dir, "anisotropy.png"),
     plot = gg
   )
-	# plot_fixed_effects_para(
-	# 	data = fit, 
-	# 	dir = dir
-	# )
+  # plot_fixed_effects_para(
+  #   data = fit,
+  #   dir = dir
+  # )
 
-	# # Calculate the predictions based on the grid 	
-	# predictions <- predict(
-	# 	fit, 
-	# 	newdata = prediction_grid
-	# ) 
-	# predictions[, c("lon", "lat")] <- round(predictions[, c("longitude", "latitude")], 1)
-	# # The X/Lon and Y/Lat have too many decimal places to allow
-	# # map plotting due to memory issues requiring them to be 
-	# # rounded off. Testing revealed that rounding the X and Y
-	# # column down to 0 decimals resulted in chopping looking maps.
-	# # Using the Lon and Lat with 1 decimal place resulted in smoother
-	# # looking figures allowing for the patterns to be visable. 
+  # # Calculate the predictions based on the grid
+  # predictions <- predict(
+  #   fit,
+  #   newdata = prediction_grid
+  # )
+  # predictions[, c("lon", "lat")] <- round(predictions[, c("longitude", "latitude")], 1)
+  # # The X/Lon and Y/Lat have too many decimal places to allow
+  # # map plotting due to memory issues requiring them to be
+  # # rounded off. Testing revealed that rounding the X and Y
+  # # column down to 0 decimals resulted in chopping looking maps.
+  # # Using the Lon and Lat with 1 decimal place resulted in smoother
+  # # looking figures allowing for the patterns to be visable.
 
-	# plot_map_density(
-	# 	predictions = predictions, 
-	# 	dir = dir
-	# )
+  # plot_map_density(
+  #   predictions = predictions,
+  #   dir = dir
+  # )
 
-	# plot_map_effects(
-	# 	predictions = predictions, 
-	# 	dir = dir
-	# )
+  # plot_map_effects(
+  #   predictions = predictions,
+  #   dir = dir
+  # )
 
-	# plot_map_year_re(
-	# 	predictions = predictions, 
-	# 	dir = dir
-	# )
+  # plot_map_year_re(
+  #   predictions = predictions,
+  #   dir = dir
+  # )
 
-	# data_with_residuals <- fit$data
-	# save(data_with_residuals, file = file.path(dir, "data_with_residuals.rdata"))
-	# save(predictions, file = file.path(dir, "predictions.rdata"))
+  # data_with_residuals <- fit$data
+  # save(data_with_residuals, file = file.path(dir, "data_with_residuals.rdata"))
+  # save(predictions, file = file.path(dir, "predictions.rdata"))
 }
