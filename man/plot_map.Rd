@@ -2,24 +2,20 @@
 % Please edit documentation in R/plot_map.R
 \name{plot_map}
 \alias{plot_map}
-\title{Map plotting basic settings applied to all
-mapping diagnostic figures using ggplot2}
+\title{Map using \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}}}
 \usage{
 plot_map(data, column)
 }
 \arguments{
-\item{data}{Predictions data frame created by
-the sdmTMB::predict function and the prediction
+\item{data}{Predictions data frame created by \code{\link[=predict]{predict()}} and the prediction
 grid.}
 
-\item{column}{The column name to plot within
-the plotting function (e.g., est_non_rf2,
-omega_s2, epsilon_st2).}
+\item{column}{The column name to plot within the plotting function (e.g.,
+est_non_rf2, omega_s2, epsilon_st2).}
 }
 \description{
-Map plotting basic settings applied to all
-mapping diagnostic figures using ggplot2
+Map using \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}}
 }
 \author{
-Chantel Wetzel
+Chantel R. Wetzel
 }
