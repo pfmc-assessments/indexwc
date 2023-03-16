@@ -1,224 +1,149 @@
-#' 
+#' Run [sdmTMB::sdmTMB]
 #'
-#' @param dir Directory location
-#' @param species 
-#' @param dist 
+#' @template dir
+#' @param data A data frame.
+#' @inheritParams sdmTMB::sdmTMB
+#' @param n_knots An integer specifying the number of knots you want in your
+#'   mesh that is created by {INLA}. More knots is not always better.
 #'
 #' @export
-#' @author Chantel Wetzel
-#' @return 
-#' @example
-#' 
-#' devtools::load_all("C:/Users/Chantel.Wetzel/Documents/GitHub/nwfscSurvey")
-#' run_sdmtmb( dir = "C:/Assessments/2022/sdmTMB/create_run_code",
-#' 	species = "canary rockfish",
-#' 	dist = c("lognormal", "gamma"))
-#' 
-#' 
-#'  options to build in
-#'  1) select to run over specific surveys
-#'  2) add input to turn on/off vessel effects
-#'  3) if vessel effects included determine if sd > 0 (model convergence)
-#'  4) option to turn off area estimates and plotting
-#'  5) add settings approach to pass in
+#' @author Chantel R. Wetzel
+#' @return
+#' Nothing is currently returned from `run_sdmtmb` but the workspace is saved
+#' to the disk as `sdmTMB_save.RData`.
+run_sdmtmb <- function(dir = getwd(),
+                       data,
+                       family = sdmTMB::delta_gamma(),
+                       formula,
+                       n_knots = 500) {
+  # TODO:
+  # * check if random effects in formula and if converged, if yes and no, then
+  #   re run the model after changing the formula to not have random effects
+  # * document california_current_grid
+  # * check licence file to see if I am even able to steal it
+  # * think about setting a distance cutoff for the triangulation network
+  #   rather than pre-specifying the number of knots
+  dir_data <- fs::path(dir, "data")
+  dir_index <- fs::path(dir, "index")
+  fs::dir_create(c(dir_data, dir_index))
 
-run_sdmtmb <- function(dir, species, dist = c("lognormal", "gamma")){
+  # Create prediction grid
+  minimum_longitude <- data %>%
+      dplyr::filter(catch_weight > 0) %>%
+      dplyr::summarize(min = min(longitude)) %>%
+      dplyr::pull(min) - 0.1
+  grid <- lookup_grid(
+    x = data[["survey_name"]][1],
+    # min_longitude = minimum_longitude,
+    years = sort(unique(data$year))
+  )
+  # TODO: think about vessel_year, might want a different level scaling things
+  #       might not have to give this to grid, might be able to use as.factor()
+  #       in the formula
+  data$vessel_year <- as.factor(data$vessel_year)
 
-knots <- 250
+  # plot and save the mesh
+  mesh <- sdmTMB::make_mesh(
+    data = data,
+    xy_cols = c("x", "y"),
+    n_knots = n_knots
+  )
+  grDevices::png(
+    filename = fs::path(dir_data, "mesh.png"),
+    width = 7,
+    height = 7,
+    units = "in",
+    res = 300,
+    pointsize = 12
+  )
+  plot(mesh)
+  dev.off()
 
-#### Get species, survey, and strata info
-info <- nwfscSurvey::GetSpp.fn(species)
+  # Run model
+  fit <- sdmTMB::sdmTMB(
+    # TODO: fix the formula so the column list works
+    # formula = data[["formula"]][1],
+    # formula = catch_weight ~ 0 + as.factor(year) + pass_scaled + (1 | vessel_year),
+    formula = catch_weight ~ 0 + as.factor(year) + pass_scaled,
+    time = "year",
+    offset = log(data$effort),
+    data = data,
+    mesh = mesh,
+    family = family,
+    spatial = "on",
+    spatiotemporal = list("iid", "iid"),
+    anisotropy = TRUE,
+    silent = TRUE,
+    control = sdmTMB::sdmTMBcontrol(
+      newton_loops = 1L,
+      map = list(ln_H_input = factor(c(1, 2, 1, 2))) # <- force sdmTMB to share anisotropy parameters across the two delta models
+    ),
+    do_index = FALSE,
+    # Uncomment to get a coast-wide index
+    # do_index = TRUE,
+    # predict_args = list(newdata = grid, re_form_iid = NA),
+    # index_args = list(area = grid$area_km2)
+  )
+  loglike <- logLik(fit)
+  aic <- AIC(fit)
 
-# Change here to remove the selection of only the WCGBT survey
-survey_list <- rev(grep("Tri|Combo|Slope",
-  nwfscSurvey::createMatrix()[, 1], value = TRUE))[2]
+  # There is no way to estimate the index with bias correction in sdmTMB::sdmTMB
+  # which is why we have to call [sdmTMB::get_index()] even if predictions are
+  # specified in [sdmTMB::sdmTMB()].
+  boundaries <-  list(
+    coastwide = data %>%
+      dplyr::filter(catch_weight > 0) %>%
+      dplyr::pull(latitude) %>%
+      range() %>%
+      rev(),
+    WA = c(southern_BC, southern_WA),
+    OR = c(southern_WA, southern_OR),
+    CA = c(southern_OR, southern_CA)
+  )
+  index_areas <- purrr::map_dfr(
+    # Set up the area-specific grids as a list of data frames
+    .x = purrr::map2(
+      .x = purrr::map(boundaries, 1),
+      .y = purrr::map(boundaries, 2),
+      .f = filter_grid,
+      grid = grid
+    ),
+    # Anonymous function that does both prediction and get_index
+    .f = function(grid, object) {
+      prediction <- predict(object, newdata = grid, return_tmb_object = TRUE)
+      index <- sdmTMB::get_index(
+        obj = prediction,
+        bias_correct = TRUE,
+        area = grid[["area_km2"]]
+      )
+      return(index)
+    },
+    object = fit,
+    .id = "area"
+  )
 
-strata_limits <- VASTWestCoast::convert_strata4vast(
-	overridedepth = TRUE,
-  strata = nwfscSurvey::GetStrata.fn(area = info[, "strata"])
-)
+    gg_index <- plot_indices(
+      data = index_areas,
+      save_loc = dir_index
+    )
+    if (any(grepl("wide", index_areas[["area"]]))) {
+      gg_index_coastwide <- plot_indices(
+        data = dplyr::filter(index_areas, grepl("wide", area)),
+        save_loc = dirname(dir_index)
+      )
+    }
 
-sppdir <- file.path(normalizePath(dir, mustWork = FALSE),
-  info[, "common_name"])
-dir.create(sppdir,recursive = TRUE, showWarnings = FALSE)
+    # Add diagnostics
+    # 1) QQ plot
+    # 2) Residuals by year
+    diagnositcs <- get_diagnostics(
+      dir = dir_index,
+      fit = fit,
+      prediction_grid = grid
+    )
 
-# Loop over selected surveys
-for (survey in survey_list){
-
-	dir.create(file.path(sppdir, survey), recursive = TRUE, showWarnings = FALSE)
-	dir.create(file.path(sppdir, survey, "data"), recursive = TRUE, showWarnings = FALSE)
-	dir.create(file.path(sppdir, survey, "index"), recursive = TRUE, showWarnings = FALSE)
-
-	# modify for other surveys & whether to include vessel effects
-	if (survey == "NWFSC.Combo"){
-		# with random vessel effects
-		formula = list(
-			Catch_mt ~ 0 + as.factor(Year) + pass_scaled + (1 | vessel_scaled),
-		  Catch_mt ~ 0 + as.factor(Year) + pass_scaled + (1 | vessel_scaled))
-		# without RE
-		formula = list(
-			Catch_mt ~ 0 + as.factor(Year) + pass_scaled,
-		  Catch_mt ~ 0 + as.factor(Year) + pass_scaled)
-	} else {
-		formula = list(
-			Catch_mt ~ 0 + as.factor(Year) + pass_scaled,
-		  Catch_mt ~ 0 + as.factor(Year) + pass_scaled)
-	}
-
-	spp <- paste(survey, info[, "scientific_name"], sep = "_")
-
-	# Pull survey data
-	raw_catch_data <- nwfscSurvey::pull_catch(
-		common_name = info$common,
-		survey = survey,
-		dir = file.path(sppdir, survey, "data"))
-	catch_data <- format_data(data = raw_catch_data)
-	catch_data$area <- "coastwide"
-
-	# Rounding is dealing with a WCGBT tow at 31.99861 latitude that was getting dropped
-	if(dim(strata_limits)[1] > 1) {
-		for (a in 2:dim(strata_limits)[1]) {
-			ind <- which(round(catch_data$Lat, 2) < strata_limits[a, "north_border"] & 
-				round(catch_data$Lat, 2) >= strata_limits[a, "south_border"])
-			catch_data$area[ind] <- strata_limits[a, "STRATA"] 
-		}
-	}
-
-	# Summarize tows by year and area
-	cw_tows <- aggregate(Tow ~ Year, catch_data, length, drop = FALSE)
-	area_tows <- aggregate(Tow ~ Year + area, catch_data, length, drop = FALSE)
-	
-
-
-	# Summarize available data
-	surveyspp <- VASTWestCoast::get_spp(input = spp)
-	data_years <- sort(unique(catch_data$Year))
-
-	for (obs in dist) {
-
-		# create subdirectory folder
-		dir.create(file.path(sppdir, survey, "index", obs), recursive = TRUE, showWarnings = FALSE)
-
-		if (obs == "gamma"){
-			family = sdmTMB::delta_gamma()
-		} 
-		if (obs == "lognormal"){
-			family = sdmTMB::delta_lognormal()
-		} 
-		if (!obs %in% c("gamma", "lognormal")){
-			# Add error statement and stop run
-		}
-		
-		# Create mesh
-		mesh_survey <- VASTWestCoast::convert_survey4vast(
-			survey = surveyspp["survey"])
-
-		mesh <- VASTWestCoast::VAST_mesh(
-			data = catch_data,
-		  survey = mesh_survey,
-		  numknots = knots,
-		  savedir = file.path(sppdir, survey, "index", obs))
-		data_mesh <- mesh$mesh$data.inner
-				
-		# Create prediction grid
-		grid <- VASTWestCoast::get_inputgrid(survey = mesh_survey)
-		grid <- grid[grid$Area_km2 > 0, ]
-		grid <- sdmTMB::add_utm_columns(grid, c("Lon", "Lat"), utm_crs = 32610) # UTM 10
-		grid$pass_scaled <- 0
-		grid$vessel_scaled <- data_mesh$vessel_scaled[1]
-		sub_grid <- dplyr::select(grid, X, Y, Area_km2, pass_scaled, vessel_scaled, Lat, Lon)
-		
-		year_grid <- purrr::map_dfr(data_years, function(yr) {
-		  sub_grid$Year <- yr
-		  sub_grid
-		})
-
-		mesh <- sdmTMB::make_mesh(
-    	data = data_mesh,
-    	xy_cols = c("X", "Y"),
-    	n_knots = knots
-	  )
-
-		# plot and save the mesh
-		grDevices::png(filename = file.path(sppdir, survey, "index", obs, "mesh.png"),
-      width = 7, height = 7, units = "in", res = 300, pointsize = 12)
-    plot(mesh)
-    dev.off()
-
-		data_mesh$vessel_scaled <- as.factor(data_mesh$vessel_scaled)
-		
-		# Run model
-		fit <- sdmTMB::sdmTMB(
-  		formula = formula,
-  		time = "Year",
-  		offset = log(data_mesh$Area_swept_km2),
-  		data = data_mesh,
-  		mesh = mesh,
-  		family = family,
-  		spatial = "on",
-  		spatiotemporal = list("iid", "iid"),
-  		anisotropy = TRUE,
-  		silent = TRUE,
-  		control = sdmTMB::sdmTMBcontrol(
-  		  newton_loops = 1L,
-  		  map = list(ln_H_input = factor(c(1, 2, 1, 2))) # <- force sdmTMB to share anisotropy parameters across the two delta models
-  		),
-  		do_index = TRUE,
-  		predict_args = list(newdata = year_grid, re_form_iid = NA),
-  		index_args = list(area = year_grid$Area_km2)
-		)
-
-		index <- sdmTMB::get_index(
-				  fit, 
-				  bias_correct = FALSE # TRUE
-		)
-		index$area <- "coastwide" 
-
-		get_diagnostics(
-			dir = file.path(sppdir, survey, "index", obs), 
-			fit = fit, 
-			prediction_grid = year_grid
-		)
-
-		# Create indices by area
-		area_indices <- NULL 
-		for (strata in strata.limits[-1,"STRATA"]){
-
-			sub_year_grid <- year_grid %>% 
-				dplyr::filter(Lat < strata.limits[strata.limits$STRAT == strata, "north_border"]) %>%
-				dplyr::filter(Lat >= strata.limits[strata.limits$STRAT == strata, "south_border"])
-			
-			pred_area <- predict( #does not work with sdmTMB::predict
-				fit, 
-				newdata = sub_year_grid,
-			  return_tmb_object = TRUE
-			)
-
-			sub_index <- sdmTMB::get_index(
-		  	pred_area, #fit, # skipping prediction step
-		  	area = sub_year_grid$Area_km2,
-		  	bias_correct = FALSE # TRUE
-			)
-
-			sub_index$area <- strata
-			area_indices <- rbind(area_indices, sub_index)
-		}
-
-		# Need to fix this for plotting
-		all_indices <- rbind(index, area_indices)
-		# Plot the index
-		plot_indices(data = all_indices, 
-			plot_info = info, 
-			save_loc = file.path(sppdir, survey, "index", obs), 
-			ymax = NULL)
-
-    save(data_mesh, mesh, year_grid, index, fit, area_indices, all_indices,
-			loglike, aic, catch_data, #plot_info,
-  		file = file.path(sppdir, survey, "index", obs, "sdmTMB_save.RData")
-		)
-
-	} # end obs loop over distributions
-} # end survey loop
-
-
+    save(
+      data, mesh, grid, fit, index_areas, loglike, aic, gg_index,
+      file = fs::path(dir_index, "sdmTMB_save.RData")
+    )
 }

@@ -58,7 +58,7 @@ run <- function(data = nwfscSurvey::pull_catch(survey = "NWFSC.Combo"),
   results <- purrr::map2(
     .x = directories,
     .y = data_split,
-    .f = run_sdmtmb2,
+    .f = run_sdmtmb,
     family = family
   )
 }
