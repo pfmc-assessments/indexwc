@@ -2,8 +2,7 @@
 % Please edit documentation in R/plot_map_effects.R
 \name{plot_map_effects}
 \alias{plot_map_effects}
-\title{Plot the fixed and spatial effect from the
-fit predictions.}
+\title{Plot the fixed and spatial effects from the fit predictions}
 \usage{
 plot_map_effects(predictions, dir, verbose = FALSE)
 }
@@ -18,9 +17,8 @@ spatial, and spatio-temporal based on the fit model estimates.}
 warnings to the console. The default is \code{FALSE}.}
 }
 \description{
-Plot the fixed and spatial effect from the
-fit predictions.
+Plot the fixed and spatial effects from the fit predictions
 }
 \author{
-Chantel Wetzel
+Chantel R. Wetzel
 }
