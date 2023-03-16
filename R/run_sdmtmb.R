@@ -74,10 +74,6 @@ run_sdmtmb <- function(dir = getwd(),
     spatiotemporal = list("iid", "iid"),
     anisotropy = TRUE,
     silent = TRUE,
-    control = sdmTMB::sdmTMBcontrol(
-      newton_loops = 1L,
-      map = list(ln_H_input = factor(c(1, 2, 1, 2))) # <- force sdmTMB to share anisotropy parameters across the two delta models
-    ),
     do_index = FALSE,
     # Uncomment to get a coast-wide index
     # do_index = TRUE,
