@@ -5,4 +5,4 @@
 *.RData
 *.rds
 *.rda
-
+**/wcgbts/*
