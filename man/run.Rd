@@ -22,6 +22,26 @@ Or a data frame pulled from the NWFSC data warehouse. See the function
 call for the default, which is to pull data for \emph{EVERY} species present
 in the West Coast Groundfish Bottom Trawl Survey.}
 
+\item{family}{The family and link. Supports \code{\link[=gaussian]{gaussian()}}, \code{\link[=Gamma]{Gamma()}},
+\code{\link[=binomial]{binomial()}}, \code{\link[=poisson]{poisson()}}, \code{\link[sdmTMB:families]{Beta()}},
+\code{\link[sdmTMB:families]{nbinom2()}},
+\code{\link[sdmTMB:families]{truncated_nbinom2()}},
+\code{\link[sdmTMB:families]{nbinom1()}},
+\code{\link[sdmTMB:families]{truncated_nbinom1()}},
+\code{\link[sdmTMB:families]{censored_poisson()}},
+\code{\link[sdmTMB:families]{gamma_mix()}},
+\code{\link[sdmTMB:families]{lognormal_mix()}},
+\code{\link[sdmTMB:families]{student()}}, and
+\code{\link[sdmTMB:families]{tweedie()}}. Supports the delta/hurdle models:
+\code{\link[sdmTMB:families]{delta_beta()}},
+\code{\link[sdmTMB:families]{delta_gamma()}},
+\code{\link[sdmTMB:families]{delta_gamma_mix()}},
+\code{\link[sdmTMB:families]{delta_lognormal_mix()}},
+\code{\link[sdmTMB:families]{delta_lognormal()}}, and
+\code{\link[sdmTMB:families]{delta_truncated_nbinom2()}},
+For binomial family options, see 'Binomial families' in the Details
+section below.}
+
 \item{dir_main}{A string specifying the file path to the working directory
 that will be populated with additional directories where the results will
 be saved.}

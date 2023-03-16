@@ -29,7 +29,6 @@ Imports:
     dplyr,
     fs,
     ggplot2,
-    knitr,
     kableExtra,
     magrittr,
     methods,
@@ -38,6 +37,8 @@ Imports:
     viridis,
     stringr
 Suggests:
+  INLA,
+  knitr,
   nmfspalette,
   testthat
 Remotes:

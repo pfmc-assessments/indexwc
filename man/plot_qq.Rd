@@ -2,18 +2,18 @@
 % Please edit documentation in R/plot_qq.R
 \name{plot_qq}
 \alias{plot_qq}
-\title{Plot the QQ and 1:1 line}
+\title{Plot the quantile-quantile for \code{fit} with a 1:1 line}
 \usage{
 plot_qq(data, dir)
 }
 \arguments{
-\item{data}{List created by the sdmTMB:: fit function}
+\item{data}{A list created by \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}}.}
 
 \item{dir}{A directory location where results and figures will be saved.}
 }
 \description{
-Plot the QQ and 1:1 line
+Plot the quantile-quantile for \code{fit} with a 1:1 line
 }
 \author{
-Chantel Wetzel
+Chantel R. Wetzel
 }

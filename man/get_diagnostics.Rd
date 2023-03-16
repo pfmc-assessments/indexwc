@@ -2,8 +2,7 @@
 % Please edit documentation in R/get_diagnostics.R
 \name{get_diagnostics}
 \alias{get_diagnostics}
-\title{Function to retreive model estimates and plot diagnositcs for sdmTMB
-index of abundance model runs.}
+\title{Retrieve model estimates and plot diagnostics}
 \usage{
 get_diagnostics(dir, fit, prediction_grid)
 }
@@ -16,8 +15,20 @@ get_diagnostics(dir, fit, prediction_grid)
 to make model predictions to.}
 }
 \description{
-Function to retreive model estimates and plot diagnositcs for sdmTMB
-index of abundance model runs.
+Retrieve model estimates and plot diagnostics
+}
+\details{
+Parameter definitions:
+\itemize{
+\item Range: A derived parameter that defines the distance at which two
+points are effectively independent (actually about 13\% correlated).
+If the share_range argument is changed to FALSE then the spatial
+and spatiotemporal ranges will be unique, otherwise the default is
+for both to share the same range.
+\item Phi: Observation error scale parameter (e.g., SD in Gaussian).
+\item sigma_O: Standard deviation of the spatial process ("Omega").
+\item sigma_E: Standard deviation of the spatiotemporal process ("Epsilon").
+}
 }
 \examples{
 \dontrun{
@@ -34,5 +45,5 @@ index of abundance model runs.
 
 }
 \author{
-Chantel Wetzel
+Chantel R. Wetzel
 }
