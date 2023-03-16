@@ -13,7 +13,6 @@ Authors@R: c(
       email = "chantel.wetzel@noaa.gov",
       comment = c(ORCID = "0000-0002-7573-8240"))
     )
-Maintainer: Kelli F. Johnson <kelli.johnson@noaa.gov.
 Description: Runs indices of abundance for survey data from the NWFSC
 	and fishery-dependent catch-per-unit-effort.
 License: MIT + file LICENSE
