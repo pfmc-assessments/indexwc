@@ -39,7 +39,13 @@ get_diagnostics <- function(dir,
   run_diagnostics[["effects"]] <- purrr::map2_dfr(
     .x = all_combos[["x"]],
     .y = all_combos[["y"]],
-    .f = ~ tidy(x = fit, model = .x, effects = .y, conf.int = TRUE),
+    .f = ~ tidy(
+      x = fit,
+      model = .x,
+      effects = .y,
+      conf.int = TRUE,
+      silent = TRUE
+    ),
     .id = "model"
   ) %>%
     dplyr::mutate(
@@ -70,6 +76,8 @@ get_diagnostics <- function(dir,
   ggplot2::theme_bw()
   ggplot2::ggsave(
     filename = fs::path(dir, "anisotropy.png"),
+    height = 7,
+    width = 7,
     plot = gg
   )
   # plot_fixed_effects_para(
