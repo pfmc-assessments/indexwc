@@ -17,11 +17,12 @@
 #' @family run
 run <- function(data = nwfscSurvey::pull_catch(survey = "NWFSC.Combo"),
                 family = gaussian(link = "identity"),
+                formula = lookup_formula("WCGBTS"),
                 dir_main = getwd()) {
   # Checks
   # This code is NOT vectorized for family. So, ensure that only a single
   # family is passed in the argument.
-  stopifnot(class(family) == "family" | "clean_name" %in% names(family))
+  stopifnot(inherits(family, "family") | "clean_name" %in% names(family))
 
   # Format
   # format the data after setting class to ensure proper column names exist
@@ -59,6 +60,7 @@ run <- function(data = nwfscSurvey::pull_catch(survey = "NWFSC.Combo"),
     .x = directories,
     .y = data_split,
     .f = run_sdmtmb,
-    family = family
+    family = family,
+    formula = formula
   )
 }
