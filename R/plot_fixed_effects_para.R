@@ -39,7 +39,7 @@ plot_fixed_effects_para <- function(data, dir) {
 
   par(mfrow = c(n_plot, 1))
 
-  td <- tidy(data, model = 1)
+  td <- tidy(data, model = 1, silent = TRUE)
   yr_i <- grep("year", td$term, ignore.case = TRUE)
    upr <- est$b_j[yr_i] + 2 * sd$b_j[yr_i]
   lwr <- est$b_j[yr_i] - 2 * sd$b_j[yr_i]
@@ -57,7 +57,7 @@ plot_fixed_effects_para <- function(data, dir) {
      col = "black")
 
   if (n_plot > 1) {
-    td <- tidy(data, model = 2)
+    td <- tidy(data, model = 2, silent = TRUE)
     upr <- est$b_j2[yr_i] + 2 * sd$b_j2[yr_i]
     lwr <- est$b_j2[yr_i] - 2 * sd$b_j2[yr_i]
     yr_i <- grep("year", td$term, ignore.case = TRUE)
