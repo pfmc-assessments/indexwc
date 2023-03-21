@@ -69,6 +69,9 @@ format_data.nwfscSurvey <- function(data, ...) {
       #       make them match the sa4ss glossary
       survey_name = dplyr::case_when(
         survey_name == "Groundfish Slope and Shelf Combination Survey" ~ "WCGBTS",
+        survey_name == "Groundfish Triennial Shelf Survey" ~ "Triennial",
+        survey_name == "AFSC/RACE Slope Survey" ~ "AFSC_Slope",
+        survey_name == "Groundfish Slope Survey" ~ "NWFSC_Slope",
         TRUE ~ "unknown survey"
       ),
       # Catches are needed in mt for stock synthesis
@@ -79,7 +82,8 @@ format_data.nwfscSurvey <- function(data, ...) {
         as.factor(paste(vessel, year, sep = "_")),
         as.is = FALSE
       ) - 1,
-      formula = lookup_formula(survey_name),
+      depth_scaled = scale(depth),
+      depth_scaled_squared = depth_scaled^2,
 	    pass_scaled = pass - mean(range(pass))
     ) %>%
     dplyr::select(
@@ -94,7 +98,8 @@ format_data.nwfscSurvey <- function(data, ...) {
       longitude,
       latitude,
       depth,
-      formula
+      depth_scaled,
+      depth_scaled_squared
     ) %>%
     dplyr::filter(
       # TODO: fix the survey  names
