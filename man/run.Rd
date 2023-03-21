@@ -7,6 +7,7 @@
 run(
   data = nwfscSurvey::pull_catch(survey = "NWFSC.Combo"),
   family = gaussian(link = "identity"),
+  formula = lookup_formula("WCGBTS"),
   dir_main = getwd()
 )
 }
@@ -41,6 +42,12 @@ in the West Coast Groundfish Bottom Trawl Survey.}
 \code{\link[sdmTMB:families]{delta_truncated_nbinom2()}},
 For binomial family options, see 'Binomial families' in the Details
 section below.}
+
+\item{formula}{Model formula. IID random intercepts are possible using
+\pkg{lme4} syntax, e.g., \code{+ (1 | g)} where \code{g} is a column of class
+character or factor representing groups. Penalized splines are possible via
+\pkg{mgcv} with \code{s()}. Optionally a list for delta (hurdle) models.  See
+examples and details below.}
 
 \item{dir_main}{A string specifying the file path to the working directory
 that will be populated with additional directories where the results will
