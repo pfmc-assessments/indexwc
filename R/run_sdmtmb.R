@@ -38,8 +38,7 @@ run_sdmtmb <- function(dir = getwd(),
     years = sort(unique(data$year))
   )
   # TODO: think about vessel_year, might want a different level scaling things
-  #       might not have to give this to grid, might be able to use as.factor()
-  #       in the formula
+  #       might not have to give this to grid
   data$vessel_year <- as.factor(data$vessel_year)
 
   # plot and save the mesh
@@ -60,21 +59,20 @@ run_sdmtmb <- function(dir = getwd(),
   dev.off()
 
   # Run model
-  fit <- sdmTMB::sdmTMB(
-    # TODO: fix the formula so the column list works
-    # formula = data[["formula"]][1],
-    # formula = catch_weight ~ 0 + as.factor(year) + pass_scaled + (1 | vessel_year),
-    formula = catch_weight ~ 0 + as.factor(year) + pass_scaled,
+	fit <- sdmTMB::sdmTMB(
+    formula = formula,
     time = "year",
     offset = log(data$effort),
     data = data,
     mesh = mesh,
     family = family,
     spatial = "on",
-    spatiotemporal = list("iid", "iid"),
+    # spatiotemporal = list("iid", "iid"),
+    spatiotemporal = list("off", "off"),
     anisotropy = TRUE,
     silent = TRUE,
     do_index = FALSE,
+    control = sdmTMBcontrol(newton_loops = 3),
     # Uncomment to get a coast-wide index
     # do_index = TRUE,
     # predict_args = list(newdata = grid, re_form_iid = NA),
@@ -118,28 +116,29 @@ run_sdmtmb <- function(dir = getwd(),
     .id = "area"
   )
 
-    gg_index <- plot_indices(
-      data = index_areas,
-      save_loc = dir_index
+  gg_index <- plot_indices(
+    data = index_areas,
+    save_loc = dir_index
+  )
+  if (any(grepl("wide", index_areas[["area"]]))) {
+    gg_index_coastwide <- plot_indices(
+      data = dplyr::filter(index_areas, grepl("wide", area)),
+      save_loc = dirname(dir_index)
     )
-    if (any(grepl("wide", index_areas[["area"]]))) {
-      gg_index_coastwide <- plot_indices(
-        data = dplyr::filter(index_areas, grepl("wide", area)),
-        save_loc = dirname(dir_index)
-      )
-    }
+  }
 
-    # Add diagnostics
-    # 1) QQ plot
-    # 2) Residuals by year
-    diagnositcs <- get_diagnostics(
-      dir = dir_index,
-      fit = fit,
-      prediction_grid = grid
-    )
+  # Add diagnostics
+  # 1) QQ plot
+  # 2) Residuals by year
+  diagnositcs <- get_diagnostics(
+    dir = dir_index,
+    fit = fit,
+    prediction_grid = grid
+  )
 
-    save(
-      data, mesh, grid, fit, index_areas, loglike, aic, gg_index,
-      file = fs::path(dir_index, "sdmTMB_save.RData")
-    )
+  save(
+    data, mesh, grid, fit, index_areas, loglike, aic, gg_index,
+    file = fs::path(dir_index, "sdmTMB_save.RData")
+  )
+  return(fit)
 }

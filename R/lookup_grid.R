@@ -1,24 +1,35 @@
 lookup_grid <- function(x,
                         years,
                         min_longitude,
+                        mean_depth,
+                        sd_depth,
                         max_depth = Inf,
                         data = california_current_grid) {
   if (missing(min_longitude)) {
     min_longitude <- min(data[["longitude"]])
   }
+  if (missing(mean_depth)) {
+    mean_depth <- mean(data[["depth"]])
+  }
+  if (missing(sd_depth)) {
+    sd_depth <- sd(data[["depth"]])
+  }
   column <- dplyr::case_when(
     grepl("WCGBTS", x) ~ "area_km2_WCGBTS",
     grepl("Triennial", x) ~ "area_km2_Triennial",
-    # TODO: not sure about this one
-    grepl("AFSC Slope", x) ~ "area_km2_Slope98_00"
+    grepl("AFSC_*\\s*Slope", x) ~ "area_km2_Slope98_00",
+    grepl("NWFSC_*\\s*Slope", x) ~ "area_km2_Slope02",
+    .default = as.character(x)
   ) %>%
     dplyr::sym()
 
-  out <- data %>%
-    dplyr::mutate(
-      area_km2 = {{column}},
-      vessel_year = "0"
-    ) %>%
+  out <- dplyr::mutate(
+    .data = data,
+    area_km2 = {{column}},
+    vessel_year = "0",
+    depth_scaled = scale(depth, center = mean_depth, scale = sd_depth),
+    depth_scaled_squared = depth_scaled^2
+  ) %>%
     dplyr::filter(
       area_km2 > 0
     )
@@ -32,7 +43,18 @@ lookup_grid <- function(x,
     c("longitude", "latitude"),
     utm_crs = 32610
   ) %>%
-    dplyr::select(x, y, area_km2, pass_scaled, vessel_year, longitude, latitude, depth)
+    dplyr::select(
+      x,
+      y,
+      area_km2,
+      pass_scaled,
+      vessel_year,
+      longitude,
+      latitude,
+      depth,
+      depth_scaled,
+      depth_scaled_squared
+    )
 
   year_grid <- purrr::map_dfr(
     .x = years,
