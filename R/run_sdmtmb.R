@@ -78,8 +78,6 @@ run_sdmtmb <- function(dir = getwd(),
     # predict_args = list(newdata = grid, re_form_iid = NA),
     # index_args = list(area = grid$area_km2)
   )
-  loglike <- logLik(fit)
-  aic <- AIC(fit)
 
   # There is no way to estimate the index with bias correction in sdmTMB::sdmTMB
   # which is why we have to call [sdmTMB::get_index()] even if predictions are
@@ -130,14 +128,21 @@ run_sdmtmb <- function(dir = getwd(),
   # Add diagnostics
   # 1) QQ plot
   # 2) Residuals by year
-  diagnositcs <- get_diagnostics(
+  diagnostics <- get_diagnostics(
     dir = dir_index,
     fit = fit,
     prediction_grid = grid
   )
 
   save(
-    data, mesh, grid, fit, index_areas, loglike, aic, gg_index,
+    data,
+    diagnostics,
+    dir,
+    mesh,
+    grid,
+    fit,
+    index_areas,
+    gg_index,
     file = fs::path(dir_index, "sdmTMB_save.RData")
   )
   return(fit)
