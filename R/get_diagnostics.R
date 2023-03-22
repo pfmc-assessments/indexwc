@@ -80,10 +80,10 @@ get_diagnostics <- function(dir,
     width = 7,
     plot = gg
   )
-  # plot_fixed_effects_para(
-  #   data = fit,
-  #   dir = dir
-  # )
+  ignore <- plot_pars_fixed(
+    fit = fit,
+    dir = dir
+  )
 
   # # Calculate the predictions based on the grid
   # predictions <- predict(
