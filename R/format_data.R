@@ -1,8 +1,7 @@
 #' Format `data` by standardizing column names and units
 #'
 #'
-#' @param data A data frame containing tow-level information on catch weight
-#'   and effort. Additional columns can be present such as depth.
+#' @template data
 #'
 #' @return A data frame with all lower case column names.
 #' * `year`
@@ -18,12 +17,23 @@
 #' * `x` and `y` are in Universal Transverse Mercator (UTM)
 #' * `depth` (m) with positive entries representing measurements above sea
 #'   level and negative entries representing measurements below sea level
+#' * `depth_scaled` depth (m) scaled using [base::scale()]; so, subtracting the
+#'    mean and dividing by the standard deviation, these values are saved in
+#'    attributes for this column so that you can reference them later
+#' * `depth_scaled_squared` is `depth_scaled^2`
 #'
 #' @author Chantel R. Wetzel and Kelli F. Johnson
 #' @export
 #'
-#' @examples formatted_data <- format_data(data = catch_data)
-#'
+#' @examples
+#' catch_wcgbts_canary <- nwfscSurvey::pull_catch(
+#'   common_name = "canary rockfish",
+#'   years = 2021:2022,
+#'   survey = "NWFSC.Combo"
+#' )
+#' # Must assign the data a class so {indexwc} knows how to format it
+#' class(catch_wcgbts_canary) <- c("nwfscSurvey", class(catch_wcgbts_canary))
+#' formatted_data <- format_data(data = catch_wcgbts_canary)
 format_data <- function(data, ...) {
   UseMethod("format_data", data)
 }
@@ -36,7 +46,7 @@ format_data.default <- function(data, ...) {
   data <- data %>%
     dplyr::rename_with(.fn = tolower)
 
-	return(data)
+  return(data)
 }
 
 #' @export
@@ -51,7 +61,7 @@ format_data.odfw <- function(data, ...) {
   # 1. Ensure numerics are actually numerics
   # 1. GF_OpenDepth should be a factor
   # 1. Create column of presence/absence
-  
+
   stop("Methods to format ODFW data do not exist yet")
 }
 
@@ -84,7 +94,7 @@ format_data.nwfscSurvey <- function(data, ...) {
       ) - 1,
       depth_scaled = scale(depth),
       depth_scaled_squared = depth_scaled^2,
-	    pass_scaled = pass - mean(range(pass))
+      pass_scaled = pass - mean(range(pass))
     ) %>%
     dplyr::select(
       year,
