@@ -12,16 +12,8 @@ run(
 )
 }
 \arguments{
-\item{data}{A data frame with the following columns:
-\itemize{
-\item survey_name
-\item common_name
-\item 
-}
-
-Or a data frame pulled from the NWFSC data warehouse. See the function
-call for the default, which is to pull data for \emph{EVERY} species present
-in the West Coast Groundfish Bottom Trawl Survey.}
+\item{data}{A data frame containing tow-level information on catch weight
+and effort. Additional columns can be present such as depth.}
 
 \item{family}{The family and link. Supports \code{\link[=gaussian]{gaussian()}}, \code{\link[=Gamma]{Gamma()}},
 \code{\link[=binomial]{binomial()}}, \code{\link[=poisson]{poisson()}}, \code{\link[sdmTMB:families]{Beta()}},
