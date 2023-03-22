@@ -28,7 +28,7 @@ Imports:
     pkgload,
     r4ss,
     rmarkdown,
-    sdmTMB,
+    sdmTMB (>= 0.3.0.9001),
     stringr,
     viridis
 Suggests:
