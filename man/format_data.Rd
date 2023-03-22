@@ -26,14 +26,24 @@ A data frame with all lower case column names.
 \item \code{x} and \code{y} are in Universal Transverse Mercator (UTM)
 \item \code{depth} (m) with positive entries representing measurements above sea
 level and negative entries representing measurements below sea level
+\item \code{depth_scaled} depth (m) scaled using \code{\link[base:scale]{base::scale()}}; so, subtracting the
+mean and dividing by the standard deviation, these values are saved in
+attributes for this column so that you can reference them later
+\item \code{depth_scaled_squared} is \code{depth_scaled^2}
 }
 }
 \description{
 Format \code{data} by standardizing column names and units
 }
 \examples{
-formatted_data <- format_data(data = catch_data)
-
+catch_wcgbts_canary <- nwfscSurvey::pull_catch(
+  common_name = "canary rockfish",
+  years = 2021:2022,
+  survey = "NWFSC.Combo"
+)
+# Must assign the data a class so {indexwc} knows how to format it
+class(catch_wcgbts_canary) <- c("nwfscSurvey", class(catch_wcgbts_canary))
+formatted_data <- format_data(data = catch_wcgbts_canary)
 }
 \author{
 Chantel R. Wetzel and Kelli F. Johnson

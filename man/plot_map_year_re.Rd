@@ -41,5 +41,5 @@ for the fit model
 
 }
 \author{
-Chantel Wetzel
+Chantel R. Wetzel
 }
