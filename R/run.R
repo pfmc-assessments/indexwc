@@ -3,13 +3,7 @@
 #' Run {sdmTMB} to estimate indices of abundance for combinations of surveys
 #' and populations present in `data`.
 #'
-#' @param data A data frame with the following columns:
-#'   * survey_name
-#'   * common_name
-#'   * 
-#'   Or a data frame pulled from the NWFSC data warehouse. See the function
-#'   call for the default, which is to pull data for *EVERY* species present
-#'   in the West Coast Groundfish Bottom Trawl Survey.
+#' @template data
 #' @inheritParams sdmTMB::sdmTMB
 #' @param dir_main A string specifying the file path to the working directory
 #'   that will be populated with additional directories where the results will

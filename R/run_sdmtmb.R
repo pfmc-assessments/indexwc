@@ -1,7 +1,7 @@
 #' Run [sdmTMB::sdmTMB]
 #'
 #' @template dir
-#' @param data A data frame.
+#' @template data
 #' @inheritParams sdmTMB::sdmTMB
 #' @param n_knots An integer specifying the number of knots you want in your
 #'   mesh that is created by {INLA}. More knots is not always better.
@@ -59,7 +59,7 @@ run_sdmtmb <- function(dir = getwd(),
   dev.off()
 
   # Run model
-	fit <- sdmTMB::sdmTMB(
+  fit <- sdmTMB::sdmTMB(
     formula = formula,
     time = "year",
     offset = log(data$effort),
@@ -72,58 +72,20 @@ run_sdmtmb <- function(dir = getwd(),
     anisotropy = TRUE,
     silent = TRUE,
     do_index = FALSE,
-    control = sdmTMBcontrol(newton_loops = 3),
+    control = sdmTMB::sdmTMBcontrol(newton_loops = 3),
     # Uncomment to get a coast-wide index
     # do_index = TRUE,
     # predict_args = list(newdata = grid, re_form_iid = NA),
     # index_args = list(area = grid$area_km2)
   )
 
-  # There is no way to estimate the index with bias correction in sdmTMB::sdmTMB
-  # which is why we have to call [sdmTMB::get_index()] even if predictions are
-  # specified in [sdmTMB::sdmTMB()].
-  boundaries <-  list(
-    coastwide = data %>%
-      dplyr::filter(catch_weight > 0) %>%
-      dplyr::pull(latitude) %>%
-      range() %>%
-      rev(),
-    WA = c(southern_BC, southern_WA),
-    OR = c(southern_WA, southern_OR),
-    CA = c(southern_OR, southern_CA)
+  gg_index_areas <- get_index_areas(
+    data = data,
+    fit = fit,
+    prediction_grid = grid,
+    dir = dir_index
   )
-  index_areas <- purrr::map_dfr(
-    # Set up the area-specific grids as a list of data frames
-    .x = purrr::map2(
-      .x = purrr::map(boundaries, 1),
-      .y = purrr::map(boundaries, 2),
-      .f = filter_grid,
-      grid = grid
-    ),
-    # Anonymous function that does both prediction and get_index
-    .f = function(grid, object) {
-      prediction <- predict(object, newdata = grid, return_tmb_object = TRUE)
-      index <- sdmTMB::get_index(
-        obj = prediction,
-        bias_correct = TRUE,
-        area = grid[["area_km2"]]
-      )
-      return(index)
-    },
-    object = fit,
-    .id = "area"
-  )
-
-  gg_index <- plot_indices(
-    data = index_areas,
-    save_loc = dir_index
-  )
-  if (any(grepl("wide", index_areas[["area"]]))) {
-    gg_index_coastwide <- plot_indices(
-      data = dplyr::filter(index_areas, grepl("wide", area)),
-      save_loc = dirname(dir_index)
-    )
-  }
+  index_areas <- gg_index_areas[["data"]]
 
   # Add diagnostics
   # 1) QQ plot
@@ -142,7 +104,7 @@ run_sdmtmb <- function(dir = getwd(),
     grid,
     fit,
     index_areas,
-    gg_index,
+    gg_index_areas,
     file = fs::path(dir_index, "sdmTMB_save.RData")
   )
   return(fit)
