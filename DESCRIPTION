@@ -1,48 +1,47 @@
 Package: indexwc
-Title: Run indices for West Coast Groundfish stock assessments
-Version: 0.1
+Title: Run indices for West Coast Groundfish assessments
+Version: 0.2
 Authors@R: c(
-    person(given = c("Kelli", "F."),
-      family = "Johnson",
-      role = c("aut", "cre"),
-      email = "kelli.johnson@noaa.gov",
-      comment = c(ORCID = "0000-0002-5149-451X")),
-    person(given = c("Chantel", "R."),
-      family = "Wetzel",
-      role = "aut",
-      email = "chantel.wetzel@noaa.gov",
-      comment = c(ORCID = "0000-0002-7573-8240"))
-    )
-Description: Runs indices of abundance for survey data from the NWFSC
-	and fishery-dependent catch-per-unit-effort.
+    person(c("Kelli", "F."), "Johnson", , "kelli.johnson@noaa.gov", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-5149-451X")),
+    person(c("Chantel", "R."), "Wetzel", , "chantel.wetzel@noaa.gov", role = "aut",
+           comment = c(ORCID = "0000-0002-7573-8240"))
+  )
+Description: A system to run and summarize models that estimate indices of
+    abundance for various data sources specific to populations off the
+    U.S.  West Coast. Models can range in complexity from simple linear
+    models to complex spatio-temporal models with lots of random effects
+    and non-linear relationships.
 License: MIT + file LICENSE
+Depends:
+    R (< 4.3),
+    R (>= 4.2)
+Imports:
+    dplyr,
+    fs,
+    ggplot2,
+    INLA,
+    kableExtra,
+    magrittr,
+    methods,
+    nwfscSurvey,
+    pkgload,
+    r4ss,
+    rmarkdown,
+    sdmTMB,
+    stringr,
+    viridis
+Suggests:
+    knitr,
+    nmfspalette,
+    testthat
+Additional_repositories: https://inla.r-inla-download.org/R/testing
+Remotes:
+    github::nmfs-general-modeling-tools/nmfspalette,
+    github::pbs-assess/sdmTMB,
+    github::pfmc-assessments/nwfscSurvey,
+    github::r4ss/r4ss
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
-Depends:
-  R (>= 4.2), R (< 4.3)
-Imports:
-    sdmTMB,
-    r4ss,
-    nwfscSurvey,
-    dplyr,
-    fs,
-    ggplot2,
-    kableExtra,
-    magrittr,
-    methods,
-    pkgload,
-    rmarkdown,
-    viridis,
-    stringr
-Suggests:
-  INLA,
-  knitr,
-  nmfspalette,
-  testthat
-Remotes:
-  github::r4ss/r4ss,
-  github::pbs-assess/sdmTMB,
-  github::pfmc-assessments/nwfscSurvey,
-  github::nmfs-general-modeling-tools/nmfspalette
