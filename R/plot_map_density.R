@@ -8,7 +8,7 @@
 #' @template verbose
 #'
 #'
-#' @author Chantel Wetzel
+#' @author Chantel R. Wetzel
 #' @export
 #' 
 #'
