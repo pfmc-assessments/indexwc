@@ -1,7 +1,7 @@
 #' Calculate indices by areas, e.g., Washington, Oregon, and California
 #'
 #' @template data
-#' @importFrom get_diagnostics
+#' @inheritParams get_diagnostics
 #' @export
 #' @author Kelli F. Johnson
 #' @return

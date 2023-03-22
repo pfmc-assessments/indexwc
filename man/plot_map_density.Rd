@@ -24,5 +24,5 @@ warnings to the console. The default is \code{FALSE}.}
 Plot the predicted biomass density by year.
 }
 \author{
-Chantel Wetzel
+Chantel R. Wetzel
 }

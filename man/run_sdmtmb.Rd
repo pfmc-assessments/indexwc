@@ -15,7 +15,8 @@ run_sdmtmb(
 \arguments{
 \item{dir}{A directory location where results and figures will be saved.}
 
-\item{data}{A data frame.}
+\item{data}{A data frame containing tow-level information on catch weight
+and effort. Additional columns can be present such as depth.}
 
 \item{family}{The family and link. Supports \code{\link[=gaussian]{gaussian()}}, \code{\link[=Gamma]{Gamma()}},
 \code{\link[=binomial]{binomial()}}, \code{\link[=poisson]{poisson()}}, \code{\link[sdmTMB:families]{Beta()}},
