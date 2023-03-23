@@ -67,6 +67,12 @@ format_data.odfw <- function(data, ...) {
 
 #' @export
 format_data.nwfscSurvey <- function(data, ...) {
+  if ("total_catch_wt_kg" %in% colnames(data)) {
+    stop(
+      "Please use nwfscSurvey::pull_catch() not nwfscSurvey::PullCatch.fn() ",
+      "to pull your data."
+    )
+  }
   data <- data %>%
     dplyr::rename_with(tolower) %>%
     dplyr::rename_with(gsub, pattern = "_dd", replace = "") %>%
