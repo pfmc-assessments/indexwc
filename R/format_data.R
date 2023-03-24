@@ -67,7 +67,7 @@ format_data.odfw <- function(data, ...) {
 
 #' @export
 format_data.nwfscSurvey <- function(data, ...) {
-  if ("total_catch_wt_kg" %in% colnames(data)) {
+  if (!"Datetime_utc_iso" %in% colnames(data)) {
     stop(
       "Please use nwfscSurvey::pull_catch() not nwfscSurvey::PullCatch.fn() ",
       "to pull your data."
