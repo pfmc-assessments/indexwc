@@ -121,7 +121,16 @@ format_data.nwfscSurvey <- function(data, ...) {
       # TODO: fix the survey  names
       # 1997, 1999, 2000, and 2001 are the only years that fully sampled the coast
       !(survey_name == "AFSC.Slope" & year <= 1996),
-      !(grepl("Triennial", survey_name) & year == 1977)
+      # 1997 was a smaller survey
+      !(grepl("Triennial", survey_name) & year == 1977),
+      # Truncate Triennial by depth and latitude to spatial extent present in
+      # every year to allow for a continuous time series
+      !(common_name %in% c("petrale sole", "canary rockfish") &
+        depth > 366 & grepl("Triennial", survey_name)
+      ),
+      !(common_name %in% c("petrale sole", "canary rockfish") &
+        latitude < 36.8 & grepl("Triennial", survey_name)
+      ),
     )
   data_utm <- sdmTMB::add_utm_columns(
     data,

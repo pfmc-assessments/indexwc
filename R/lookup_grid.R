@@ -1,18 +1,30 @@
 lookup_grid <- function(x,
                         years,
+                        max_latitude,
+                        min_latitude,
+                        max_longitude,
                         min_longitude,
                         mean_depth,
                         sd_depth,
                         max_depth = Inf,
                         data = california_current_grid) {
+  if (missing(max_latitude)) {
+    max_latitude <- max(data[["latitude"]], na.rm = TRUE)
+  }
+  if (missing(min_latitude)) {
+    min_latitude <- min(data[["latitude"]], na.rm = TRUE)
+  }
+  if (missing(max_longitude)) {
+    max_longitude <- max(data[["longitude"]], na.rm = TRUE)
+  }
   if (missing(min_longitude)) {
-    min_longitude <- min(data[["longitude"]])
+    min_longitude <- min(data[["longitude"]], na.rm = TRUE)
   }
   if (missing(mean_depth)) {
-    mean_depth <- mean(data[["depth"]])
+    mean_depth <- mean(data[["depth"]], na.rm = TRUE)
   }
   if (missing(sd_depth)) {
-    sd_depth <- sd(data[["depth"]])
+    sd_depth <- sd(data[["depth"]], na.rm = TRUE)
   }
   column <- dplyr::case_when(
     grepl("WCGBTS", x) ~ "area_km2_WCGBTS",
@@ -35,8 +47,11 @@ lookup_grid <- function(x,
     )
 
   out_truncated <- out %>%
-    dplyr::filter(longitude > min_longitude)
-
+    dplyr::filter(
+      latitude > min_latitude & latitude < max_latitude,
+      longitude > min_longitude & longitude < max_longitude
+    )
+  stopifnot(NROW(out_truncated) > 0)
   # Transform the coordinates to UTM
   out_utm <- sdmTMB::add_utm_columns(
     out_truncated,

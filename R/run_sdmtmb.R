@@ -28,22 +28,32 @@ run_sdmtmb <- function(dir = getwd(),
   fs::dir_create(c(dir_data, dir_index))
 
   # Create prediction grid
-  minimum_longitude <- data %>%
+  ranges <- data %>%
       dplyr::filter(catch_weight > 0) %>%
-      dplyr::summarize(min = min(longitude)) %>%
-      dplyr::pull(min) - 0.1
+      dplyr::summarize(dplyr::across(
+        dplyr::contains("tude"),
+        .fns = list("max" = ~ max(.) + 0.1, "min" = ~ min(.) - 0.1)
+      ))
+  data_truncated <- data %>%
+    dplyr::filter(
+      latitude > ranges[["latitude_min"]] & latitude < ranges[["latitude_max"]],
+      longitude > ranges[["longitude_min"]] & longitude < ranges[["longitude_max"]]
+    )
   grid <- lookup_grid(
     x = data[["survey_name"]][1],
-    # min_longitude = minimum_longitude,
-    years = sort(unique(data$year))
+    max_latitude = ranges[["latitude_max"]],
+    min_latitude = ranges[["latitude_min"]],
+    max_longitude = ranges[["longitude_max"]],
+    min_longitude = ranges[["longitude_min"]],
+    years = sort(unique(data_truncated$year))
   )
   # TODO: think about vessel_year, might want a different level scaling things
   #       might not have to give this to grid
-  data$vessel_year <- as.factor(data$vessel_year)
+  data_truncated$vessel_year <- as.factor(data_truncated$vessel_year)
 
   # plot and save the mesh
   mesh <- sdmTMB::make_mesh(
-    data = data,
+    data = data_truncated,
     xy_cols = c("x", "y"),
     n_knots = n_knots
   )
@@ -62,8 +72,8 @@ run_sdmtmb <- function(dir = getwd(),
   fit <- sdmTMB::sdmTMB(
     formula = formula,
     time = "year",
-    offset = log(data$effort),
-    data = data,
+    offset = log(data_truncated$effort),
+    data = data_truncated,
     mesh = mesh,
     family = family,
     spatial = "on",
@@ -80,7 +90,7 @@ run_sdmtmb <- function(dir = getwd(),
   )
 
   gg_index_areas <- get_index_areas(
-    data = data,
+    data = data_truncated,
     fit = fit,
     prediction_grid = grid,
     dir = dir_index
@@ -98,6 +108,7 @@ run_sdmtmb <- function(dir = getwd(),
 
   save(
     data,
+    data_truncated,
     diagnostics,
     dir,
     mesh,

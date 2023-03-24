@@ -24,6 +24,18 @@ get_index_areas <- function(data, fit, prediction_grid, dir) {
     OR = c(southern_WA, southern_OR),
     CA = c(southern_OR, southern_CA)
   )
+
+  # Pull out boundaries if they are not present
+  if (NROW(dplyr::filter(data, latitude > southern_WA)) == 0) {
+    boundaries <- boundaries[-which(names(boundaries) == "WA")]
+  }
+  if (NROW(dplyr::filter(data, latitude > southern_WA & latitude < southern_OR)) == 0) {
+    boundaries <- boundaries[-which(names(boundaries) == "OR")]
+  }
+  if (NROW(dplyr::filter(data, latitude < southern_OR)) == 0) {
+    boundaries <- boundaries[-which(names(boundaries) == "CA")]
+  }
+
   index_areas <- purrr::map_dfr(
     # Set up the area-specific prediction_grids as a list of data frames
     .x = purrr::map2(
