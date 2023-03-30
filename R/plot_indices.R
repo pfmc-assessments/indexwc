@@ -64,7 +64,8 @@ plot_indices <- function(data,
     ) +
     ggplot2::scale_colour_viridis_d() +
     ggplot2::xlab("Year") +
-    ggplot2::ylab("Index (mt)")
+    ggplot2::ylab("Index (mt)") +
+    ggplot2::expand_limits(y = 0)
 
   ggplot2::ggsave(
     plot = gg,
