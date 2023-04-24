@@ -1,7 +1,13 @@
 #' Format `data` by standardizing column names and units
 #'
+#' Input data to `run(data = )` must be formatted in a certain way to allow
+#' calculations such as the creation of the mesh to work. Therefore, all input
+#' data frames must be formatted prior to using [run()]. This function will
+#' work detect what kind of data you have and then format it appropriately to
+#' work with all downstream functions within this package.
 #'
-#' @template data
+#' @param data A data frame containing tow-level information on catch weight
+#'   and effort. Additional columns can be present such as depth.
 #'
 #' @return A data frame with all lower case column names.
 #' * `year`
@@ -12,6 +18,7 @@
 #' * `effort` ($km^2$)
 #' * `pass_scaled` after subtracting the mean
 #' * `vessel_year` pasted together, made numeric, and subtract 1
+#' * `fyear` the factor version of `year` to match notation used in {sdmTMB}
 #' * `longitude` (decimal degrees)
 #' * `latitude` (decimal degrees)
 #' * `x` and `y` are in Universal Transverse Mercator (UTM)
@@ -98,12 +105,14 @@ format_data.nwfscSurvey <- function(data, ...) {
         as.factor(paste(vessel, year, sep = "_")),
         as.is = FALSE
       ) - 1,
+      fyear = as.factor(year),
       depth_scaled = scale(depth),
       depth_scaled_squared = depth_scaled^2,
       pass_scaled = pass - mean(range(pass))
     ) %>%
     dplyr::select(
       year,
+      fyear,
       survey_name,
       common_name,
       catch_numbers,
@@ -132,11 +141,11 @@ format_data.nwfscSurvey <- function(data, ...) {
         latitude < 36.8 & grepl("Triennial", survey_name)
       ),
     )
-  data_utm <- sdmTMB::add_utm_columns(
+  data_utm <- suppressWarnings(sdmTMB::add_utm_columns(
     data,
-    utm_crs = 32610,
+    utm_crs = utm_zone_10,
     utm_names = c("x", "y")
-  ) %>%
+  )) %>%
     dplyr::rename_with(tolower) %>%
     tibble::as_tibble()
 

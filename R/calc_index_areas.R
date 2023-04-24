@@ -1,7 +1,7 @@
 #' Calculate indices by areas, e.g., Washington, Oregon, and California
 #'
-#' @template data
-#' @inheritParams get_diagnostics
+#' @inheritParams format_data
+#' @inheritParams diagnose
 #' @export
 #' @author Kelli F. Johnson
 #' @return
@@ -10,7 +10,10 @@
 #' that users can change parts of the figure and re-save it if they wish and
 #' the calculated indices will be available in `*[["data"]]` where you should
 #' replace `*` with your saved object name.
-get_index_areas <- function(data, fit, prediction_grid, dir) {
+calc_index_areas <- function(data,
+                             fit,
+                             prediction_grid,
+                             dir) {
 # There is no way to estimate the index with bias correction in sdmTMB::sdmTMB
   # which is why we have to call [sdmTMB::get_index()] even if predictions are
   # specified in [sdmTMB::sdmTMB()].
@@ -29,7 +32,7 @@ get_index_areas <- function(data, fit, prediction_grid, dir) {
   if (NROW(dplyr::filter(data, latitude > southern_WA)) == 0) {
     boundaries <- boundaries[-which(names(boundaries) == "WA")]
   }
-  if (NROW(dplyr::filter(data, latitude > southern_WA & latitude < southern_OR)) == 0) {
+  if (NROW(dplyr::filter(data, latitude < southern_WA & latitude > southern_OR)) == 0) {
     boundaries <- boundaries[-which(names(boundaries) == "OR")]
   }
   if (NROW(dplyr::filter(data, latitude < southern_OR)) == 0) {

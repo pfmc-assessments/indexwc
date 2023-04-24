@@ -26,12 +26,12 @@ california_current_grid <- california_current_grid %>%
     )
   )
 
-  california_current_grid <- sdmTMB::add_utm_columns(
+  california_current_grid <- suppressWarnings(sdmTMB::add_utm_columns(
     california_current_grid,
-    utm_crs = 32610,
+    utm_crs = utm_zone_10,
     ll_names = c("Lon", "Lat"),
     utm_names = c("x", "y")
-  ) %>%
+  )) %>%
   dplyr::rename(
     longitude = "Lon",
     latitude = "Lat"
