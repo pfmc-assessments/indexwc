@@ -4,12 +4,7 @@
 \alias{run}
 \title{Estimate indices of abundance for combinations of surveys and populations}
 \usage{
-run(
-  data = nwfscSurvey::pull_catch(survey = "NWFSC.Combo"),
-  family = gaussian(link = "identity"),
-  formula = lookup_formula("WCGBTS"),
-  dir_main = getwd()
-)
+run(data, family, formula, dir_main = getwd(), n_knots = 500, ...)
 }
 \arguments{
 \item{data}{A data frame containing tow-level information on catch weight
@@ -41,12 +36,54 @@ character or factor representing groups. Penalized splines are possible via
 \pkg{mgcv} with \code{s()}. Optionally a list for delta (hurdle) models.  See
 examples and details below.}
 
-\item{dir_main}{A string specifying the file path to the working directory
-that will be populated with additional directories where the results will
-be saved.}
+\item{dir_main}{A string specifying a path where results will be saved. The
+default is your current working directory.}
+
+\item{n_knots}{An integer specifying the number of knots you want in your
+mesh that is created by {INLA}. More knots is not always better. The
+default is to use 500 knots. Future work will look at specifying a
+threshold distance between points rather than number of knots.}
+
+\item{...}{Optional arguments passed to \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}} can be passed
+using viable arguments of \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}}. Note that users
+cannot pass \code{anisotropy} or \code{sdmTMBcontrol} because both of these are set
+in \code{\link[=run_sdmtmb]{run_sdmtmb()}}, where \code{anisotropy = TRUE} because the coastline
+of the western portion of the U.S.A. is not perpendicular to the U.S.A.
+and three newton loops are specified in the control parameters.}
+}
+\value{
+A \code{list} of {sdmTMB} \code{list}s, where each element in the list is the returned
+object from \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}} when fitting data to a model and of the class
+\code{sdmTMB}. The list of lists is because \code{\link[purrr:map2]{purrr::map2()}} is used to split the
+input data by species and survey/source in case your data contain
+combinations of these two categories in a long data frame.
 }
 \description{
 Run {sdmTMB} to estimate indices of abundance for combinations of surveys
-and populations present in \code{data}.
+and populations present in \code{data}. The same \code{formula} and \code{family} will be
+used for all data sets present in data so you may wish to run this function
+iteratively across different families or using {purrr}.
+}
+\examples{
+\dontrun{
+# Get some data
+data <- nwfscSurvey::pull_catch(
+  common_name = "sablefish",
+  survey = "NWFSC.Combo"
+)
+# Run a single species
+results <- run(
+  data = data,
+  family = sdmTMB::tweedie(),
+  formula = lookup_formula("WCGBTS")
+)
+# Run without the spatiotemporal component by passing arguments using ...
+results <- run(
+  data = data,
+  family = sdmTMB::tweedie(),
+  formula = lookup_formula("WCGBTS"),
+  spatiotemporal = "off"
+)
+}
 }
 \concept{run}

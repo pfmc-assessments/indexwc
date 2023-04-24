@@ -21,6 +21,7 @@ A data frame with all lower case column names.
 \item \code{effort} ($km^2$)
 \item \code{pass_scaled} after subtracting the mean
 \item \code{vessel_year} pasted together, made numeric, and subtract 1
+\item \code{fyear} the factor version of \code{year} to match notation used in {sdmTMB}
 \item \code{longitude} (decimal degrees)
 \item \code{latitude} (decimal degrees)
 \item \code{x} and \code{y} are in Universal Transverse Mercator (UTM)
@@ -33,7 +34,11 @@ attributes for this column so that you can reference them later
 }
 }
 \description{
-Format \code{data} by standardizing column names and units
+Input data to \code{run(data = )} must be formatted in a certain way to allow
+calculations such as the creation of the mesh to work. Therefore, all input
+data frames must be formatted prior to using \code{\link[=run]{run()}}. This function will
+work detect what kind of data you have and then format it appropriately to
+work with all downstream functions within this package.
 }
 \examples{
 catch_wcgbts_canary <- nwfscSurvey::pull_catch(

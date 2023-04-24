@@ -42,12 +42,12 @@ plot_pars_fixed <- function(fit, dir) {
     ggplot2::xlab("Year") +
     ggplot2::ylab("Fixed effects") +
     ggplot2::theme_bw()
-  ggplot2::ggsave(
+  suppressMessages(ggplot2::ggsave(
     filename = file.path(dir, "parameters_fixed_effects.png"),
     plot = gg_out,
     height = 10,
     width = 10,
     units = "in"
-  )
+  ))
   return(gg_out)
 }

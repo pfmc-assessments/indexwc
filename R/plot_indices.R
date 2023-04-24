@@ -67,14 +67,14 @@ plot_indices <- function(data,
     ggplot2::ylab("Index (mt)") +
     ggplot2::expand_limits(y = 0)
 
-  ggplot2::ggsave(
+  suppressMessages(ggplot2::ggsave(
     plot = gg,
     filename = fs::path(save_loc, file_name),
     width = 10,
     height = 7,
     dpi = 300,
     pointsize = 12
-  )
+  ))
 
   return(gg)
 }

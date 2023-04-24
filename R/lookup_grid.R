@@ -49,15 +49,16 @@ lookup_grid <- function(x,
   out_truncated <- out %>%
     dplyr::filter(
       latitude > min_latitude & latitude < max_latitude,
-      longitude > min_longitude & longitude < max_longitude
+      longitude > min_longitude & longitude < max_longitude,
+      depth < max_depth
     )
   stopifnot(NROW(out_truncated) > 0)
   # Transform the coordinates to UTM
-  out_utm <- sdmTMB::add_utm_columns(
+  out_utm <- suppressWarnings(sdmTMB::add_utm_columns(
     out_truncated,
     c("longitude", "latitude"),
-    utm_crs = 32610
-  ) %>%
+    utm_crs = utm_zone_10
+  )) %>%
     dplyr::select(
       x,
       y,
@@ -78,7 +79,10 @@ lookup_grid <- function(x,
       data
     },
     data = out_utm
-  )
+  ) %>%
+    dplyr::mutate(
+      fyear = as.factor(year)
+    )
 
   return(year_grid)
 }

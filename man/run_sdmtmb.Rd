@@ -2,18 +2,13 @@
 % Please edit documentation in R/run_sdmtmb.R
 \name{run_sdmtmb}
 \alias{run_sdmtmb}
-\title{Run \link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB}}
+\title{Run \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}}}
 \usage{
-run_sdmtmb(
-  dir = getwd(),
-  data,
-  family = sdmTMB::delta_gamma(),
-  formula,
-  n_knots = 500
-)
+run_sdmtmb(dir_main = getwd(), data, family, formula, n_knots = 500, ...)
 }
 \arguments{
-\item{dir}{A directory location where results and figures will be saved.}
+\item{dir_main}{A string specifying a path where results will be saved. The
+default is your current working directory.}
 
 \item{data}{A data frame containing tow-level information on catch weight
 and effort. Additional columns can be present such as depth.}
@@ -45,14 +40,23 @@ character or factor representing groups. Penalized splines are possible via
 examples and details below.}
 
 \item{n_knots}{An integer specifying the number of knots you want in your
-mesh that is created by {INLA}. More knots is not always better.}
+mesh that is created by {INLA}. More knots is not always better. The
+default is to use 500 knots. Future work will look at specifying a
+threshold distance between points rather than number of knots.}
+
+\item{...}{Optional arguments passed to \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}} can be passed
+using viable arguments of \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}}. Note that users
+cannot pass \code{anisotropy} or \code{sdmTMBcontrol} because both of these are set
+in \code{\link[=run_sdmtmb]{run_sdmtmb()}}, where \code{anisotropy = TRUE} because the coastline
+of the western portion of the U.S.A. is not perpendicular to the U.S.A.
+and three newton loops are specified in the control parameters.}
 }
 \value{
-Nothing is currently returned from \code{run_sdmtmb} but the workspace is saved
-to the disk as \code{sdmTMB_save.RData}.
+An object (`list``) of class sdmTMB. This object is what is returned by
+\code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}} when fitting data to the model.
 }
 \description{
-Run \link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB}
+Run \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}}
 }
 \author{
 Chantel R. Wetzel
