@@ -1,5 +1,5 @@
 Package: indexwc
-Title: Run indices for West Coast Groundfish assessments
+Title: Run indices for U.S. West Coast groundfish assessments
 Version: 0.2
 Authors@R: c(
     person(c("Kelli", "F."), "Johnson", , "kelli.johnson@noaa.gov", role = c("aut", "cre"),
