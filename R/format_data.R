@@ -42,6 +42,12 @@
 #' class(catch_wcgbts_canary) <- c("nwfscSurvey", class(catch_wcgbts_canary))
 #' formatted_data <- format_data(data = catch_wcgbts_canary)
 format_data <- function(data, ...) {
+  if (all(
+    c("Latitude_dd", "cpue_kg_per_ha_der", "Datetime_utc_iso") %in%
+    colnames(data)
+  )) {
+    class(data) <- c("nwfscSurvey", class(data))
+  }
   UseMethod("format_data", data)
 }
 
@@ -101,10 +107,10 @@ format_data.nwfscSurvey <- function(data, ...) {
       catch_weight = total_catch_wt_kg * 0.001,
       effort = area_swept_ha_der * 0.01,
       depth = depth_m * -1,
-      vessel_year = as.numeric(
+      vessel_year = as.factor(as.numeric(
         as.factor(paste(vessel, year, sep = "_")),
         as.is = FALSE
-      ) - 1,
+      ) - 1),
       fyear = as.factor(year),
       depth_scaled = scale(depth),
       depth_scaled_squared = depth_scaled^2,

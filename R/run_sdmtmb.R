@@ -23,12 +23,10 @@ run_sdmtmb <- function(dir_main = getwd(),
   dir_index <- fs::path(dir_main, "index")
   fs::dir_create(c(dir_data, dir_index))
   save(data, file = file.path(dir_data, "data.rdata"))
-  if (inherits(formula, "character")) {
-    if (length(formula) == 3 && formula[1] == "~") {
-      formula <- paste(formula[2], formula[1], formula[3])
-    }
-    formula <- as.formula(paste(formula, collapse = ""))
-  }
+  formula <- format_formula(formula)
+  cli::cli_inform(c(
+    "*" = "Running sdmTMB for {data[1, 'common_name']}"
+  ))
 
   # Create prediction grid
   ranges <- data %>%
@@ -46,7 +44,9 @@ run_sdmtmb <- function(dir_main = getwd(),
       latitude > ranges[["latitude_min"]] & latitude < ranges[["latitude_max"]],
       longitude > ranges[["longitude_min"]] & longitude < ranges[["longitude_max"]],
       depth > ranges[["depth_max"]]
-    )
+    ) %>%
+    droplevels()
+
   grid <- lookup_grid(
     x = data[["survey_name"]][1],
     max_latitude = ranges[["latitude_max"]],
@@ -56,9 +56,6 @@ run_sdmtmb <- function(dir_main = getwd(),
     max_depth = abs(ranges[["depth_max"]]),
     years = sort(unique(data_truncated$year))
   )
-  # TODO: think about vessel_year, might want a different level scaling things
-  #       might not have to give this to grid
-  data_truncated$vessel_year <- as.factor(data_truncated$vessel_year)
 
   # plot and save the mesh
   mesh <- sdmTMB::make_mesh(
@@ -66,16 +63,7 @@ run_sdmtmb <- function(dir_main = getwd(),
     xy_cols = c("x", "y"),
     n_knots = n_knots
   )
-  grDevices::png(
-    filename = fs::path(dir_data, "mesh.png"),
-    width = 7,
-    height = 7,
-    units = "in",
-    res = 300,
-    pointsize = 12
-  )
-  plot(mesh)
-  dev.off()
+  plot_mesh(mesh, file_name = fs::path(dir_data, "mesh.png"))
 
   # Run model
   fit <- sdmTMB::sdmTMB(
@@ -86,23 +74,27 @@ run_sdmtmb <- function(dir_main = getwd(),
     mesh = mesh,
     family = family,
     control = sdmTMB::sdmTMBcontrol(newton_loops = 3),
+    share_range = FALSE,
     ...
   )
-  if (any(grepl("depth_scaled", as.character(formula)))) {
-    gg_depth <- cowplot::plot_grid(
-      nrow = 2,
-      visreg_delta(fit, xvar = "depth_scaled", model = 1, gg = TRUE),
-      visreg_delta(fit, xvar = "depth_scaled", model = 2, gg = TRUE)
-    )
-    cowplot::save_plot(
-      filename = file.path(dir_index, "depth_scaled.png"),
-      plot = gg_depth
-    )
-    dev.off()
-  }
   # Refit the model if the hessian is not positive definite
   if (!fit[["pos_def_hessian"]]) {
     fit <- sdmTMB::run_extra_optimization(fit)
+  }
+  if (any(grepl("depth_scaled", as.character(formula)))) {
+    gg_depth <- suppressMessages(purrr::map(
+      .x = which(is_depth_in_formula(formula, family[["delta"]])),
+      .f = ~ visreg_delta(fit, xvar = "depth_scaled", model = .x, gg = TRUE)
+    ))
+    cowplot::save_plot(
+      filename = file.path(dir_index, "depth_scaled.png"),
+      plot = cowplot::plot_grid(
+        plotlist = gg_depth,
+        nrow = sum(is_depth_in_formula(formula, family[["delta"]])),
+        ncol = 1
+      )
+    )
+    dev.off()
   }
   gg_index_areas <- calc_index_areas(
     data = data_truncated,
@@ -111,7 +103,11 @@ run_sdmtmb <- function(dir_main = getwd(),
     dir = dir_index
   )
   index_areas <- gg_index_areas[["data"]]
-
+  write.csv(
+    index_areas,
+    file = file.path(dir_index, "est_by_area.csv"),
+    row.names = FALSE
+  )
   # Add diagnostics
   # 1) QQ plot
   # 2) Residuals by year

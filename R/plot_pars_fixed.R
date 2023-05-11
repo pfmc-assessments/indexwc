@@ -10,7 +10,7 @@ plot_pars_fixed <- function(fit, dir) {
     out <- tidy(fit, model = model_number, silent = TRUE) %>%
       dplyr::mutate(
         model = as.factor(model_number),
-        term = gsub("as.factor\\([a-zA-Z_]+\\)", "", term),
+        term = gsub("fyear", "", term),
         lower_ci = estimate - 2 * std.error,
         upper_ci = estimate + 2 * std.error,
       ) %>%

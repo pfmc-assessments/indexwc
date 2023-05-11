@@ -56,24 +56,18 @@ run <- function(data,
                 ...) {
   # Checks
   stopifnot(inherits(family, "family"))
-
-  # Format
-  # format the data to ensure proper column names exist
-  # TODO:
-  # * Require that input data have the appropriate class set prior
-  #   to running this function or use format_data() to set the class
-  if (
-    all(c("cpue_kg_km2", "Pass") %in% colnames(data)) &&
-    !inherits(data, "nwfscSurvey")
-  ) {
-    class(data) <- c("nwfscSurvey", class(data))
-  }
-  data_formatted <- format_data(data)
+  stopifnot(all(
+    c(
+      "year", "fyear", "survey_name", "common_name",
+      "catch_weight", "effort", "x", "y"
+    ) %in%
+    colnames(data)
+  ))
 
   # Objects
-  data_formatted_grouped <- data_formatted %>%
+  data_grouped <- data %>%
     dplyr::group_by(survey_name, common_name)
-  combinations <- data_formatted_grouped %>%
+  combinations <- data_grouped %>%
     dplyr::count() %>%
     dplyr::mutate(
       common_without = format_common_name(common_name),
@@ -85,7 +79,7 @@ run <- function(data,
     combinations[["survey_without"]],
     format_family(family)
   )
-  data_split <- data_formatted_grouped %>%
+  data_split <- data_grouped %>%
     dplyr::group_split()
 
   # Run
