@@ -14,7 +14,7 @@ calc_index_areas <- function(data,
                              fit,
                              prediction_grid,
                              dir) {
-# There is no way to estimate the index with bias correction in sdmTMB::sdmTMB
+  # There is no way project the index with bias correction in sdmTMB::sdmTMB
   # which is why we have to call [sdmTMB::get_index()] even if predictions are
   # specified in [sdmTMB::sdmTMB()].
   boundaries <-  list(
