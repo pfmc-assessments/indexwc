@@ -38,12 +38,19 @@ calc_index_areas <- function(data,
   if (NROW(dplyr::filter(data, latitude < southern_OR)) == 0) {
     boundaries <- boundaries[-which(names(boundaries) == "CA")]
   }
-
+  # Shrink state-specific border boundaries if no positive tows
+  if_p <- function(x, y, .f) {
+    ifelse(
+      test = eval(parse(text = paste("x", .f, "y"))),
+      yes = y,
+      no = x
+    )
+  }
   index_areas <- purrr::map_dfr(
     # Set up the area-specific prediction_grids as a list of data frames
     .x = purrr::map2(
-      .x = purrr::map(boundaries, 1),
-      .y = purrr::map(boundaries, 2),
+      .x = if_p(purrr::map(boundaries, 1), boundaries[["coastwide"]][1], ">"),
+      .y = if_p(purrr::map(boundaries, 2), boundaries[["coastwide"]][2], "<"),
       .f = filter_grid,
       grid = prediction_grid
     ),
