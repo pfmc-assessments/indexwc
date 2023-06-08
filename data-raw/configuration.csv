@@ -1,6 +1,6 @@
 species,fxn,source,family,formula,min_depth,max_depth,min_latitude,max_latitude,min_year,max_year,anisotropy
 "petrale sole","nwfscSurvey::pull_catch(common_name = species,survey=source)","NWFSC.Combo",sdmTMB::delta_lognormal(),"catch_weight ~ 0 + fyear + pass_scaled",-55,-675,-Inf,Inf,-Inf,Inf,TRUE
-"petrale sole","nwfscSurvey::pull_catch(common_name = species,survey=source)","Triennial",sdmTMB::delta_lognormal(),"catch_weight ~ 0 + fyear + s(depth_scaled)",-55,-366,37,Inf,-Inf,Inf,TRUE
+"petrale sole","nwfscSurvey::pull_catch(common_name = species,survey=source)","Triennial",sdmTMB::delta_lognormal(),"catch_weight ~ 0 + fyear",-55,-366,37,Inf,-Inf,Inf,TRUE
 "canary rockfish","nwfscSurvey::pull_catch(common_name = species,survey=source)","NWFSC.Combo",sdmTMB::delta_lognormal,"catch_weight ~ 0 + fyear + pass_scaled",-55,-275,-Inf,Inf,-Inf,Inf,FALSE
 "canary rockfish","nwfscSurvey::pull_catch(common_name = species,survey=source)","Triennial",sdmTMB::delta_lognormal_mix(),"catch_weight ~ 0 + fyear",-55,-366,37,Inf,-Inf,Inf,FALSE
 "rex sole","nwfscSurvey::pull_catch(common_name = species,survey=source)","NWFSC.Combo",sdmTMB::delta_gamma(),"catch_weight ~ 0 + fyear + pass_scaled",-55,-1300,-Inf,Inf,-Inf,Inf,TRUE
