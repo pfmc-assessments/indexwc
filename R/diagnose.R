@@ -65,27 +65,30 @@ diagnose <- function(dir,
   # * calculate these by model component 1 or 1:2
   # * save by model component
   fit[["data"]][["residuals"]] <- stats::residuals(fit, model = 1)
-  if (length(fit[["formula"]]) == 2) {
+  if (length(fit[["formula"]]) == 2 &&
+      !grepl("mix", fit$family$clean_name)) {
     fit[["data"]][["residuals2"]] <- stats::residuals(fit, model = 2)
   }
 
-  plot_qq(
-    data = fit,
-    dir = dir
-  )
+  if (!grepl("mix", fit$family$clean_name)) {
+    plot_qq(
+      data = fit,
+      dir = dir
+    )
 
-  ignore <- purrr::map(
-    seq(length(fit[["formula"]])),
-    .f = function(x, y, f_dir) {
-      y[["data"]][["residuals"]] <- stats::residuals(y, model = x)
-      map_residuals(
-        y,
-        save_prefix = file.path(f_dir, paste0("residuals_", x, "_"))
-      )
-    },
-    y = fit,
-    f_dir = dir
-  )
+    ignore <- purrr::map(
+      seq(length(fit[["formula"]])),
+      .f = function(x, y, f_dir) {
+        y[["data"]][["residuals"]] <- stats::residuals(y, model = x)
+        map_residuals(
+          y,
+          save_prefix = file.path(f_dir, paste0("residuals_", x, "_"))
+        )
+      },
+      y = fit,
+      f_dir = dir
+    )
+  }
 
   gg <- sdmTMB::plot_anisotropy(
     object = fit
