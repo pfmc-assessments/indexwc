@@ -30,7 +30,10 @@ diagnose <- function(dir,
   run_diagnostics$loglike <- logLik(fit)
   run_diagnostics$aic <- AIC(fit)
   write.table(
-    rbind(c("AIC", run_diagnostics$aic), c("NLL", run_diagnostics$loglike)),
+    rbind(
+      c("AIC", run_diagnostics$aic),
+      c("NLL", -1 * run_diagnostics$loglike)
+    ),
     file = file.path(dir, "aic_nll.txt"),
     row.names = FALSE, col.names = FALSE
   )
