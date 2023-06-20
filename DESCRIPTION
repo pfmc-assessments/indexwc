@@ -9,7 +9,7 @@ Authors@R: c(
   )
 Description: A system to run and summarize models that estimate indices of
     abundance for various data sources specific to populations off the
-    U.S.  West Coast. Models can range in complexity from simple linear
+    U.S. West Coast. Models can range in complexity from simple linear
     models to complex spatio-temporal models with lots of random effects
     and non-linear relationships.
 License: MIT + file LICENSE
@@ -21,12 +21,9 @@ Imports:
     fs,
     ggplot2,
     INLA,
-    kableExtra,
     magrittr,
     methods,
     nwfscSurvey,
-    pkgload,
-    r4ss,
     raster,
     rmarkdown,
     sdmTMB (>= 0.3.0.9001),
