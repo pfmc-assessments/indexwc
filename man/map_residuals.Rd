@@ -2,17 +2,23 @@
 % Please edit documentation in R/map_residuals.R
 \name{map_residuals}
 \alias{map_residuals}
-\title{Plot the residuals from a model fit by \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}}}
+\title{Plot the data from a model fit by \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}}}
 \usage{
 map_residuals(
   data,
   n_row = 1,
   n_col = 2,
-  save_prefix = file.path(getwd(), "residuals_")
+  save_prefix = file.path(getwd(), "data_")
 )
 }
 \arguments{
-\item{data}{A list returned from \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}}.}
+\item{data}{A data frame with at least the following three columns:
+\itemize{
+\item \code{x},
+\item \code{y}, and
+\item \code{data},
+where the data column is the result of \code{\link[stats:residuals]{stats::residuals()}}.
+}}
 
 \item{n_row, n_col}{Integers specifying the number of rows and columns for
 the faceted figures. The default is one row and two columns.}
@@ -25,7 +31,7 @@ in the default is present to provide an example for users who want to
 change the path to something other than their current directory.}
 }
 \description{
-Plot the residuals from a model fit by \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}}
+Plot the data from a model fit by \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}}
 }
 \author{
 Chantel R. Wetzel

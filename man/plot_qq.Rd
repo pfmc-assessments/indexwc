@@ -2,17 +2,35 @@
 % Please edit documentation in R/plot_qq.R
 \name{plot_qq}
 \alias{plot_qq}
-\title{Plot the quantile-quantile for \code{fit} with a 1:1 line}
+\title{Quantile-Quantile plot of an \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}} object}
 \usage{
-plot_qq(data, dir)
+plot_qq(fit, file_name = "qq.png")
 }
 \arguments{
-\item{data}{A list created by \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}}.}
+\item{fit}{A fitted model returned from \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}}.}
 
-\item{dir}{A directory location where results and figures will be saved.}
+\item{file_name}{A file name that will be saved in your current working
+directory unless a full path or a path relative to your working directory
+is given. The default is to save it in the current working directory as
+\code{qq.png}. No file will be created if \code{file_name = NULL}.}
+}
+\value{
+A \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}} object is invisibly returned and a file is saved to the
+disk if a name is passed to \code{file_name}.
 }
 \description{
-Plot the quantile-quantile for \code{fit} with a 1:1 line
+\code{plot_qq()} returns and/or saves a \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}} version of
+\code{\link[stats:qqnorm]{stats::qqnorm()}} for an \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}} object. A set of points will
+exist for each model component, where delta models have presence/absence and
+rate components, to facilitate assessing the total model fit. A legend is
+placed on the figure if there is more than one model component.
+}
+\seealso{
+\itemize{
+\item \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}}
+\item \code{\link[stats:qqnorm]{stats::qqnorm()}}
+\item \code{\link[stats:qqnorm]{stats::qqline()}}
+}
 }
 \author{
 Chantel R. Wetzel

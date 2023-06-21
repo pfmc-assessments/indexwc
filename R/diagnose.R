@@ -22,8 +22,10 @@
 diagnose <- function(dir,
                      fit,
                      prediction_grid) {
+  # Print out a list of check marks for good model, x's for bad model
   sdmTMB::sanity(fit)
 
+  # To do: just save stuff to disk, don't make a list
   run_diagnostics <- list()
   run_diagnostics$model <- fit$family$clean_name
   run_diagnostics$formula <- fit$formula[[1]]
@@ -63,10 +65,6 @@ diagnose <- function(dir,
     file = file.path(dir, "run_diagnostics_and_estimates.rdata")
   )
 
-  # Calculate the residuals
-  # TODO
-  # * calculate these by model component 1 or 1:2
-  # * save by model component
   fit[["data"]][["residuals"]] <- stats::residuals(fit, model = 1)
   if (length(fit[["formula"]]) == 2 &&
       !grepl("mix", fit$family$clean_name)) {
@@ -75,20 +73,22 @@ diagnose <- function(dir,
 
   if (!grepl("mix", fit$family$clean_name)) {
     plot_qq(
-      data = fit,
-      dir = dir
+      fit = fit,
+      file_name = file.path(dir, "qq.png")
     )
 
     ignore <- purrr::map(
-      seq(length(fit[["formula"]])),
+      seq_along(fit[["formula"]]),
       .f = function(x, y, f_dir) {
-        y[["data"]][["residuals"]] <- stats::residuals(y, model = x)
+        y[["residuals"]] <- y[[
+          paste0("residuals", ifelse(x == 1, "", x))
+        ]]
         map_residuals(
           y,
           save_prefix = file.path(f_dir, paste0("residuals_", x, "_"))
         )
       },
-      y = fit,
+      y = fit[["data"]],
       f_dir = dir
     )
   }

@@ -1,6 +1,10 @@
-#' Plot the residuals from a model fit by [sdmTMB::sdmTMB()]
+#' Plot the data from a model fit by [sdmTMB::sdmTMB()]
 #'
-#' @param data A list returned from [sdmTMB::sdmTMB()].
+#' @param data A data frame with at least the following three columns:
+#'   * `x`,
+#'   * `y`, and
+#'   * `data`,
+#'   where the data column is the result of [stats::residuals()].
 #' @inheritParams map_density
 #'
 #' @author Chantel R. Wetzel
@@ -9,16 +13,15 @@
 map_residuals <- function(data,
                           n_row = 1,
                           n_col = 2,
-                          save_prefix = file.path(getwd(), "residuals_")) {
+                          save_prefix = file.path(getwd(), "data_")) {
 
-  residuals <- data[["data"]]
-  # data_extent <- raster::extent(residuals[, c("x", "y")])
+  # data_extent <- raster::extent(data[, c("x", "y")])
   # data_raster <- raster::raster(data_extent,
   #   ncol = floor((slot(data_extent, "xmax") - slot(data_extent, "xmin")) / 2),
   #   nrow = floor((slot(data_extent, "ymax") - slot(data_extent, "ymin")) / 2)
   # )
   # proj4string(data_raster) <- CRS(paste("+proj=utm +zone=10 ellps=WGS84"))
-  # data_grouped <- residuals %>%
+  # data_grouped <- data %>%
   #   dplyr::group_by(year)
   # split_names <- unlist(dplyr::group_keys(data_grouped))
   # x <- purrr::map(
@@ -37,7 +40,7 @@ map_residuals <- function(data,
 
   gg <- map_base() +
     ggplot2::geom_point(
-      data = residuals,
+      data = data,
       ggplot2::aes(x * 1000, y * 1000, colour = residuals, fill = residuals),
       pch = 15,
       alpha = 0.5
