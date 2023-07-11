@@ -7,7 +7,7 @@ plot_mesh <- function(mesh, file_name) {
     res = 300,
     pointsize = 12
   )
-  on.exit(dev.off())
+  on.exit(dev.off(), add = TRUE, after = FALSE)
   plot(mesh)
   return(invisible(NULL))
 }
