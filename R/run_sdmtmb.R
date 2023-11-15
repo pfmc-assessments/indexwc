@@ -1,8 +1,22 @@
 #' Run [sdmTMB::sdmTMB()]
 #'
-#' @inheritParams run
+#' @param dir_main A string specifying a path where results will be saved. The
+#'   default is your current working directory.
+#' @inheritParams format_data
+#' @inheritParams sdmTMB::sdmTMB
+#' @param n_knots An integer specifying the number of knots you want in your
+#'   mesh that is created by {INLA}. More knots is not always better. The
+#'   default is to use 500 knots. Future work will look at specifying a
+#'   threshold distance between points rather than number of knots.
+#' @param ... Optional arguments passed to [sdmTMB::sdmTMB()] can be passed
+#'   using viable arguments of [sdmTMB::sdmTMB()]. Note that users
+#'   cannot pass `anisotropy` or `sdmTMBcontrol` because both of these are set
+#'   in [run_sdmtmb()], where `anisotropy = TRUE` because the coastline
+#'   of the western portion of the U.S.A. is not perpendicular to the U.S.A.
+#'   and three newton loops are specified in the control parameters.
 #'
 #' @author Chantel R. Wetzel
+#' @export
 #' @return
 #' An object (`list``) of class sdmTMB. This object is what is returned by
 #' [sdmTMB::sdmTMB()] when fitting data to the model.
@@ -12,6 +26,15 @@ run_sdmtmb <- function(dir_main = getwd(),
                        formula,
                        n_knots = 500,
                        ...) {
+  # Checks
+  stopifnot(inherits(family, "family"))
+  stopifnot(all(
+    c(
+      "year", "fyear", "survey_name", "common_name",
+      "catch_weight", "effort", "x", "y"
+    ) %in%
+    colnames(data)
+  ))
   # TODO:
   # * check if random effects in formula and if converged, if yes and no, then
   #   re run the model after changing the formula to not have random effects
@@ -19,8 +42,23 @@ run_sdmtmb <- function(dir_main = getwd(),
   # * check licence file to see if I am even able to steal it
   # * think about setting a distance cutoff for the triangulation network
   #   rather than pre-specifying the number of knots
-  dir_data <- fs::path(dir_main, "data")
-  dir_index <- fs::path(dir_main, "index")
+  dir_new <- data |>
+    dplyr::group_by(survey_name, common_name) |>
+    dplyr::count() |>
+    dplyr::mutate(
+      common_without = format_common_name(common_name),
+      survey_without = format_common_name(survey_name),
+      directory = fs::path(
+        dir_main,
+        common_without,
+        survey_without,
+        format_family(family)
+      )
+    ) |>
+    dplyr::pull(directory)
+  stopifnot(length(dir_new) == 1)
+  dir_data <- fs::path(dir_new, "data")
+  dir_index <- fs::path(dir_new, "index")
   fs::dir_create(c(dir_data, dir_index))
   save(data, file = file.path(dir_data, "data.rdata"))
   formula <- format_formula(formula)
@@ -121,7 +159,7 @@ run_sdmtmb <- function(dir_main = getwd(),
     data,
     data_truncated,
     diagnostics,
-    dir_main,
+    dir_new,
     mesh,
     grid,
     fit,

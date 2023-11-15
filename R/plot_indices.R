@@ -31,14 +31,12 @@ plot_indices <- function(data,
   if (!"area" %in% colnames(data)) {
     data[["area"]] <- ""
   }
-  labels_wide <- grep("wide", unique(data[["area"]]))
-  data[["area"]] <- factor(
+  if (inherits(data[["area"]], "factor")) {
+    data[["area"]] <- relevel(
       data[["area"]],
-      levels = c(
-        unique(data[["area"]])[labels_wide],
-        unique(data[["area"]])[-labels_wide]
-      )
+      ref = c("coastwide")
     )
+  }
 
   gg <- ggplot2::ggplot(
     data = data,

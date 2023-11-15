@@ -5,20 +5,7 @@
 #' used for all data sets present in data so you may wish to run this function
 #' iteratively across different families or using {purrr}.
 #'
-#' @inheritParams format_data
-#' @inheritParams sdmTMB::sdmTMB
-#' @param dir_main A string specifying a path where results will be saved. The
-#'   default is your current working directory.
-#' @param n_knots An integer specifying the number of knots you want in your
-#'   mesh that is created by {INLA}. More knots is not always better. The
-#'   default is to use 500 knots. Future work will look at specifying a
-#'   threshold distance between points rather than number of knots.
-#' @param ... Optional arguments passed to [sdmTMB::sdmTMB()] can be passed
-#'   using viable arguments of [sdmTMB::sdmTMB()]. Note that users
-#'   cannot pass `anisotropy` or `sdmTMBcontrol` because both of these are set
-#'   in [run_sdmtmb()], where `anisotropy = TRUE` because the coastline
-#'   of the western portion of the U.S.A. is not perpendicular to the U.S.A.
-#'   and three newton loops are specified in the control parameters.
+
 #' @return
 #' A `list` of {sdmTMB} `list`s, where each element in the list is the returned
 #' object from [sdmTMB::sdmTMB()] when fitting data to a model and of the class

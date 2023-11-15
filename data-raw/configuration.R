@@ -24,7 +24,7 @@ data <- configuration %>%
   ) %>%
   dplyr::ungroup()
 
-best <- data[-3, ] %>%
+best <- data %>%
   dplyr::mutate(
     # Evaluate the call in family
     family = purrr::map(family, .f = ~ eval(parse(text = .x))),
@@ -34,26 +34,11 @@ best <- data[-3, ] %>%
         data = data_filtered,
         formula = formula,
         family = family,
-        anisotropy = anisotropy
+        anisotropy = anisotropy,
+        n_knots = knots,
+        spatiotemporal = purrr::map2(spatiotemporal1, spatiotemporal2, list)
       ),
-      .f = indexwc::run
-    )
-  )
-best2 <- data[c(3), ] %>%
-  dplyr::mutate(
-    # Evaluate the call in family
-    family = purrr::map(family, .f = ~ eval(parse(text = .x))),
-    # Run the model on each row in data
-    results = purrr::pmap(
-      .l = list(
-        data = data_filtered,
-        formula = formula,
-        family = family,
-        anisotropy = anisotropy
-      ),
-      spatiotemporal = list("iid", "off"),
-      n_knots = 200,
-      .f = indexwc::run
+      .f = indexwc::run_sdmtmb
     )
   )
 
@@ -85,3 +70,22 @@ gg <- ggplot2::ggplot(
 ggplot2::geom_line() +
 ggplot2::theme_bw()
 ggsave(gg, filename = "indexwc_copper_rockfish.png")
+
+
+best <- data[2, ] %>%
+  dplyr::mutate(
+    # Evaluate the call in family
+    family = purrr::map(family, .f = ~ eval(parse(text = .x))),
+    # Run the model on each row in data
+    results = purrr::pmap(
+      .l = list(
+        data = data_filtered,
+        formula = formula,
+        family = family,
+        anisotropy = anisotropy
+      ),
+      spatiotemporal = list("iid", "off"),
+      n_knots = 200,
+      .f = indexwc::run_sdmtmb
+    )
+  )

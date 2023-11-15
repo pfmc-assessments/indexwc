@@ -8,6 +8,8 @@
 #'
 #' @param data A data frame containing tow-level information on catch weight
 #'   and effort. Additional columns can be present such as depth.
+#' @param ... Not yet implemented for any of the available methods but present
+#'   for future development purposes.
 #'
 #' @return A data frame with all lower case column names.
 #' * `year`
