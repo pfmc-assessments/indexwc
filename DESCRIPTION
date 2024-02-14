@@ -14,7 +14,6 @@ Description: A system to run and summarize models that estimate indices of
     and non-linear relationships.
 License: MIT + file LICENSE
 Depends:
-    R (< 4.3),
     R (>= 4.2)
 Imports:
     dplyr,
