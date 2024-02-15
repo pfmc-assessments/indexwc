@@ -1,8 +1,8 @@
 species,fxn,source,family,formula,min_depth,max_depth,min_latitude,max_latitude,min_year,max_year,anisotropy,knots,spatiotemporal1,spatiotemporal2
 "petrale sole","nwfscSurvey::pull_catch(common_name = species,survey=source)","NWFSC.Combo",sdmTMB::delta_lognormal(),"catch_weight ~ 0 + fyear + pass_scaled",-55,-675,-Inf,Inf,-Inf,Inf,TRUE,500,"iid","iid"
 "petrale sole","nwfscSurvey::pull_catch(common_name = species,survey=source)","Triennial",sdmTMB::delta_lognormal(),"catch_weight ~ 0 + fyear",-55,-366,37,Inf,-Inf,Inf,TRUE,500,"iid","iid"
-"canary rockfish","nwfscSurvey::pull_catch(common_name = species,survey=source)","NWFSC.Combo",sdmTMB::delta_lognormal(),"catch_weight ~ 0 + fyear + pass_scaled",-55,-275,-Inf,Inf,-Inf,Inf,FALSE,200,"iid",off
-"canary rockfish","nwfscSurvey::pull_catch(common_name = species,survey=source)","Triennial",sdmTMB::delta_lognormal(),"catch_weight ~ 0 + fyear",-55,-366,37,Inf,-Inf,Inf,TRUE,200,"iid",off
+"canary rockfish","nwfscSurvey::pull_catch(common_name = species,survey=source)","NWFSC.Combo",sdmTMB::delta_lognormal(),"catch_weight ~ 0 + fyear + pass_scaled",-55,-275,-Inf,Inf,-Inf,Inf,FALSE,200,"iid","off"
+"canary rockfish","nwfscSurvey::pull_catch(common_name = species,survey=source)","Triennial",sdmTMB::delta_lognormal(),"catch_weight ~ 0 + fyear",-55,-366,37,Inf,-Inf,Inf,TRUE,200,"iid","off"
 "rex sole","nwfscSurvey::pull_catch(common_name = species,survey=source)","NWFSC.Combo",sdmTMB::delta_gamma(),"catch_weight ~ 0 + fyear + pass_scaled",-55,-1300,-Inf,Inf,-Inf,Inf,TRUE,500,"iid","iid"
 "rex sole","nwfscSurvey::pull_catch(common_name = species,survey=source)","Triennial",sdmTMB::delta_lognormal(),"catch_weight ~ 0 + fyear",-55,-500,-Inf,Inf,-Inf,Inf,TRUE,500,"iid","iid"
 "shortspine thornyhead","nwfscSurvey::pull_catch(common_name = species,survey=source)","NWFSC.Combo",sdmTMB::delta_lognormal(),"catch_weight ~ 0 + fyear + pass_scaled + depth_scaled + depth_scaled_squared",-55,-Inf,-Inf,Inf,-Inf,Inf,TRUE,500,"iid","iid"
