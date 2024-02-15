@@ -1,42 +1,42 @@
 species,fxn,source,family,formula,min_depth,max_depth,min_latitude,max_latitude,min_year,max_year,anisotropy,knots,spatiotemporal1,spatiotemporal2
-petrale sole,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_lognormal(),catch_weight ~ 0 + fyear + pass_scaled,-55,-675,-Inf,Inf,-Inf,Inf,TRUE,500,iid,iid
-petrale sole,"nwfscSurvey::pull_catch(common_name = species,survey=source)",Triennial,sdmTMB::delta_lognormal(),catch_weight ~ 0 + fyear,-55,-366,37,Inf,-Inf,Inf,TRUE,500,iid,iid
-canary rockfish,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_lognormal(),catch_weight ~ 0 + fyear + pass_scaled,-55,-275,-Inf,Inf,-Inf,Inf,FALSE,200,iid,off
-canary rockfish,"nwfscSurvey::pull_catch(common_name = species,survey=source)",Triennial,sdmTMB::delta_lognormal(),catch_weight ~ 0 + fyear,-55,-366,37,Inf,-Inf,Inf,TRUE,200,iid,off
-rex sole,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear + pass_scaled,-55,-1300,-Inf,Inf,-Inf,Inf,TRUE,500,iid,iid
-rex sole,"nwfscSurvey::pull_catch(common_name = species,survey=source)",Triennial,sdmTMB::delta_lognormal(),catch_weight ~ 0 + fyear,-55,-500,-Inf,Inf,-Inf,Inf,TRUE,500,iid,iid
-shortspine thornyhead,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_lognormal(),catch_weight ~ 0 + fyear + pass_scaled + depth_scaled + depth_scaled_squared,-55,-Inf,-Inf,Inf,-Inf,Inf,TRUE,500,iid,iid
-shortspine thornyhead,"nwfscSurvey::pull_catch(common_name = species,survey=source)",Triennial,sdmTMB::delta_lognormal(),catch_weight ~ 0 + fyear + depth_scaled + depth_scaled_squared,-55,-Inf,-Inf,Inf,-Inf,Inf,TRUE,500,iid,iid
-sablefish,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_lognormal(),catch_weight ~ 0 + fyear + pass_scaled,-55,-Inf,-Inf,Inf,-Inf,Inf,TRUE,500,iid,iid
-sablefish,"nwfscSurvey::pull_catch(common_name = species,survey=source)",Triennial,sdmTMB::delta_lognormal(),catch_weight ~ 0 + fyear,-55,-Inf,-Inf,Inf,-Inf,Inf,TRUE,500,iid,iid
-sablefish,"nwfscSurvey::pull_catch(common_name = species,survey=source)",AFSC.Slope,sdmTMB::delta_lognormal(),catch_weight ~ 0 + fyear,-55,-Inf,-Inf,Inf,-Inf,Inf,TRUE,500,iid,iid
-sablefish,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Slope,sdmTMB::delta_lognormal(),catch_weight ~ 0 + fyear,-55,-Inf,-Inf,Inf,-Inf,Inf,TRUE,500,iid,iid
-arrowtooth flounder,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear + pass_scaled,-55,-Inf,34,Inf,-Inf,Inf,TRUE,500,iid,iid
-aurora rockfish,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear + pass_scaled,-183,-Inf,-Inf,Inf,-Inf,Inf,TRUE,500,iid,iid
-big skate,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear + pass_scaled,-55,-500,-Inf,Inf,-Inf,Inf,TRUE,500,iid,iid
-blackgill rockfish,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear + pass_scaled,-183,-850,35,Inf,-Inf,Inf,TRUE,500,iid,iid
-bocaccio,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear + pass_scaled,-55,-500,-Inf,Inf,-Inf,Inf,TRUE,500,iid,iid
-chilipepper,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear + pass_scaled,-55,-500,-Inf,Inf,-Inf,Inf,TRUE,500,iid,iid
-curlfin sole,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear + pass_scaled,-55,-450,-Inf,Inf,-Inf,Inf,TRUE,500,iid,iid
-darkblotched rockfish,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_lognormal(),catch_weight ~ 0 + fyear + pass_scaled,-55,-675,33.5,Inf,-Inf,Inf,TRUE,500,iid,iid
-Dover sole,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear + pass_scaled,-55,-Inf,-Inf,Inf,-Inf,Inf,TRUE,500,iid,iid
-English sole,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear + pass_scaled,-55,-475,-Inf,Inf,-Inf,Inf,TRUE,500,iid,iid
-flathead sole,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear + pass_scaled,-55,-450,41,Inf,-Inf,Inf,TRUE,500,iid,iid
-greenspotted rockfish,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_lognormal(),catch_weight ~ 0 + fyear + pass_scaled,-55,-350,-Inf,Inf,-Inf,Inf,TRUE,500,iid,iid
-greenstriped rockfish,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear + pass_scaled,-55,-675,-Inf,Inf,-Inf,Inf,TRUE,500,iid,iid
-lingcod,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear + pass_scaled,-55,-450,-Inf,Inf,-Inf,Inf,TRUE,500,iid,iid
-longnose skate,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear + pass_scaled,-55,-Inf,-Inf,Inf,-Inf,Inf,TRUE,500,iid,iid
-longspine thornyhead,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_lognormal(),catch_weight ~ 0 + fyear + pass_scaled,-300,-Inf,-Inf,Inf,-Inf,Inf,TRUE,500,iid,iid
-Pacific cod,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear + pass_scaled,-55,-300,39,Inf,-Inf,Inf,TRUE,200,iid,iid
-Pacific ocean perch,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear + pass_scaled,-55,-500,35,Inf,-Inf,Inf,TRUE,500,iid,iid
-Pacific sanddab,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear + pass_scaled,-55,-500,-Inf,Inf,-Inf,Inf,TRUE,500,iid,iid
-Pacific spiny dogfish,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_lognormal(),catch_weight ~ 0 + fyear + pass_scaled,-55,-700,-Inf,Inf,-Inf,Inf,TRUE,500,iid,iid
-redbanded rockfish,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_lognormal(),catch_weight ~ 0 + fyear + pass_scaled,-55,-675,33.5,Inf,-Inf,Inf,TRUE,500,iid,iid
-rosethorn rockfish,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear + pass_scaled,-55,-675,-Inf,Inf,-Inf,Inf,TRUE,500,iid,iid
-rougheye and blackspotted rockfish,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear + pass_scaled,-55,-875,33.5,Inf,-Inf,Inf,TRUE,200,iid,iid
-sharpchin rockfish,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_lognormal(),catch_weight ~ 0 + fyear + pass_scaled,-55,-475,33,Inf,-Inf,Inf,TRUE,500,iid,iid
-splitnose rockfish,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear + pass_scaled,-55,-700,-Inf,Inf,-Inf,Inf,TRUE,500,iid,iid
-stripetail rockfish,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear + pass_scaled,-55,-500,-Inf,Inf,-Inf,Inf,TRUE,500,iid,iid
-widow rockfish,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_lognormal(),catch_weight ~ 0 + fyear + pass_scaled,-55,-675,33.5,Inf,-Inf,Inf,TRUE,200,iid,iid
-yelloweye rockfish,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear + pass_scaled,-55,-325,34.5,Inf,-Inf,Inf,TRUE,200,iid,iid
-yellowtail rockfish,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear + pass_scaled,-55,-425,33.5,Inf,-Inf,Inf,TRUE,500,iid,iid
+petrale sole,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_lognormal(),catch_weight ~ 0 + fyear + pass_scaled,-55,-675,-Inf,Inf,-Inf,Inf,TRUE,500,"iid","iid"
+petrale sole,"nwfscSurvey::pull_catch(common_name = species,survey=source)",Triennial,sdmTMB::delta_lognormal(),catch_weight ~ 0 + fyear,-55,-366,37,Inf,-Inf,Inf,TRUE,500,"iid","iid"
+canary rockfish,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_lognormal(),catch_weight ~ 0 + fyear + pass_scaled,-55,-275,-Inf,Inf,-Inf,Inf,FALSE,200,"iid",off
+canary rockfish,"nwfscSurvey::pull_catch(common_name = species,survey=source)",Triennial,sdmTMB::delta_lognormal(),catch_weight ~ 0 + fyear,-55,-366,37,Inf,-Inf,Inf,TRUE,200,"iid",off
+rex sole,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear + pass_scaled,-55,-1300,-Inf,Inf,-Inf,Inf,TRUE,500,"iid","iid"
+rex sole,"nwfscSurvey::pull_catch(common_name = species,survey=source)",Triennial,sdmTMB::delta_lognormal(),catch_weight ~ 0 + fyear,-55,-500,-Inf,Inf,-Inf,Inf,TRUE,500,"iid","iid"
+shortspine thornyhead,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_lognormal(),catch_weight ~ 0 + fyear + pass_scaled + depth_scaled + depth_scaled_squared,-55,-Inf,-Inf,Inf,-Inf,Inf,TRUE,500,"iid","iid"
+shortspine thornyhead,"nwfscSurvey::pull_catch(common_name = species,survey=source)",Triennial,sdmTMB::delta_lognormal(),catch_weight ~ 0 + fyear + depth_scaled + depth_scaled_squared,-55,-Inf,-Inf,Inf,-Inf,Inf,TRUE,500,"iid","iid"
+sablefish,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_lognormal(),catch_weight ~ 0 + fyear + pass_scaled,-55,-Inf,-Inf,Inf,-Inf,Inf,TRUE,500,"iid","iid"
+sablefish,"nwfscSurvey::pull_catch(common_name = species,survey=source)",Triennial,sdmTMB::delta_lognormal(),catch_weight ~ 0 + fyear,-55,-Inf,-Inf,Inf,-Inf,Inf,TRUE,500,"iid","iid"
+sablefish,"nwfscSurvey::pull_catch(common_name = species,survey=source)",AFSC.Slope,sdmTMB::delta_lognormal(),catch_weight ~ 0 + fyear,-55,-Inf,-Inf,Inf,-Inf,Inf,TRUE,500,"iid","iid"
+sablefish,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Slope,sdmTMB::delta_lognormal(),catch_weight ~ 0 + fyear,-55,-Inf,-Inf,Inf,-Inf,Inf,TRUE,500,"iid","iid"
+arrowtooth flounder,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear + pass_scaled,-55,-Inf,34,Inf,-Inf,Inf,TRUE,500,"iid","iid"
+aurora rockfish,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear + pass_scaled,-183,-Inf,-Inf,Inf,-Inf,Inf,TRUE,500,"iid","iid"
+big skate,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear + pass_scaled,-55,-500,-Inf,Inf,-Inf,Inf,TRUE,500,"iid","iid"
+blackgill rockfish,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear + pass_scaled,-183,-850,35,Inf,-Inf,Inf,TRUE,500,"iid","iid"
+bocaccio,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear + pass_scaled,-55,-500,-Inf,Inf,-Inf,Inf,TRUE,500,"iid","iid"
+chilipepper,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear + pass_scaled,-55,-500,-Inf,Inf,-Inf,Inf,TRUE,500,"iid","iid"
+curlfin sole,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear + pass_scaled,-55,-450,-Inf,Inf,-Inf,Inf,TRUE,500,"iid","iid"
+darkblotched rockfish,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_lognormal(),catch_weight ~ 0 + fyear + pass_scaled,-55,-675,33.5,Inf,-Inf,Inf,TRUE,500,"iid","iid"
+Dover sole,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear + pass_scaled,-55,-Inf,-Inf,Inf,-Inf,Inf,TRUE,500,"iid","iid"
+English sole,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear + pass_scaled,-55,-475,-Inf,Inf,-Inf,Inf,TRUE,500,"iid","iid"
+flathead sole,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear + pass_scaled,-55,-450,41,Inf,-Inf,Inf,TRUE,500,"iid","iid"
+greenspotted rockfish,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_lognormal(),catch_weight ~ 0 + fyear + pass_scaled,-55,-350,-Inf,Inf,-Inf,Inf,TRUE,500,"iid","iid"
+greenstriped rockfish,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear + pass_scaled,-55,-675,-Inf,Inf,-Inf,Inf,TRUE,500,"iid","iid"
+lingcod,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear + pass_scaled,-55,-450,-Inf,Inf,-Inf,Inf,TRUE,500,"iid","iid"
+longnose skate,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear + pass_scaled,-55,-Inf,-Inf,Inf,-Inf,Inf,TRUE,500,"iid","iid"
+longspine thornyhead,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_lognormal(),catch_weight ~ 0 + fyear + pass_scaled,-300,-Inf,-Inf,Inf,-Inf,Inf,TRUE,500,"iid","iid"
+Pacific cod,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear + pass_scaled,-55,-300,39,Inf,-Inf,Inf,TRUE,200,"iid","iid"
+Pacific ocean perch,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear + pass_scaled,-55,-500,35,Inf,-Inf,Inf,TRUE,500,"iid","iid"
+Pacific sanddab,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear + pass_scaled,-55,-500,-Inf,Inf,-Inf,Inf,TRUE,500,"iid","iid"
+Pacific spiny dogfish,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_lognormal(),catch_weight ~ 0 + fyear + pass_scaled,-55,-700,-Inf,Inf,-Inf,Inf,TRUE,500,"iid","iid"
+redbanded rockfish,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_lognormal(),catch_weight ~ 0 + fyear + pass_scaled,-55,-675,33.5,Inf,-Inf,Inf,TRUE,500,"iid","iid"
+rosethorn rockfish,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear + pass_scaled,-55,-675,-Inf,Inf,-Inf,Inf,TRUE,500,"iid","iid"
+rougheye and blackspotted rockfish,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear + pass_scaled,-55,-875,33.5,Inf,-Inf,Inf,TRUE,200,"iid","iid"
+sharpchin rockfish,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_lognormal(),catch_weight ~ 0 + fyear + pass_scaled,-55,-475,33,Inf,-Inf,Inf,TRUE,500,"iid","iid"
+splitnose rockfish,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear + pass_scaled,-55,-700,-Inf,Inf,-Inf,Inf,TRUE,500,"iid","iid"
+stripetail rockfish,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear + pass_scaled,-55,-500,-Inf,Inf,-Inf,Inf,TRUE,500,"iid","iid"
+widow rockfish,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_lognormal(),catch_weight ~ 0 + fyear + pass_scaled,-55,-675,33.5,Inf,-Inf,Inf,TRUE,200,"iid","iid"
+yelloweye rockfish,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear + pass_scaled,-55,-325,34.5,Inf,-Inf,Inf,TRUE,200,"iid","iid"
+yellowtail rockfish,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear + pass_scaled,-55,-425,33.5,Inf,-Inf,Inf,TRUE,500,"iid","iid"
