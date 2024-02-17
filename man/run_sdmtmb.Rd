@@ -44,16 +44,15 @@ mesh that is created by {INLA}. More knots is not always better. The
 default is to use 500 knots. Future work will look at specifying a
 threshold distance between points rather than number of knots.}
 
-\item{...}{Optional arguments passed to \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}} can be passed
-using viable arguments of \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}}. Note that users
+\item{...}{Optional arguments passed to \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}}. Note that users
 cannot pass \code{anisotropy} or \code{sdmTMBcontrol} because both of these are set
-in \code{\link[=run_sdmtmb]{run_sdmtmb()}}, where \code{anisotropy = TRUE} because the coastline
-of the western portion of the U.S.A. is not perpendicular to the U.S.A.
+internal to this function, where \code{anisotropy = TRUE} because the coastline
+of the western coastline of the U.S.A. is not perpendicular to the country
 and three newton loops are specified in the control parameters.}
 }
 \value{
-An object (`list``) of class sdmTMB. This object is what is returned by
-\code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}} when fitting data to the model.
+An list object of class sdmTMB. This object is returned by \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}}
+when fitting data to the model.
 }
 \description{
 Run \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}}

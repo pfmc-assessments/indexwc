@@ -2,54 +2,9 @@
 % Please edit documentation in R/run.R
 \name{run}
 \alias{run}
-\title{Estimate indices of abundance for combinations of surveys and populations}
+\title{A deprecated function, use \code{\link[=run_sdmtmb]{run_sdmtmb()}}}
 \usage{
 run(data, family, formula, dir_main = getwd(), n_knots = 500, ...)
-}
-\arguments{
-\item{data}{A data frame containing tow-level information on catch weight
-and effort. Additional columns can be present such as depth.}
-
-\item{family}{The family and link. Supports \code{\link[=gaussian]{gaussian()}}, \code{\link[=Gamma]{Gamma()}},
-\code{\link[=binomial]{binomial()}}, \code{\link[=poisson]{poisson()}}, \code{\link[sdmTMB:families]{Beta()}},
-\code{\link[sdmTMB:families]{nbinom2()}},
-\code{\link[sdmTMB:families]{truncated_nbinom2()}},
-\code{\link[sdmTMB:families]{nbinom1()}},
-\code{\link[sdmTMB:families]{truncated_nbinom1()}},
-\code{\link[sdmTMB:families]{censored_poisson()}},
-\code{\link[sdmTMB:families]{gamma_mix()}},
-\code{\link[sdmTMB:families]{lognormal_mix()}},
-\code{\link[sdmTMB:families]{student()}}, and
-\code{\link[sdmTMB:families]{tweedie()}}. Supports the delta/hurdle models:
-\code{\link[sdmTMB:families]{delta_beta()}},
-\code{\link[sdmTMB:families]{delta_gamma()}},
-\code{\link[sdmTMB:families]{delta_gamma_mix()}},
-\code{\link[sdmTMB:families]{delta_lognormal_mix()}},
-\code{\link[sdmTMB:families]{delta_lognormal()}}, and
-\code{\link[sdmTMB:families]{delta_truncated_nbinom2()}},
-For binomial family options, see 'Binomial families' in the Details
-section below.}
-
-\item{formula}{Model formula. IID random intercepts are possible using
-\pkg{lme4} syntax, e.g., \code{+ (1 | g)} where \code{g} is a column of class
-character or factor representing groups. Penalized splines are possible via
-\pkg{mgcv} with \code{s()}. Optionally a list for delta (hurdle) models.  See
-examples and details below.}
-
-\item{dir_main}{A string specifying a path where results will be saved. The
-default is your current working directory.}
-
-\item{n_knots}{An integer specifying the number of knots you want in your
-mesh that is created by {INLA}. More knots is not always better. The
-default is to use 500 knots. Future work will look at specifying a
-threshold distance between points rather than number of knots.}
-
-\item{...}{Optional arguments passed to \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}} can be passed
-using viable arguments of \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}}. Note that users
-cannot pass \code{anisotropy} or \code{sdmTMBcontrol} because both of these are set
-in \code{\link[=run_sdmtmb]{run_sdmtmb()}}, where \code{anisotropy = TRUE} because the coastline
-of the western portion of the U.S.A. is not perpendicular to the U.S.A.
-and three newton loops are specified in the control parameters.}
 }
 \value{
 A \code{list} of {sdmTMB} \code{list}s, where each element in the list is the returned
@@ -59,31 +14,8 @@ input data by species and survey/source in case your data contain
 combinations of these two categories in a long data frame.
 }
 \description{
-Run {sdmTMB} to estimate indices of abundance for combinations of surveys
-and populations present in \code{data}. The same \code{formula} and \code{family} will be
-used for all data sets present in data so you may wish to run this function
-iteratively across different families or using {purrr}.
-}
-\examples{
-\dontrun{
-# Get some data
-data <- nwfscSurvey::pull_catch(
-  common_name = "sablefish",
-  survey = "NWFSC.Combo"
-)
-# Run a single species
-results <- run(
-  data = data,
-  family = sdmTMB::tweedie(),
-  formula = lookup_formula("WCGBTS")
-)
-# Run without the spatiotemporal component by passing arguments using ...
-results <- run(
-  data = data,
-  family = sdmTMB::tweedie(),
-  formula = lookup_formula("WCGBTS"),
-  spatiotemporal = "off"
-)
-}
+Split your data into a list of data frames, e.g.,
+\code{dplyr::split(data, common_name)} and then use \code{\link[purrr:map]{purrr::map()}} on the
+resulting list with \code{.f = run_sdmtmb}.
 }
 \concept{run}

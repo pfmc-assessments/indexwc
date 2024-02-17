@@ -9,6 +9,9 @@ format_data(data, ...)
 \arguments{
 \item{data}{A data frame containing tow-level information on catch weight
 and effort. Additional columns can be present such as depth.}
+
+\item{...}{Not yet implemented for any of the available methods but present
+for future development purposes.}
 }
 \value{
 A data frame with all lower case column names.

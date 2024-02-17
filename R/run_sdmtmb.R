@@ -8,18 +8,17 @@
 #'   mesh that is created by {INLA}. More knots is not always better. The
 #'   default is to use 500 knots. Future work will look at specifying a
 #'   threshold distance between points rather than number of knots.
-#' @param ... Optional arguments passed to [sdmTMB::sdmTMB()] can be passed
-#'   using viable arguments of [sdmTMB::sdmTMB()]. Note that users
+#' @param ... Optional arguments passed to [sdmTMB::sdmTMB()]. Note that users
 #'   cannot pass `anisotropy` or `sdmTMBcontrol` because both of these are set
-#'   in [run_sdmtmb()], where `anisotropy = TRUE` because the coastline
-#'   of the western portion of the U.S.A. is not perpendicular to the U.S.A.
+#'   internal to this function, where `anisotropy = TRUE` because the coastline
+#'   of the western coastline of the U.S.A. is not perpendicular to the country
 #'   and three newton loops are specified in the control parameters.
 #'
 #' @author Chantel R. Wetzel
 #' @export
 #' @return
-#' An object (`list``) of class sdmTMB. This object is what is returned by
-#' [sdmTMB::sdmTMB()] when fitting data to the model.
+#' An list object of class sdmTMB. This object is returned by [sdmTMB::sdmTMB()]
+#' when fitting data to the model.
 run_sdmtmb <- function(dir_main = getwd(),
                        data,
                        family,
@@ -134,18 +133,13 @@ run_sdmtmb <- function(dir_main = getwd(),
     )
     dev.off()
   }
-  gg_index_areas <- calc_index_areas(
+  results_by_area <- calc_index_areas(
     data = data_truncated,
     fit = fit,
     prediction_grid = grid,
     dir = dir_index
   )
-  index_areas <- gg_index_areas[["data"]]
-  write.csv(
-    index_areas,
-    file = file.path(dir_index, "est_by_area.csv"),
-    row.names = FALSE
-  )
+
   # Add diagnostics
   # 1) QQ plot
   # 2) Residuals by year
@@ -163,8 +157,7 @@ run_sdmtmb <- function(dir_main = getwd(),
     mesh,
     grid,
     fit,
-    index_areas,
-    gg_index_areas,
+    results_by_area,
     file = fs::path(dir_index, "sdmTMB_save.RData")
   )
   return(fit)

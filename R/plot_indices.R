@@ -31,12 +31,6 @@ plot_indices <- function(data,
   if (!"area" %in% colnames(data)) {
     data[["area"]] <- ""
   }
-  if (inherits(data[["area"]], "factor")) {
-    data[["area"]] <- relevel(
-      data[["area"]],
-      ref = c("coastwide")
-    )
-  }
 
   gg <- ggplot2::ggplot(
     data = data,

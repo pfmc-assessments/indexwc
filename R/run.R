@@ -1,11 +1,9 @@
-#' Estimate indices of abundance for combinations of surveys and populations
+#' A deprecated function, use [run_sdmtmb()]
 #'
-#' Run {sdmTMB} to estimate indices of abundance for combinations of surveys
-#' and populations present in `data`. The same `formula` and `family` will be
-#' used for all data sets present in data so you may wish to run this function
-#' iteratively across different families or using {purrr}.
+#' Split your data into a list of data frames, e.g.,
+#' `dplyr::split(data, common_name)` and then use [purrr::map()] on the
+#' resulting list with `.f = run_sdmtmb`.
 #'
-
 #' @return
 #' A `list` of {sdmTMB} `list`s, where each element in the list is the returned
 #' object from [sdmTMB::sdmTMB()] when fitting data to a model and of the class
@@ -14,33 +12,17 @@
 #' combinations of these two categories in a long data frame.
 #' @family run
 #' @export
-#' @examples
-#' \dontrun{
-#' # Get some data
-#' data <- nwfscSurvey::pull_catch(
-#'   common_name = "sablefish",
-#'   survey = "NWFSC.Combo"
-#' )
-#' # Run a single species
-#' results <- run(
-#'   data = data,
-#'   family = sdmTMB::tweedie(),
-#'   formula = lookup_formula("WCGBTS")
-#' )
-#' # Run without the spatiotemporal component by passing arguments using ...
-#' results <- run(
-#'   data = data,
-#'   family = sdmTMB::tweedie(),
-#'   formula = lookup_formula("WCGBTS"),
-#'   spatiotemporal = "off"
-#' )
-#' }
 run <- function(data,
                 family,
                 formula,
                 dir_main = getwd(),
                 n_knots = 500,
                 ...) {
+  lifecycle::deprecate_warn(
+    when = "0.7",
+    what = "run()",
+    with = "run_sdmtmb()"
+  )
   # Checks
   stopifnot(inherits(family, "family"))
   stopifnot(all(
