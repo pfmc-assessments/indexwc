@@ -1,4 +1,4 @@
-boundaries <- list(
+boundaries_data <- list(
   Coastwide = c(southern_BC, southern_CA),
   WA = c(southern_BC, southern_WA),
   OR = c(southern_WA, southern_OR),
@@ -15,7 +15,6 @@ boundaries <- list(
 )
 
 usethis::use_data(
-  boundaries,
-  internal = FALSE,
+  boundaries_data,
   overwrite = TRUE
 )

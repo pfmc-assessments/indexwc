@@ -5,7 +5,7 @@
 #' Fisheries Management Council and some are entirely related to ecological
 #' boundaries from currents, etc. that limit movement of populations.
 #'
-#' @format ## `boundaries`
+#' @format ## `boundaries_data`
 #' A list with 10 entries, where each entry is a numeric vector of length two,
 #' with the northern and southern boundaries for that area:
 #' \describe{
@@ -33,4 +33,4 @@
 #' * South of Cape Mendocino
 #' * North of Monterey Bay
 #' * South of Monterey Bay
-"boundaries"
+"boundaries_data"
