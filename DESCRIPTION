@@ -18,6 +18,7 @@ Depends:
 Imports:
     dplyr,
     fs,
+    ggforce,
     ggplot2,
     INLA,
     magrittr,
@@ -25,10 +26,13 @@ Imports:
     nwfscSurvey,
     raster,
     rmarkdown,
+    rnaturalearth,
+    rnaturalearthdata,
     sdmTMB (>= 0.3.0.9001),
     sf,
     stringr,
-    viridis
+    viridis,
+    visreg
 Suggests:
     knitr,
     nmfspalette,
