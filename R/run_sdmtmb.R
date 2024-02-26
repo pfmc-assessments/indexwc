@@ -118,6 +118,9 @@ run_sdmtmb <- function(dir_main = getwd(),
   if (!fit[["pos_def_hessian"]]) {
     fit <- sdmTMB::run_extra_optimization(fit)
   }
+
+  # Save model output
+  write_hess_logical(fit, fs::path(dir_index, "hess_logical.txt"))
   if (any(grepl("depth_scaled", as.character(formula)))) {
     gg_depth <- suppressMessages(purrr::map(
       .x = which(is_depth_in_formula(formula, family[["delta"]])),

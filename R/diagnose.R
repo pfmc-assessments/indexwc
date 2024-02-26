@@ -66,12 +66,14 @@ diagnose <- function(dir,
   )
 
   fit[["data"]][["residuals"]] <- stats::residuals(fit, model = 1)
-  if (length(fit[["formula"]]) == 2 &&
-      !grepl("mix", fit$family$clean_name)) {
+  if (
+    lookup_is_delta(fit[["formula"]]) &&
+    lookup_is_mixture(fit[["formula"]])
+  ) {
     fit[["data"]][["residuals2"]] <- stats::residuals(fit, model = 2)
   }
 
-  if (!grepl("mix", fit$family$clean_name)) {
+  if (!lookup_is_mixture(fit[["formula"]])) {
     plot_qq(
       fit = fit,
       file_name = file.path(dir, "qq.png")

@@ -22,7 +22,7 @@ plot_pars_fixed <- function(fit, dir) {
     return(out)
   }
 
-  n_plot <- length(grep("b_j", names(sdmTMB::get_pars(fit))))
+  n_plot <- ifelse(isTRUE(fit$family$delta), 2, 1)
 
   gg_out <- ggplot2::ggplot(
     data = purrr::map_df(
