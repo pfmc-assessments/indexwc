@@ -9,7 +9,7 @@
 #' Kelli F. Johnson
 write_hessian <- function(fit, file = "hess_logical.txt") {
   writeLines(
-    fit[["pos_def_hessian"]],
+    text = as.character(fit[["pos_def_hessian"]]),
     con = file
   )
   return(invisible(fit[["pos_def_hessian"]]))
