@@ -120,7 +120,7 @@ run_sdmtmb <- function(dir_main = getwd(),
   }
 
   # Save model output
-  write_hess_logical(fit, fs::path(dir_index, "hess_logical.txt"))
+  write_hessian(fit, fs::path(dir_index, "hess_logical.txt"))
   if (any(grepl("depth_scaled", as.character(formula)))) {
     gg_depth <- suppressMessages(purrr::map(
       .x = which(is_depth_in_formula(formula, family[["delta"]])),
