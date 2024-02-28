@@ -5,3 +5,7 @@ lookup_is_mixture <- function(x) {
 lookup_is_delta <- function(x) {
   isTRUE(x[["family"]][["delta"]])
 }
+
+lookup_is_tweedie <- function(x){
+  isTRUE(x[["family"]] == "tweedie")
+}

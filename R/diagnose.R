@@ -95,6 +95,9 @@ diagnose <- function(dir,
     )
   }
 
+  if(
+    lookup_is_tweedie(fit[["family"]])
+  ) { fit[["spatiotemporal"]] <- "iid" }
   gg <- sdmTMB::plot_anisotropy(
     object = fit
   ) +
@@ -109,7 +112,6 @@ diagnose <- function(dir,
     fit = fit,
     dir = dir
   )
-
   # Calculate the predictions based on the grid
   predictions <- predict(
     fit,
