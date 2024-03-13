@@ -26,7 +26,7 @@ species,fxn,source,family,formula,min_depth,max_depth,min_latitude,max_latitude,
 "greenstriped rockfish","nwfscSurvey::pull_catch(common_name = species,survey=source)","NWFSC.Combo",sdmTMB::delta_gamma(),"catch_weight ~ 0 + fyear",-55,-675,-Inf,Inf,-Inf,Inf,TRUE,300,"iid","iid"
 "lingcod","nwfscSurvey::pull_catch(common_name = species,survey=source)","NWFSC.Combo",sdmTMB::delta_gamma(),"catch_weight ~ 0 + fyear + pass_scaled",-55,-450,-Inf,Inf,-Inf,Inf,TRUE,500,"iid","iid"
 "longnose skate","nwfscSurvey::pull_catch(common_name = species,survey=source)","NWFSC.Combo",sdmTMB::delta_gamma(),"catch_weight ~ 0 + fyear + pass_scaled",-55,-Inf,-Inf,Inf,-Inf,Inf,TRUE,500,"iid","iid"
-"longspine thornyhead","nwfscSurvey::pull_catch(common_name = species,survey=source)","NWFSC.Combo",sdmTMB::tweedie(link = "log"),"catch_weight ~ 0 + fyear",-300,-Inf,-Inf,Inf,-Inf,Inf,TRUE,500,"iid","iid"
+"longspine thornyhead","nwfscSurvey::pull_catch(common_name = species,survey=source)","NWFSC.Combo",sdmTMB::tweedie(),"catch_weight ~ 0 + fyear",-300,-Inf,-Inf,Inf,-Inf,Inf,TRUE,500,"iid","iid"
 "Pacific cod","nwfscSurvey::pull_catch(common_name = species,survey=source)","NWFSC.Combo",sdmTMB::delta_gamma(),"catch_weight ~ 0 + fyear + pass_scaled",-55,-300,39,Inf,-Inf,Inf,TRUE,200,"iid","iid"
 "Pacific ocean perch","nwfscSurvey::pull_catch(common_name = species,survey=source)","NWFSC.Combo",sdmTMB::delta_gamma(),"catch_weight ~ 0 + fyear + pass_scaled",-55,-500,35,Inf,-Inf,Inf,TRUE,500,"iid","iid"
 "Pacific sanddab","nwfscSurvey::pull_catch(common_name = species,survey=source)","NWFSC.Combo",sdmTMB::delta_gamma(),"catch_weight ~ 0 + fyear + pass_scaled",-55,-500,-Inf,Inf,-Inf,Inf,TRUE,500,"iid","iid"
