@@ -66,10 +66,7 @@ diagnose <- function(dir,
   )
 
   fit[["data"]][["residuals"]] <- stats::residuals(fit, model = 1)
-  if (
-    lookup_is_delta(fit[["formula"]]) &&
-    lookup_is_mixture(fit[["formula"]])
-  ) {
+  if (lookup_is_delta(fit) | lookup_is_mixture(fit)) {
     fit[["data"]][["residuals2"]] <- stats::residuals(fit, model = 2)
   }
 
