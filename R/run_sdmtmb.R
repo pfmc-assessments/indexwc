@@ -120,6 +120,7 @@ run_sdmtmb <- function(dir_main = getwd(),
   }
 
   # Save model output
+  saveRDS(fit, file = fs::path(dir_index, "ignore_fit.rds"))
   write_hessian(fit, fs::path(dir_index, "hess_logical.txt"))
   if (any(grepl("depth_scaled", as.character(formula)))) {
     gg_depth <- suppressMessages(purrr::map(
