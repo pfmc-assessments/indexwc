@@ -23,7 +23,14 @@ diagnose <- function(dir,
                      fit,
                      prediction_grid) {
   # Print out a list of check marks for good model, x's for bad model
-  sdmTMB::sanity(fit)
+  sanity_out <- sanity_data(fit)
+  utils::write.table(
+    sanity_out,
+    file = fs::path(dir, "sanity_data_frame.csv"),
+    append = FALSE,
+    sep = ",",
+    row.names = FALSE
+  )
 
   # To do: just save stuff to disk, don't make a list
   run_diagnostics <- list()

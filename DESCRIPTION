@@ -16,6 +16,7 @@ License: MIT + file LICENSE
 Depends:
     R (>= 4.2)
 Imports:
+    cli,
     dplyr,
     fs,
     ggforce,
@@ -24,6 +25,7 @@ Imports:
     magrittr,
     methods,
     nwfscSurvey,
+    purrr,
     raster,
     rmarkdown,
     rnaturalearth,
@@ -31,6 +33,7 @@ Imports:
     sdmTMB (>= 0.3.0.9001),
     sf,
     stringr,
+    tibble,
     viridis,
     visreg
 Suggests:
