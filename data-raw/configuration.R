@@ -7,7 +7,11 @@
 #   to give this to grid
 configuration <- tibble::as_tibble(read.csv(
   file.path("data-raw", "configuration.csv")
-))
+)) |>
+  dplyr::mutate(
+    # Convert the column of strings to a list of lists
+    spatiotemporal = purrr::map(spatiotemporal, \(x) eval(parse(text = x)))
+  )
 
 data <- configuration %>%
   # Row by row ... do stuff then ungroup
@@ -36,7 +40,7 @@ best <- data %>%
         family = family,
         anisotropy = anisotropy,
         n_knots = knots,
-        spatiotemporal = purrr::map2(spatiotemporal1, spatiotemporal2, list)
+        spatiotemporal = spatiotemporal
       ),
       .f = indexwc::run_sdmtmb
     )
