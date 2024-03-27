@@ -52,6 +52,24 @@ not extrapolate into areas where positive tows are not observed at least
 once. This is helpful for species that are sparsely sampled because model
 convergence is poor when there are a lot of zeros.
 }
+\examples{
+\dontrun{
+# Read back in the saved object
+load("sdmTMB_save.RData")
+# pick which boundary you want to use, e.g., 4 for California,
+boundaries_data[4]
+# or you can make your own named list, e.g.,
+list("test" = c(39, 38))
+# run the function
+index <- calc_index_areas(
+  data, fit, grid, dir = getwd(), boundaries = list("test" = c(39, 38))
+)
+# look at the index, which will be in "test" because that is what we
+# named the boundary
+index[["test"]][["index"]]
+}
+
+}
 \seealso{
 \itemize{
 \item \link{boundaries_data}, a data object

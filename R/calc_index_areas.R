@@ -34,6 +34,23 @@
 #' each area specified in boundaries. Potentially, two figures are also saved
 #' to the disk displaying the index by year. The index for each area is also
 #' saved to a csv file in `dir` titled `est_by_area.csv`.
+#' @examples
+#' \dontrun{
+#' # Read back in the saved object
+#' load("sdmTMB_save.RData")
+#' # pick which boundary you want to use, e.g., 4 for California,
+#' boundaries_data[4]
+#' # or you can make your own named list, e.g.,
+#' list("test" = c(39, 38))
+#' # run the function
+#' index <- calc_index_areas(
+#'   data, fit, grid, dir = getwd(), boundaries = list("test" = c(39, 38))
+#' )
+#' # look at the index, which will be in "test" because that is what we
+#' # named the boundary
+#' index[["test"]][["index"]]
+#' }
+#' 
 calc_index_areas <- function(data,
                              fit,
                              prediction_grid,
