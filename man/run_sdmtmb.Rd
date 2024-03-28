@@ -4,7 +4,15 @@
 \alias{run_sdmtmb}
 \title{Run \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}}}
 \usage{
-run_sdmtmb(dir_main = getwd(), data, family, formula, n_knots = 500, ...)
+run_sdmtmb(
+  dir_main = getwd(),
+  data,
+  family,
+  formula,
+  n_knots = 500,
+  boundaries = boundaries_data["Coastwide"],
+  ...
+)
 }
 \arguments{
 \item{dir_main}{A string specifying a path where results will be saved. The
@@ -22,8 +30,10 @@ and effort. Additional columns can be present such as depth.}
 \code{\link[sdmTMB:families]{censored_poisson()}},
 \code{\link[sdmTMB:families]{gamma_mix()}},
 \code{\link[sdmTMB:families]{lognormal_mix()}},
-\code{\link[sdmTMB:families]{student()}}, and
-\code{\link[sdmTMB:families]{tweedie()}}. Supports the delta/hurdle models:
+\code{\link[sdmTMB:families]{student()}},
+\code{\link[sdmTMB:families]{tweedie()}}, and
+\code{\link[sdmTMB:families]{gengamma()}}.
+Supports the delta/hurdle models:
 \code{\link[sdmTMB:families]{delta_beta()}},
 \code{\link[sdmTMB:families]{delta_gamma()}},
 \code{\link[sdmTMB:families]{delta_gamma_mix()}},
@@ -43,6 +53,16 @@ examples and details below.}
 mesh that is created by {INLA}. More knots is not always better. The
 default is to use 500 knots. Future work will look at specifying a
 threshold distance between points rather than number of knots.}
+
+\item{boundaries}{A named list of northern and southern boundaries for a
+set of areas. The list can contain as many areas as you would like but
+it must contain at least one area and each area must be a vector of two
+real numbers specified in decimal degrees. The order of the areas only
+matters if you care what order they are plotted because the names will
+be turned into factors. The default value uses a data object called
+\code{boundaries_data}, which is a list of several areas along the U.S. West
+Coast, including a coastwide area going from the northern Washington
+border to the southern California border.}
 
 \item{...}{Optional arguments passed to \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}}. Note that users
 cannot pass \code{anisotropy} or \code{sdmTMBcontrol} because both of these are set
