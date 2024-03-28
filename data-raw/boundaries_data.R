@@ -11,7 +11,10 @@ boundaries_data <- list(
   "South of Cape Mendocino" = c(40.166667, southern_CA),
   # For sablefish
   "North of Monterey Bay" = c(southern_BC, 36.00),
-  "South of Monterey Bay" = c(36.00, southern_CA)
+  "South of Monterey Bay" = c(36.00, southern_CA),
+  # Boundary used in some tribal U&A calculations
+  "North of 46deg 53.3min" = c(southern_BC, 46.888333),
+  "South of 46deg 53.3min" = c(46.888333, southern_CA)
 )
 
 usethis::use_data(

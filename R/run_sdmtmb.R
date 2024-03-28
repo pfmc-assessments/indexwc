@@ -8,6 +8,7 @@
 #'   mesh that is created by {INLA}. More knots is not always better. The
 #'   default is to use 500 knots. Future work will look at specifying a
 #'   threshold distance between points rather than number of knots.
+#' @template boundaries
 #' @param ... Optional arguments passed to [sdmTMB::sdmTMB()]. Note that users
 #'   cannot pass `anisotropy` or `sdmTMBcontrol` because both of these are set
 #'   internal to this function, where `anisotropy = TRUE` because the coastline
@@ -24,6 +25,7 @@ run_sdmtmb <- function(dir_main = getwd(),
                        family,
                        formula,
                        n_knots = 500,
+                       boundaries = boundaries_data["Coastwide"],
                        ...) {
   # Checks
   stopifnot(inherits(family, "family"))
@@ -141,7 +143,8 @@ run_sdmtmb <- function(dir_main = getwd(),
     data = data_truncated,
     fit = fit,
     prediction_grid = grid,
-    dir = dir_index
+    dir = dir_index,
+    boundaries = boundaries
   )
 
   # Add diagnostics
