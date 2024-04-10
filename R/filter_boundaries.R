@@ -29,19 +29,25 @@ filter_boundaries <- function(y, boundaries) {
 
   # Pull out boundaries for each state if there are no data for that state
   if (length(y[y > southern_WA]) == 0) {
-    boundaries <- boundaries[
-      -which(names(boundaries) %in% c("WA", "wa", "washington", "Washington"))
-    ]
+    if(names(boundaries) %in% c("WA", "wa", "washington", "Washington")){
+      boundaries <- boundaries[
+        -which(names(boundaries) %in% c("WA", "wa", "washington", "Washington"))
+      ]
+    }
   }
   if (length(y[y < southern_WA]) == 0 & length(y[y > southern_OR]) == 0) {
-    boundaries <- boundaries[
-      -which(names(boundaries) %in% c("OR", "or", "oregon", "Oregon"))
-    ]
+    if(names(boundaries) %in% c("OR", "or", "oregon", "Oregon")){
+      boundaries <- boundaries[
+        -which(names(boundaries) %in% c("OR", "or", "oregon", "Oregon"))
+      ]
+    }
   }
   if (length(y[y < southern_OR]) == 0) {
-    boundaries <- boundaries[
-      -which(names(boundaries) %in% c("CA", "ca", "california", "California"))
-    ]
+    if(names(boundaries) %in% c("CA", "ca", "california", "California")){
+      boundaries <- boundaries[
+        -which(names(boundaries) %in% c("CA", "ca", "california", "California"))
+      ]
+    }
   }
 
   boundaries_tops <- shrink_boundary(purrr::map(boundaries, 1), max(y), ">")
