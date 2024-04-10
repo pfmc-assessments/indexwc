@@ -1,4 +1,4 @@
-#' Determine which boundaries in a group should be eliminated
+#' Eliminate boundaries that do not have any data in them or are duplicates
 #'
 #' @details Sometimes boundaries can be exactly equal and therefore do not need
 #' to be included in a set. Other times a boundary was initially valid but
@@ -23,30 +23,33 @@
 #' where the bad areas are removed. If the input vectors are named, then the
 #' resulting rows of the returned data frame will also be named.
 #' @examples
+#' # Removes OR because there are only observations in WA and CA
 #' filter_boundaries(y = c(34, 48), boundaries = boundaries_data)
+#' # Shrinks northern borders and removes WA because no observations in WA
+#' filter_boundaries(y = c(45.5, 34), boundaries = boundaries_data)
 filter_boundaries <- function(y, boundaries) {
   stopifnot(is.vector(y))
 
-  # Pull out boundaries for each state if there are no data for that state
-  if (length(y[y > southern_WA]) == 0) {
-    boundaries <- boundaries[
-      -which(names(boundaries) %in% c("WA", "wa", "washington", "Washington"))
-    ]
-  }
-  if (length(y[y < southern_WA]) == 0 & length(y[y > southern_OR]) == 0) {
-    boundaries <- boundaries[
-      -which(names(boundaries) %in% c("OR", "or", "oregon", "Oregon"))
-    ]
-  }
-  if (length(y[y < southern_OR]) == 0) {
-    boundaries <- boundaries[
-      -which(names(boundaries) %in% c("CA", "ca", "california", "California"))
-    ]
-  }
+  # Remove boundaries without any data inside of them
+  bool_inside <- purrr::map_vec(
+    boundaries_data,
+    \(z) all_x_inside(y, z[2], z[1])
+  )
+  boundaries_with_data <- boundaries_data[bool_inside]
+  rm(bool_inside)
 
-  boundaries_tops <- shrink_boundary(purrr::map(boundaries, 1), max(y), ">")
-  boundaries_bottoms <- shrink_boundary(purrr::map(boundaries, 2), min(y), "<")
-
+  # Shrink the boundaries so we are not predicting to somewhere the species
+  # has never been seen
+  boundaries_tops <- shrink_boundary(
+    purrr::map(boundaries_with_data, 1),
+    max(y),
+    ">"
+  )
+  boundaries_bottoms <- shrink_boundary(
+    purrr::map(boundaries_with_data, 2),
+    min(y),
+    "<"
+  )
   # Join the vectors of boundaries into a matrix
   wide_df <- dplyr::bind_rows(boundaries_tops, boundaries_bottoms)
 
@@ -76,6 +79,9 @@ filter_boundaries <- function(y, boundaries) {
     boundaries_bottoms[!seq_along(boundaries_bottoms) %in% bad_groups]
   ))
   colnames(out) <- c("upper", "lower")
+  # Remove boundaries where upper equals lower b/c a point is right on the
+  # boundary
+  out <- out[out[, "upper"] != out[, "lower"], ]
   return(out)
 }
 
@@ -87,4 +93,23 @@ shrink_boundary <- function(x, y, .f) {
     yes = y,
     no = x
   )
+}
+
+# #' Ensure that the range has at least one x value in it
+# #' @param x A vector of doubles.
+# #' @param lower A single double value specifying the lower limit.
+# #' @param upper A single double value specifying the upper limit.
+# #' @examples
+# #' # TRUE
+# #' are_all_x_inside(1:5, 3, 5)
+# #' # FALSE
+# #' are_all_x_inside(1:2, 3, 5)
+# #' # Error "lower < upper is not TRUE"
+# #' \dontrun{are_all_x_inside(1:5, 6, 5)}
+# #' @return
+# #' A logical values indicating if all values in `x` are within or equal to
+# #' the bounds specified by `lower`--`upper`.
+all_x_inside <- function(x, lower, upper) {
+  stopifnot(lower < upper)
+  any(x >= lower & x <= upper)
 }

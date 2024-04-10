@@ -2,7 +2,7 @@
 % Please edit documentation in R/filter_boundaries.R
 \name{filter_boundaries}
 \alias{filter_boundaries}
-\title{Determine which boundaries in a group should be eliminated}
+\title{Eliminate boundaries that do not have any data in them or are duplicates}
 \usage{
 filter_boundaries(y, boundaries)
 }
@@ -19,7 +19,7 @@ where the bad areas are removed. If the input vectors are named, then the
 resulting rows of the returned data frame will also be named.
 }
 \description{
-Determine which boundaries in a group should be eliminated
+Eliminate boundaries that do not have any data in them or are duplicates
 }
 \details{
 Sometimes boundaries can be exactly equal and therefore do not need
@@ -37,5 +37,8 @@ positive tows, which is in effort to not predict to areas without
 observations that leads to the boundary being bad.
 }
 \examples{
+# Removes OR because there are only observations in WA and CA
 filter_boundaries(y = c(34, 48), boundaries = boundaries_data)
+# Shrinks northern borders and removes WA because no observations in WA
+filter_boundaries(y = c(45.5, 34), boundaries = boundaries_data)
 }

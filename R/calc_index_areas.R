@@ -59,11 +59,21 @@ calc_index_areas <- function(data,
   # There is no way project the index with bias correction in sdmTMB::sdmTMB
   # which is why we have to call [sdmTMB::get_index()] even if predictions are
   # specified in [sdmTMB::sdmTMB()].
+  latitudes_of_catches <- data |>
+    dplyr::filter(catch_weight > 0) |>
+    dplyr::pull(latitude)
   boundaries_fixed <- filter_boundaries(
-    y = dplyr::filter(data, catch_weight > 0) |>
-      dplyr::pull(latitude),
+    y = latitudes_of_catches,
     boundaries = boundaries
   )
+  if (NROW(boundaries_fixed) == 0) {
+    cli::cli_abort(c(
+      "x" = "There are no data in your supplied boundaries.",
+      "i" = "We checked for data in {names(boundaries)}.",
+      "i" = "Your data ranged from {.val {max(latitudes_of_catches)}}
+             to {.val {min(latitudes_of_catches)}}."
+    ))
+  }
   boundaries_grids <- purrr::map2(
     .x = boundaries_fixed[, "upper"],
     .y = boundaries_fixed[, "lower"],
