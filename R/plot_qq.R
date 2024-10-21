@@ -35,7 +35,7 @@ plot_qq <- function(fit, file_name = "qq.png") {
     .f = stats::residuals,
     # mcmc_samples = samples,
     # type = "mle-mcmc",
-    type = "mle-laplace",
+    type = "mle-mvn",
     object = fit
   )
   data <- purrr::map_df(
