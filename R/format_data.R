@@ -107,7 +107,7 @@ format_data.nwfscSurvey <- function(data, ...) {
       ),
       # Catches are needed in mt for stock synthesis
       catch_weight = total_catch_wt_kg * 0.001,
-      effort = area_swept_ha_der * 0.01,
+      effort = area_swept_ha * 0.01,
       depth = depth_m * -1,
       vessel_year = as.factor(as.numeric(
         as.factor(paste(vessel, year, sep = "_")),
