@@ -33,7 +33,6 @@ species,fxn,source,family,formula,min_depth,max_depth,min_latitude,max_latitude,
 "Pacific spiny dogfish","nwfscSurvey::pull_catch(common_name = species,survey=source)","NWFSC.Combo",sdmTMB::delta_lognormal(),"catch_weight ~ 0 + fyear + pass_scaled",-55,-700,-Inf,Inf,-Inf,Inf,TRUE,500,"iid","iid"
 "redbanded rockfish","nwfscSurvey::pull_catch(common_name = species,survey=source)","NWFSC.Combo",sdmTMB::delta_gamma(),"catch_weight ~ 0 + fyear",-55,-675,33.5,Inf,-Inf,Inf,TRUE,200,"off","iid"
 "rosethorn rockfish","nwfscSurvey::pull_catch(common_name = species,survey=source)","NWFSC.Combo",sdmTMB::delta_gamma(),"catch_weight ~ 0 + fyear + pass_scaled",-55,-675,-Inf,Inf,-Inf,Inf,TRUE,200,"iid","off"
-"rougheye and blackspotted rockfish","nwfscSurvey::pull_catch(common_name = species,survey=source)","NWFSC.Combo",sdmTMB::delta_gamma(),"catch_weight ~ 0 + fyear + pass_scaled",-55,-875,33.5,Inf,-Inf,Inf,TRUE,200,"iid","iid"
 "sharpchin rockfish","nwfscSurvey::pull_catch(common_name = species,survey=source)","NWFSC.Combo",sdmTMB::delta_lognormal(),"catch_weight ~ 0 + fyear + pass_scaled",-55,-475,33,Inf,-Inf,Inf,TRUE,200,"iid","off"
 "splitnose rockfish","nwfscSurvey::pull_catch(common_name = species,survey=source)","NWFSC.Combo",sdmTMB::delta_gamma(),"catch_weight ~ 0 + fyear + pass_scaled",-55,-700,-Inf,Inf,-Inf,Inf,TRUE,500,"iid","off"
 "stripetail rockfish","nwfscSurvey::pull_catch(common_name = species,survey=source)","NWFSC.Combo",sdmTMB::delta_gamma(),"catch_weight ~ 0 + fyear",-55,-500,-Inf,Inf,-Inf,Inf,TRUE,500,"off","iid"
