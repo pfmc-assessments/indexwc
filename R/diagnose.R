@@ -81,7 +81,7 @@ diagnose <- function(dir,
     fit[["data"]][["residuals2"]] <- stats::residuals(
       fit,
       model = 2,
-      type = "mle-mvn"  
+      type = "mle-mvn"
     )
   }
 

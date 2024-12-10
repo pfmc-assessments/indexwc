@@ -46,7 +46,7 @@
 format_data <- function(data, ...) {
   if (all(
     c("Latitude_dd", "cpue_kg_per_ha_der", "Datetime_utc_iso") %in%
-    colnames(data)
+      colnames(data)
   )) {
     class(data) <- c("nwfscSurvey", class(data))
   }

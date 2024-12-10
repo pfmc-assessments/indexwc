@@ -50,7 +50,7 @@ lookup_grid <- function(x,
 
   out <- dplyr::mutate(
     .data = data,
-    area_km2 = {{column}},
+    area_km2 = {{ column }},
     vessel_year = "0",
     depth_scaled = scale(depth, center = mean_depth, scale = sd_depth),
     depth_scaled_squared = depth_scaled^2

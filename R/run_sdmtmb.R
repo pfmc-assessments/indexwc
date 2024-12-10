@@ -32,7 +32,7 @@ run_sdmtmb <- function(dir_main = getwd(),
       "year", "fyear", "survey_name", "common_name",
       "catch_weight", "effort", "x", "y"
     ) %in%
-    colnames(data)
+      colnames(data)
   ))
   # TODO:
   # * check if random effects in formula and if converged, if yes and no, then
@@ -67,15 +67,15 @@ run_sdmtmb <- function(dir_main = getwd(),
 
   # Create prediction grid
   ranges <- data %>%
-      dplyr::filter(catch_weight > 0) %>%
-      dplyr::summarize(
-        dplyr::across(
-          dplyr::matches("tude"),
-          .fns = list("max" = ~ max(.) + 0.1, "min" = ~ min(.) - 0.1)
-        ),
-        # depth_min = min(abs(depth), na.rm = TRUE),
-        depth_max = min(depth, na.rm = TRUE)
-      )
+    dplyr::filter(catch_weight > 0) %>%
+    dplyr::summarize(
+      dplyr::across(
+        dplyr::matches("tude"),
+        .fns = list("max" = ~ max(.) + 0.1, "min" = ~ min(.) - 0.1)
+      ),
+      # depth_min = min(abs(depth), na.rm = TRUE),
+      depth_max = min(depth, na.rm = TRUE)
+    )
   data_truncated <- data %>%
     dplyr::filter(
       latitude > ranges[["latitude_min"]] & latitude < ranges[["latitude_max"]],

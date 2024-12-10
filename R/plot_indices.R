@@ -49,9 +49,9 @@ plot_indices <- function(data,
     ) +
     ggplot2::theme_bw() +
     ggplot2::theme(
-    # If we want legend on the figure
-    #   legend.justification = c(0, 1),
-    #   legend.direction = "horizontal"
+      # If we want legend on the figure
+      #   legend.justification = c(0, 1),
+      #   legend.direction = "horizontal"
       legend.position = legend_loc,
     ) +
     ggplot2::scale_colour_viridis_d() +

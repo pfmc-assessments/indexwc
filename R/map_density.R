@@ -34,7 +34,6 @@ map_density <- function(predictions,
                         n_col = 2,
                         column_grep = "^est[2]*$",
                         tile_size = c(2000, 2000)) {
-
   column <- grep(column_grep, colnames(predictions), value = TRUE)
   predictions <- dplyr::rename(
     .data = predictions,
@@ -66,7 +65,7 @@ map_density <- function(predictions,
   )
   names(x) <- split_names
 
- gg <- map_base() +
+  gg <- map_base() +
     ggplot2::geom_tile(
       data = purrr::list_rbind(x, names_to = "year"),
       mapping = aes(x * 1000, y * 1000, fill = layer)
