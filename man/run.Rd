@@ -16,6 +16,8 @@ run(data, family, formula, dir_main = getwd(), n_knots = 500, ...)
 \item{dir_main}{The name of the main directory}
 
 \item{n_knots}{The number of knots to specify for the SPDE mesh}
+
+\item{...}{Extra arguments}
 }
 \value{
 A \code{list} of {sdmTMB} \code{list}s, where each element in the list is the returned

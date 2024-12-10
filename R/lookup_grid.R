@@ -1,3 +1,16 @@
+#' Lookup the prediction grid
+#'
+#' @param x The raw survey data
+#' @param years The years to use for predictions
+#' @param max_latitude The maximum latitude for predictions
+#' @param min_latitude The minimum latitude for predictions
+#' @param max_longitude The maximum longitude for predictions
+#' @param min_longitude The minimum longitude for predictions
+#' @param mean_depth The mean depth to use
+#' @param sd_depth The sd of depth to use
+#' @param max_depth Maximum depth, defaults to Inf
+#' @param data the name of the grid, defaults to california_current_grid (WCGBTS)
+#' @export
 lookup_grid <- function(x,
                         years,
                         max_latitude,

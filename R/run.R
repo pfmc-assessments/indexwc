@@ -8,6 +8,7 @@
 #' @param formula  The formula used in the model
 #' @param dir_main The name of the main directory
 #' @param n_knots The number of knots to specify for the SPDE mesh
+#' @param ... Extra arguments
 #' @return
 #' A `list` of {sdmTMB} `list`s, where each element in the list is the returned
 #' object from [sdmTMB::sdmTMB()] when fitting data to a model and of the class
