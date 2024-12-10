@@ -15,7 +15,7 @@ plot_indices(
 \item{data}{A data frame created by \code{\link[sdmTMB:get_index]{sdmTMB::get_index()}} with an additional
 column giving the \code{.id} of each index called \code{area}. If \code{area} is not
 not present, then all data points will be assumed to be from one default
-area. It behoves you to make \code{area} an ordered factor such that the areas
+area. It behooves you to make \code{area} an ordered factor such that the areas
 are plotted in the order that you desire.}
 
 \item{save_loc}{A string providing the location of the directory you wish to
