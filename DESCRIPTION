@@ -21,7 +21,7 @@ Imports:
     fs,
     ggforce,
     ggplot2,
-    INLA,
+    gridExtra,
     magrittr,
     methods,
     nwfscSurvey,
@@ -40,7 +40,6 @@ Suggests:
     knitr,
     nmfspalette,
     testthat
-Additional_repositories: https://inla.r-inla-download.org/R/testing
 Remotes:
     github::nmfs-general-modeling-tools/nmfspalette,
     github::pbs-assess/sdmTMB,

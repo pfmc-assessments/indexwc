@@ -5,7 +5,7 @@
 #' @inheritParams format_data
 #' @inheritParams sdmTMB::sdmTMB
 #' @param n_knots An integer specifying the number of knots you want in your
-#'   mesh that is created by {INLA}. More knots is not always better. The
+#'   mesh that is created by {fmesher}. More knots is not always better. The
 #'   default is to use 500 knots. Future work will look at specifying a
 #'   threshold distance between points rather than number of knots.
 #' @param ... Optional arguments passed to [sdmTMB::sdmTMB()]. Note that users
