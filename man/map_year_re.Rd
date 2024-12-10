@@ -27,17 +27,16 @@ for the fit model
 }
 \examples{
 \dontrun{
-	predictions <- predict(
-	    fit , 
-	    newdata = prediction_grid
-	) 
-	predictions[, c("lon", "lat")] <- round(predictions[, c("Lon", "Lat")], 1)
-	map_year_re(
-		predictions = predictions, 
-		dir = file.path(sppdir, survey, "index", obs)
-	)
- }
-
+predictions <- predict(
+  fit,
+  newdata = prediction_grid
+)
+predictions[, c("lon", "lat")] <- round(predictions[, c("Lon", "Lat")], 1)
+map_year_re(
+  predictions = predictions,
+  dir = file.path(sppdir, survey, "index", obs)
+)
+}
 
 }
 \author{

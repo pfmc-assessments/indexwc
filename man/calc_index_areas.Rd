@@ -62,7 +62,8 @@ boundaries_data[4]
 list("test" = c(39, 38))
 # run the function
 index <- calc_index_areas(
-  data, fit, grid, dir = getwd(), boundaries = list("test" = c(39, 38))
+  data, fit, grid,
+  dir = getwd(), boundaries = list("test" = c(39, 38))
 )
 # look at the index, which will be in "test" because that is what we
 # named the boundary

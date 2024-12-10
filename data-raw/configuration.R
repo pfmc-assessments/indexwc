@@ -54,21 +54,21 @@ indices <- dir(
       load(x)
       if (exists("index_areas")) {
         return(data.frame(i = x, index_areas))
-        } else {
-          return(NULL)
-        }
+      } else {
+        return(NULL)
+      }
     }
   )
 gg <- ggplot2::ggplot(
- data = indices %>%
-  dplyr::mutate(
-    dist = basename(dirname(dirname(i)))
-  ) %>%
-  dplyr::filter(area == "coastwide"),
+  data = indices %>%
+    dplyr::mutate(
+      dist = basename(dirname(dirname(i)))
+    ) %>%
+    dplyr::filter(area == "coastwide"),
   ggplot2::aes(x = year, y = est, lty = dist, col = dist, group = i)
 ) +
-ggplot2::geom_line() +
-ggplot2::theme_bw()
+  ggplot2::geom_line() +
+  ggplot2::theme_bw()
 ggsave(gg, filename = "indexwc_copper_rockfish.png")
 
 

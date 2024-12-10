@@ -14,7 +14,6 @@ map_residuals <- function(data,
                           n_row = 1,
                           n_col = 2,
                           save_prefix = file.path(getwd(), "data_")) {
-
   # data_extent <- raster::extent(data[, c("x", "y")])
   # data_raster <- raster::raster(data_extent,
   #   ncol = floor((slot(data_extent, "xmax") - slot(data_extent, "xmin")) / 2),

@@ -75,12 +75,13 @@ plot_qq <- function(fit, file_name = "qq.png") {
     ggplot2::ylab("Sample quantiles") +
     ggplot2::labs(title = "Normal quantile-quantile plot") +
     ggplot2::theme_bw() +
-    ggplot2::theme(legend.position =
-      if (length(unique(data[["model"]])) > 1) {
-        c(0.15, 0.9)
-      } else {
-        "none"
-      }
+    ggplot2::theme(
+      legend.position =
+        if (length(unique(data[["model"]])) > 1) {
+          c(0.15, 0.9)
+        } else {
+          "none"
+        }
     ) +
     ggplot2::geom_abline(
       mapping = ggplot2::aes(

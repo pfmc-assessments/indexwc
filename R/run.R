@@ -36,7 +36,7 @@ run <- function(data,
       "year", "fyear", "survey_name", "common_name",
       "catch_weight", "effort", "x", "y"
     ) %in%
-    colnames(data)
+      colnames(data)
   ))
 
   # Objects
