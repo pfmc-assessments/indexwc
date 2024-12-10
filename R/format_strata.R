@@ -3,6 +3,7 @@
 #' @param strata An object returned from [nwfscSurvey::GetStrata.fn()].
 #' @param min_depth,max_depth The minimum and maximum depths you want to use
 #'   for all strata if you want to override the values in `strata`.
+#' @export
 #' @examples
 #' format_strata()
 #' format_strata(nwfscSurvey::GetStrata.fn("sablefish"))
