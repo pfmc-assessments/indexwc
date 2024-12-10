@@ -18,6 +18,7 @@
 #'   be in real values whether that is decimal degrees or m it does not matter
 #'   but they cannot be character values.
 #' @param boundaries TODO document
+#' @export
 #' @return
 #' A data frame with two columns (i.e., `upper` and `lower`) is returned,
 #' where the bad areas are removed. If the input vectors are named, then the

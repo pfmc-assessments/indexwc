@@ -17,30 +17,28 @@ Depends:
     R (>= 4.2)
 Imports:
     cli,
+    cowplot,
     dplyr,
+    forcats,
     fs,
     ggforce,
     ggplot2,
-    INLA,
+    gridExtra,
+    lifecycle,
     magrittr,
-    methods,
     nwfscSurvey,
     purrr,
     raster,
-    rmarkdown,
     rnaturalearth,
-    rnaturalearthdata,
     sdmTMB (>= 0.3.0.9001),
     sf,
-    stringr,
     tibble,
-    viridis,
-    visreg
+    tidyr,
+    viridis
 Suggests:
     knitr,
     nmfspalette,
     testthat
-Additional_repositories: https://inla.r-inla-download.org/R/testing
 Remotes:
     github::nmfs-general-modeling-tools/nmfspalette,
     github::pbs-assess/sdmTMB,
