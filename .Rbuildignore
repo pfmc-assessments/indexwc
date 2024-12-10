@@ -2,4 +2,4 @@
 ^sandbox$
 ^.*\.Rproj$
 ^\.Rproj\.user$
-^.github$
+^\.github$
