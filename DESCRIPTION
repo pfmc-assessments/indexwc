@@ -17,25 +17,24 @@ Depends:
     R (>= 4.2)
 Imports:
     cli,
+    cowplot,
     dplyr,
+    forcats,
     fs,
     ggforce,
     ggplot2,
     gridExtra,
+    lifecycle,
     magrittr,
-    methods,
     nwfscSurvey,
     purrr,
     raster,
-    rmarkdown,
     rnaturalearth,
-    rnaturalearthdata,
     sdmTMB (>= 0.3.0.9001),
     sf,
-    stringr,
     tibble,
-    viridis,
-    visreg
+    tidyr,
+    viridis
 Suggests:
     knitr,
     nmfspalette,

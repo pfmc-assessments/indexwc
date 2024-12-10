@@ -6,6 +6,17 @@
 \usage{
 run(data, family, formula, dir_main = getwd(), n_knots = 500, ...)
 }
+\arguments{
+\item{data}{The data object being passed in}
+
+\item{family}{The name of the family used for the response variable}
+
+\item{formula}{The formula used in the model}
+
+\item{dir_main}{The name of the main directory}
+
+\item{n_knots}{The number of knots to specify for the SPDE mesh}
+}
 \value{
 A \code{list} of {sdmTMB} \code{list}s, where each element in the list is the returned
 object from \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}} when fitting data to a model and of the class
