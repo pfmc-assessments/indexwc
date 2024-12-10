@@ -2,10 +2,16 @@ Package: indexwc
 Title: Run indices for West Coast Groundfish assessments
 Version: 0.6
 Authors@R: c(
-    person(c("Kelli", "F."), "Johnson", , "kelli.johnson@noaa.gov", role = c("aut", "cre"),
+    person(c("Kelli", "F."), "Johnson", email = "kelli.johnson@noaa.gov", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-5149-451X")),
-    person(c("Chantel", "R."), "Wetzel", , "chantel.wetzel@noaa.gov", role = "aut",
-           comment = c(ORCID = "0000-0002-7573-8240"))
+    person(c("Sean", "C."), "Anderson", role = c("aut"),
+           comment = c(ORCID = "0000-0001-9563-1937")),
+    person(c("Chantel", "R."), "Wetzel", email = "chantel.wetzel@noaa.gov", role = "aut",
+           comment = c(ORCID = "0000-0002-7573-8240")),
+    person(c("Eric", "J."), "Ward", role = "aut",
+           comment = c(ORCID = "0000-0002-4359-0296")),
+    person(c("Ian", "G."), "Taylor", email = "Ian.Taylor@noaa.gov", role = "aut",
+           comment = c(ORCID = "0000-0002-4232-5669"))
   )
 Description: A system to run and summarize models that estimate indices of
     abundance for various data sources specific to populations off the
@@ -30,6 +36,7 @@ Imports:
     purrr,
     raster,
     rnaturalearth,
+    rnaturalearthdata,
     sdmTMB (>= 0.3.0.9001),
     sf,
     tibble,
