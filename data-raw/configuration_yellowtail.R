@@ -47,18 +47,18 @@ lm_pos <- lm(formula = as.formula(configuration$formula),
          data = dplyr::filter(data$data_filtered[[1]], catch_weight>0))
 pos_not_identifiable <- names(which(is.na(coef(lm_pos))))
 
-
+# Create variables to be not estimated/ mapped off
 .map <- names(coef(lm))
 .map[names(coef(lm)) %in% not_identifiable] <- NA
 .map <- factor(.map)
 .start <- rep(0, length(coef(lm)))
 .start[names(coef(lm)) %in% not_identifiable] <- -20
 
-.map_pos <- names(coef(lm_pos))
-.map_pos[names(coef(lm_pos)) %in% pos_not_identifiable] <- NA
-.map_pos <- factor(.map)
-.start_pos <- rep(0, length(coef(lm_pos)))
-.start_pos[names(coef(lm_pos)) %in% pos_not_identifiable] <- -20
+.map_pos <- names(coef(lm))
+.map_pos[names(coef(lm)) %in% pos_not_identifiable] <- NA
+.map_pos <- factor(.map_pos)
+.start_pos <- rep(0, length(coef(lm)))
+.start_pos[names(coef(lm)) %in% pos_not_identifiable] <- -20
 
 best <- data |>
   dplyr::mutate(
