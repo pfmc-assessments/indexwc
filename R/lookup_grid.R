@@ -82,7 +82,8 @@ lookup_grid <- function(x,
       latitude,
       depth,
       depth_scaled,
-      depth_scaled_squared
+      depth_scaled_squared,
+      split_conception
     )
 
   year_grid <- purrr::map_dfr(

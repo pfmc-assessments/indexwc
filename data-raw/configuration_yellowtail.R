@@ -5,6 +5,9 @@
 #   it is class(data) > [1] "tbl_df" "tbl" "data.frame"
 # * for vessel_year, might want a different level scaling things might not have
 #   to give this to grid
+
+library(dplyr)
+library(indexwc)
 configuration <- tibble::as_tibble(read.csv(
   file.path("data-raw", "configuration.csv")
 ))
@@ -13,8 +16,9 @@ configuration <- configuration |>
   dplyr::filter(species == "yellowtail rockfish")
 
 # Change the formula to add year : region interaction
-configuration$formula <- "catch_weight ~ 0 + fyear*region + pass_scaled"
+configuration$formula <- "catch_weight ~ 0 + fyear*split_conception + pass_scaled"
 configuration$knots <- 400
+configuration$spatiotemporal1 <- "off"
 configuration$spatiotemporal2 <- "off" # based on EW's initial modeling, these worked best
 
 data <- configuration |>
@@ -29,13 +33,17 @@ data <- configuration |>
         latitude >= min_latitude, latitude <= max_latitude,
         year >= min_year, year <= max_year
       ) |>
-        dplyr::mutate(region = ifelse(latitude > 40.1666667, "N", "S")))
+        dplyr::mutate(split_conception = ifelse(latitude > 40.1666667, "N", "S")))
   ) |>
   dplyr::ungroup()
 
+# data("california_current_grid")
+# california_current_grid$split_conception <- ifelse(california_current_grid$latitude > 40.1666667, "N", "S")
+# usethis::use_data(california_current_grid, overwrite = TRUE)
+
 # Confirm no data in the south in 2007:
 dplyr::filter(data$data_filtered[[1]], catch_weight > 0) |>
-  dplyr::group_by(region, year) |>
+  dplyr::group_by(split_conception, year) |>
   dplyr::summarise(n = n())
 
 # Find variables that aren't identifiable for presence-absence model
@@ -59,6 +67,17 @@ pos_not_identifiable <- names(which(is.na(coef(lm_pos))))
 .map_pos <- factor(.map_pos)
 .start_pos <- rep(0, length(coef(lm)))
 .start_pos[names(coef(lm)) %in% pos_not_identifiable] <- -20
+#
+# fit <- sdmTMB(catch_weight ~ 0 + fyear*split_conception + pass_scaled,
+#        offset = log(data$data_filtered[[1]]$effort),
+#        family = delta_gamma(),
+#        spatial="off",
+#        spatiotemporal = "off",
+#        data = data$data_filtered[[1]],
+#        control = sdmTMB::sdmTMBcontrol(
+#          map = list(b_j = .map_pos, b_j2 = .map_pos),
+#          start = list(b_j = .start_pos, b_j2 = .start_pos)
+#        ))
 
 best <- data |>
   dplyr::mutate(
@@ -76,8 +95,8 @@ best <- data |>
         spatiotemporal = purrr::map2(spatiotemporal1, spatiotemporal2, list),
         sdmtmb_control = list(
           sdmTMB::sdmTMBcontrol(
-            map = list(b_j = .map, b_j2 = .map_pos),
-            start = list(b_j = .start, b_j2 = .start_pos)
+            map = list(b_j = .map_pos, b_j2 = .map_pos),
+            start = list(b_j = .start_pos, b_j2 = .start_pos)
           )
         )
       ),

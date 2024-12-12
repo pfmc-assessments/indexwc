@@ -9,6 +9,10 @@ configuration <- tibble::as_tibble(read.csv(
   file.path("data-raw", "configuration.csv")
 ))
 
+configuration <- configuration[39:40,]
+configuration$spatiotemporal1 <- "off"
+configuration$spatiotemporal2 <- "off"
+
 data <- configuration %>%
   # Row by row ... do stuff then ungroup
   dplyr::rowwise() %>%
@@ -20,9 +24,17 @@ data <- configuration %>%
         depth <= min_depth, depth >= max_depth,
         latitude >= min_latitude, latitude <= max_latitude,
         year >= min_year, year <= max_year
-      ))
+      ) |>
+        dplyr::mutate(region = ifelse(latitude > 40.1666667, "N", "S")))
   ) %>%
   dplyr::ungroup()
+
+# Confirm no data in the south in 2007:
+dplyr::filter(data$data_filtered[[2]], catch_weight > 0) |>
+  dplyr::group_by(region, year) |>
+  dplyr::summarise(n = n())
+
+
 
 best <- data %>%
   dplyr::mutate(
