@@ -8,10 +8,10 @@
 
 # Things to flag for Chantel:
 # 1. spatiotemporal + speed
-# 2. move dplyr::mutate(split_conception = ifelse(latitude > 40.1666667, "N", "S"))) to data formatting -- making
+# 2. move dplyr::mutate(split_mendocino = ifelse(latitude > 40.1666667, "N", "S"))) to data formatting -- making
 # columns available for user
 # 3. could automate coefficient mapping
-# 4. edit lookup_grid() to add split_conception -- needs to be done for other splits
+# 4. edit lookup_grid() to add split_mendocino -- needs to be done for other splits
 library(dplyr)
 library(indexwc)
 configuration <- tibble::as_tibble(read.csv(
@@ -22,9 +22,9 @@ configuration <- configuration |>
   dplyr::filter(species == "yellowtail rockfish")
 
 # Change the formula to add year : region interaction
-configuration$formula <- "catch_weight ~ 0 + fyear*split_conception + pass_scaled"
+configuration$formula <- "catch_weight ~ 0 + fyear*split_mendocino + pass_scaled"
 configuration$knots <- 400
-# configuration$spatiotemporal1 <- "off" # can be turned off just for speed
+configuration$spatiotemporal1 <- "off" # can be turned off just for speed
 configuration$spatiotemporal2 <- "off" # based on EW's initial modeling, these worked best
 
 data <- configuration |>
@@ -39,17 +39,17 @@ data <- configuration |>
         latitude >= min_latitude, latitude <= max_latitude,
         year >= min_year, year <= max_year
       ) |>
-        dplyr::mutate(split_conception = ifelse(latitude > 40.1666667, "N", "S")))
+        dplyr::mutate(split_mendocino = ifelse(latitude > 40.1666667, "N", "S")))
   ) |>
   dplyr::ungroup()
 
 # data("california_current_grid")
-# california_current_grid$split_conception <- ifelse(california_current_grid$latitude > 40.1666667, "N", "S")
+# california_current_grid$split_mendocino <- ifelse(california_current_grid$latitude > 40.1666667, "N", "S")
 # usethis::use_data(california_current_grid, overwrite = TRUE)
 
 # Confirm no data in the south in 2007:
 dplyr::filter(data$data_filtered[[1]], catch_weight > 0) |>
-  dplyr::group_by(split_conception, year) |>
+  dplyr::group_by(split_mendocino, year) |>
   dplyr::summarise(n = n())
 
 # Find variables that aren't identifiable for presence-absence model
@@ -92,7 +92,8 @@ best <- data |>
         sdmtmb_control = list(
           sdmTMB::sdmTMBcontrol(
             map = list(b_j = .map_pos, b_j2 = .map_pos),
-            start = list(b_j = .start_pos, b_j2 = .start_pos)
+            start = list(b_j = .start_pos, b_j2 = .start_pos),
+            newton_loops = 3
           )
         )
       ),
