@@ -64,7 +64,7 @@ estimation for data limited applications}
 By default, this is includes 3 newton loops}
 
 \item{...}{Optional arguments passed to \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}}. Note that users
-cannot pass \code{anisotropy} because this are set
+cannot pass \code{anisotropy} because this is set
 internal to this function, where \code{anisotropy = TRUE} because the coastline
 of the western coastline of the U.S.A. is not perpendicular to the country
 and three newton loops are specified in the control parameters.}

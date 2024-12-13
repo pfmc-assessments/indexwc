@@ -48,4 +48,3 @@ best <- data |>
 #   it is class(data) > [1] "tbl_df" "tbl" "data.frame"
 # * for vessel_year, might want a different level scaling things might not have
 #   to give this to grid
-

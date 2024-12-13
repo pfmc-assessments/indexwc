@@ -26,7 +26,7 @@ data <- configuration |>
         latitude >= min_latitude, latitude <= max_latitude,
         year >= min_year, year <= max_year
       ) |>
-        dplyr::mutate(split_mendocino = ifelse(latitude > 40.1666667, "N", "S")))
+      dplyr::mutate(split_mendocino = ifelse(latitude > 40.1666667, "N", "S")))
   ) |>
   dplyr::ungroup()
 
@@ -36,12 +36,16 @@ dplyr::filter(data$data_filtered[[1]], catch_weight > 0) |>
   dplyr::summarise(n = dplyr::n())
 
 # Find variables that aren't identifiable for presence-absence model
-lm <- lm(formula = as.formula(configuration$formula),
-         data = data$data_filtered[[1]])
-#not_identifiable <- names(which(is.na(coef(lm))))
+lm <- lm(
+  formula = as.formula(configuration$formula),
+  data = data$data_filtered[[1]]
+)
+# not_identifiable <- names(which(is.na(coef(lm))))
 # Find variables that aren't identifiable for positive model
-lm_pos <- lm(formula = as.formula(configuration$formula),
-         data = dplyr::filter(data$data_filtered[[1]], catch_weight>0))
+lm_pos <- lm(
+  formula = as.formula(configuration$formula),
+  data = dplyr::filter(data$data_filtered[[1]], catch_weight > 0)
+)
 pos_not_identifiable <- names(which(is.na(coef(lm_pos))))
 
 # Create variables to be not estimated/ mapped off
@@ -77,7 +81,3 @@ best <- data |>
       .f = indexwc::run_sdmtmb
     )
   )
-
-
-
-
