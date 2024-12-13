@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">indexwc</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.7</span>
       </span>
     </div>
 
@@ -44,7 +44,16 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">run_sdmtmb</span><span class="op">(</span>dir_main <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">data</span>, <span class="va">family</span>, <span class="va">formula</span>, n_knots <span class="op">=</span> <span class="fl">500</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">run_sdmtmb</span><span class="op">(</span></span>
+<span>  dir_main <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  <span class="va">data</span>,</span>
+<span>  <span class="va">family</span>,</span>
+<span>  <span class="va">formula</span>,</span>
+<span>  n_knots <span class="op">=</span> <span class="fl">500</span>,</span>
+<span>  share_range <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  sdmtmb_control <span class="op">=</span> <span class="fu">sdmTMB</span><span class="fu">::</span><span class="fu"><a href="https://pbs-assess.github.io/sdmTMB/reference/sdmTMBcontrol.html" class="external-link">sdmTMBcontrol</a></span><span class="op">(</span>newton_loops <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -100,9 +109,21 @@ default is to use 500 knots. Future work will look at specifying a
 threshold distance between points rather than number of knots.</p></dd>
 
 
+<dt id="arg-share-range">share_range<a class="anchor" aria-label="anchor" href="#arg-share-range"></a></dt>
+<dd><p>Logical, whether or not to share the range between the
+spatial and spatiotemporal fields. This defaults to FALSE, but adds extra
+parameters. The default in sdmTMB is TRUE, and sharing the range may improve
+estimation for data limited applications</p></dd>
+
+
+<dt id="arg-sdmtmb-control">sdmtmb_control<a class="anchor" aria-label="anchor" href="#arg-sdmtmb-control"></a></dt>
+<dd><p>Optional list, in the format of <code><a href="https://pbs-assess.github.io/sdmTMB/reference/sdmTMBcontrol.html" class="external-link">sdmTMB::sdmTMBcontrol()</a></code>.
+By default, this is includes 3 newton loops</p></dd>
+
+
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>Optional arguments passed to <code><a href="https://pbs-assess.github.io/sdmTMB/reference/sdmTMB.html" class="external-link">sdmTMB::sdmTMB()</a></code>. Note that users
-cannot pass <code>anisotropy</code> or <code>sdmTMBcontrol</code> because both of these are set
+cannot pass <code>anisotropy</code> because this are set
 internal to this function, where <code>anisotropy = TRUE</code> because the coastline
 of the western coastline of the U.S.A. is not perpendicular to the country
 and three newton loops are specified in the control parameters.</p></dd>
