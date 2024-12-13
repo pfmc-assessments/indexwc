@@ -83,7 +83,10 @@ lookup_grid <- function(x,
       depth,
       depth_scaled,
       depth_scaled_squared,
-      split_mendocino
+      split_mendocino,
+      split_conception,
+      split_monterey,
+      split_state
     )
 
   year_grid <- purrr::map_dfr(
