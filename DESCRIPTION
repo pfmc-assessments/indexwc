@@ -1,6 +1,6 @@
 Package: indexwc
 Title: Run indices for West Coast Groundfish assessments
-Version: 0.6
+Version: 0.7
 Authors@R: c(
     person(c("Kelli", "F."), "Johnson", , "kelli.johnson@noaa.gov", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-5149-451X")),
