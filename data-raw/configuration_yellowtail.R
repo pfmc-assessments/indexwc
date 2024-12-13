@@ -1,17 +1,8 @@
 # TODO list
-# * Only pull data once per species and then combine the pull results with the
-#   configuration matrix again
-# * Fix how format_data returns an object without the nwfscSurvey class instead
-#   it is class(data) > [1] "tbl_df" "tbl" "data.frame"
-# * for vessel_year, might want a different level scaling things might not have
-#   to give this to grid
-
-# Things to flag for Chantel:
-# 1. spatiotemporal + speed
-# 2. move dplyr::mutate(split_mendocino = ifelse(latitude > 40.1666667, "N", "S"))) to data formatting -- making
+# * move dplyr::mutate(split_mendocino = ifelse(latitude > 40.1666667, "N", "S"))) to data formatting -- making
 # columns available for user
-# 3. could automate coefficient mapping
-# 4. edit lookup_grid() to add split_mendocino -- needs to be done for other splits
+# * could automate coefficient mapping
+
 library(dplyr)
 library(indexwc)
 configuration <- tibble::as_tibble(read.csv(
@@ -20,12 +11,8 @@ configuration <- tibble::as_tibble(read.csv(
 
 configuration <- configuration |>
   dplyr::filter(species == "yellowtail rockfish")
-
-# Change the formula to add year : region interaction
+# Change the covariates to include a split at cape mendocino
 configuration$formula <- "catch_weight ~ 0 + fyear*split_mendocino + pass_scaled"
-configuration$knots <- 400
-configuration$spatiotemporal1 <- "off" # can be turned off just for speed
-configuration$spatiotemporal2 <- "off" # based on EW's initial modeling, these worked best
 
 data <- configuration |>
   # Row by row ... do stuff then ungroup
@@ -43,14 +30,10 @@ data <- configuration |>
   ) |>
   dplyr::ungroup()
 
-# data("california_current_grid")
-# california_current_grid$split_mendocino <- ifelse(california_current_grid$latitude > 40.1666667, "N", "S")
-# usethis::use_data(california_current_grid, overwrite = TRUE)
-
 # Confirm no data in the south in 2007:
 dplyr::filter(data$data_filtered[[1]], catch_weight > 0) |>
   dplyr::group_by(split_mendocino, year) |>
-  dplyr::summarise(n = n())
+  dplyr::summarise(n = dplyr::n())
 
 # Find variables that aren't identifiable for presence-absence model
 lm <- lm(formula = as.formula(configuration$formula),
@@ -62,12 +45,6 @@ lm_pos <- lm(formula = as.formula(configuration$formula),
 pos_not_identifiable <- names(which(is.na(coef(lm_pos))))
 
 # Create variables to be not estimated/ mapped off
-# .map <- names(coef(lm))
-# .map[names(coef(lm)) %in% not_identifiable] <- NA
-# .map <- factor(.map)
-# .start <- rep(0, length(coef(lm)))
-# .start[names(coef(lm)) %in% not_identifiable] <- -20
-
 coef_names <- names(coef(lm))
 .map_pos <- coef_names
 .map_pos[coef_names %in% pos_not_identifiable] <- NA
@@ -87,7 +64,7 @@ best <- data |>
         family = family,
         anisotropy = anisotropy,
         n_knots = knots,
-        share_range = FALSE,
+        share_range = share_range,
         spatiotemporal = purrr::map2(spatiotemporal1, spatiotemporal2, list),
         sdmtmb_control = list(
           sdmTMB::sdmTMBcontrol(
