@@ -18,7 +18,7 @@ california_current_grid <- california_current_grid |>
     split_mendocino = dplyr::case_when(Lat > 40.1666667 ~"N", .default = "S"),
     split_conception = dplyr::case_when(Lat > 34.45 ~"N", .default = "S"),
     split_monterey = dplyr::case_when(Lat > 36.0 ~"N", .default = "S"),
-    split_state = dplyr::case_when(Lat > 46.0 ~"W", Lat < 42.0 ~"C", .default = "O"),
+    split_state = dplyr::case_when(Lat > 46.25 ~"W", Lat < 42.0 ~"C", .default = "O"),
     propInTriennial = ifelse(Lat < 34.5, 0, propInTriennial),
     depth = Depth_km * -1000,
     dplyr::across(
