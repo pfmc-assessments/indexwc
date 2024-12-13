@@ -4,7 +4,16 @@
 \alias{run_sdmtmb}
 \title{Run \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}}}
 \usage{
-run_sdmtmb(dir_main = getwd(), data, family, formula, n_knots = 500, ...)
+run_sdmtmb(
+  dir_main = getwd(),
+  data,
+  family,
+  formula,
+  n_knots = 500,
+  share_range = FALSE,
+  sdmtmb_control = sdmTMB::sdmTMBcontrol(newton_loops = 3),
+  ...
+)
 }
 \arguments{
 \item{dir_main}{A string specifying a path where results will be saved. The
@@ -46,8 +55,16 @@ mesh that is created by {fmesher}. More knots is not always better. The
 default is to use 500 knots. Future work will look at specifying a
 threshold distance between points rather than number of knots.}
 
+\item{share_range}{Logical, whether or not to share the range between the
+spatial and spatiotemporal fields. This defaults to FALSE, but adds extra
+parameters. The default in sdmTMB is TRUE, and sharing the range may improve
+estimation for data limited applications}
+
+\item{sdmtmb_control}{Optional list, in the format of \code{\link[sdmTMB:sdmTMBcontrol]{sdmTMB::sdmTMBcontrol()}}.
+By default, this is includes 3 newton loops}
+
 \item{...}{Optional arguments passed to \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}}. Note that users
-cannot pass \code{anisotropy} or \code{sdmTMBcontrol} because both of these are set
+cannot pass \code{anisotropy} because this are set
 internal to this function, where \code{anisotropy = TRUE} because the coastline
 of the western coastline of the U.S.A. is not perpendicular to the country
 and three newton loops are specified in the control parameters.}

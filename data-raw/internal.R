@@ -1,5 +1,5 @@
 southern_BC <- 49.0
-southern_WA <- 46.0
+southern_WA <- 46.25
 southern_OR <- 42.0
 southern_CA <- 32.0
 

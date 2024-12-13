@@ -8,8 +8,14 @@
 #'   mesh that is created by {fmesher}. More knots is not always better. The
 #'   default is to use 500 knots. Future work will look at specifying a
 #'   threshold distance between points rather than number of knots.
+#' @param share_range Logical, whether or not to share the range between the
+#'   spatial and spatiotemporal fields. This defaults to FALSE, but adds extra
+#'   parameters. The default in sdmTMB is TRUE, and sharing the range may improve
+#'   estimation for data limited applications
+#' @param sdmtmb_control Optional list, in the format of [sdmTMB::sdmTMBcontrol()].
+#'   By default, this is includes 3 newton loops
 #' @param ... Optional arguments passed to [sdmTMB::sdmTMB()]. Note that users
-#'   cannot pass `anisotropy` or `sdmTMBcontrol` because both of these are set
+#'   cannot pass `anisotropy` because this is set
 #'   internal to this function, where `anisotropy = TRUE` because the coastline
 #'   of the western coastline of the U.S.A. is not perpendicular to the country
 #'   and three newton loops are specified in the control parameters.
@@ -24,6 +30,8 @@ run_sdmtmb <- function(dir_main = getwd(),
                        family,
                        formula,
                        n_knots = 500,
+                       share_range = FALSE,
+                       sdmtmb_control = sdmTMB::sdmTMBcontrol(newton_loops = 3),
                        ...) {
   # Checks
   stopifnot(inherits(family, "family"))
@@ -110,8 +118,8 @@ run_sdmtmb <- function(dir_main = getwd(),
     data = data_truncated,
     mesh = mesh,
     family = family,
-    control = sdmTMB::sdmTMBcontrol(newton_loops = 3),
-    share_range = FALSE,
+    control = sdmtmb_control,
+    share_range = share_range,
     ...
   )
   # Refit the model if the hessian is not positive definite
