@@ -14,11 +14,7 @@
 #'   estimation for data limited applications
 #' @param sdmtmb_control Optional list, in the format of [sdmTMB::sdmTMBcontrol()].
 #'   By default, this is includes 3 newton loops
-#' @param ... Optional arguments passed to [sdmTMB::sdmTMB()]. Note that users
-#'   cannot pass `anisotropy` because this is set
-#'   internal to this function, where `anisotropy = TRUE` because the coastline
-#'   of the western coastline of the U.S.A. is not perpendicular to the country
-#'   and three newton loops are specified in the control parameters.
+#' @param ... Optional arguments passed to [sdmTMB::sdmTMB()].
 #'
 #' @author Chantel R. Wetzel
 #' @export
