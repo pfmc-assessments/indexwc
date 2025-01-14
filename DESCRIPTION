@@ -44,10 +44,8 @@ Imports:
     viridis
 Suggests:
     knitr,
-    nmfspalette,
     testthat
 Remotes:
-    github::nmfs-general-modeling-tools/nmfspalette,
     github::pbs-assess/sdmTMB,
     github::pfmc-assessments/nwfscSurvey,
     github::r4ss/r4ss
