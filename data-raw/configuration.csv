@@ -49,7 +49,7 @@
 "stripetail rockfish","nwfscSurvey::pull_catch(common_name = species,survey=source)","NWFSC.Combo","sdmTMB::delta_gamma()","catch_weight ~ 0 + fyear",-55,-500,-Inf,Inf,-Inf,Inf,TRUE,500,"off","iid",FALSE
 "widow rockfish","nwfscSurvey::pull_catch(common_name = species,survey=source)","NWFSC.Combo","sdmTMB::delta_gamma()","catch_weight ~ 0 + fyear + pass_scaled",-55,-675,33.5,Inf,-Inf,Inf,TRUE,200,"iid","off",TRUE
 "yelloweye rockfish","nwfscSurvey::pull_catch(common_name = species,survey=source)","NWFSC.Combo","sdmTMB::delta_gamma()","catch_weight ~ 0 + fyear + pass_scaled",-55,-325,34.5,Inf,-Inf,Inf,TRUE,200,"off","off",TRUE
-"yellowtail rockfish","nwfscSurvey::pull_catch(common_name = species,survey=source)","NWFSC.Combo","sdmTMB::delta_gamma()","catch_weight ~ 0 + fyear + pass_scaled",-55,-425,33.5,Inf,-Inf,Inf,TRUE,400,"iid","off",TRUE
+"yellowtail rockfish","nwfscSurvey::pull_catch(common_name = species,survey=source)","NWFSC.Combo","sdmTMB::delta_gamma()","catch_weight ~ 0 + fyear*split_mendocino + pass_scaled",-55,-425,33.5,Inf,-Inf,Inf,TRUE,400,"iid","off",TRUE
 "yellowtail rockfish","nwfscSurvey::pull_catch(common_name = species,survey=source)","Triennial","sdmTMB::delta_gamma()","catch_weight ~ 0 + fyear*split_mendocino",-55,-425,33.5,Inf,1980,Inf,TRUE,400,"iid","off",TRUE
 "sablefish","nwfscSurvey::pull_catch(common_name = species,survey=source)","AFSC.Slope","sdmTMB::tweedie()","catch_weight ~ 0 + fyear",-183,-Inf,34.5,Inf,1997,Inf,TRUE,300,"iid","iid",FALSE
 "rougheye and blackspotted rockfish","nwfscSurvey::pull_catch(common_name = species,survey=source)","Triennial","sdmTMB::delta_lognormal()","catch_weight ~ 0 + fyear",-55,-500,42,Inf,1980,-Inf,FALSE,100,"iid","off",TRUE
@@ -61,3 +61,6 @@
 "rougheye rockfish","nwfscSurvey::pull_catch(common_name = species,survey=source)","NWFSC.Slope","sdmTMB::delta_gamma()","catch_weight ~ 0 + fyear",-183,-Inf,34.5,Inf,1999,Inf,TRUE,100,"off","off",TRUE
 "chilipepper","nwfscSurvey::pull_catch(common_name = species,survey=source)","AFSC.Slope","sdmTMB::delta_gamma()","catch_weight ~ 0 + fyear",-183,-Inf,34.5,Inf,1997,Inf,FALSE,100,"off","off",TRUE
 "chilipepper","nwfscSurvey::pull_catch(common_name = species,survey=source)","AFSC.Slope","sdmTMB::delta_lognormal()","catch_weight ~ 0 + fyear",-183,-Inf,34.5,Inf,1997,Inf,FALSE,100,"off","off",TRUE
+"yellowtail rockfish","nwfscSurvey::pull_catch(common_name = species,survey=source)","NWFSC.Combo","sdmTMB::delta_lognormal()","catch_weight ~ 0 + fyear*split_mendocino + pass_scaled",-55,-425,33.5,Inf,-Inf,Inf,TRUE,400,"iid","off",TRUE
+"yellowtail rockfish","nwfscSurvey::pull_catch(common_name = species,survey=source)","NWFSC.Combo","sdmTMB::delta_lognormal()","catch_weight ~ 0 + fyear + pass_scaled",-55,-425,40.1667,Inf,-Inf,Inf,TRUE,400,"iid","off",TRUE
+"yellowtail rockfish","nwfscSurvey::pull_catch(common_name = species,survey=source)","NWFSC.Combo","sdmTMB::delta_gamma()","catch_weight ~ 0 + fyear + pass_scaled",-55,-425,40.1667,Inf,-Inf,Inf,TRUE,400,"iid","off",TRUE
