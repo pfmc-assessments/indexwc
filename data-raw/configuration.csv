@@ -47,7 +47,7 @@
 "sharpchin rockfish","nwfscSurvey::pull_catch(common_name = species,survey=source)","NWFSC.Combo","sdmTMB::delta_lognormal()","catch_weight ~ 0 + fyear + pass_scaled",-55,-475,33,Inf,-Inf,Inf,TRUE,200,"iid","off",FALSE
 "splitnose rockfish","nwfscSurvey::pull_catch(common_name = species,survey=source)","NWFSC.Combo","sdmTMB::delta_gamma()","catch_weight ~ 0 + fyear + pass_scaled",-55,-700,-Inf,Inf,-Inf,Inf,TRUE,500,"iid","off",FALSE
 "stripetail rockfish","nwfscSurvey::pull_catch(common_name = species,survey=source)","NWFSC.Combo","sdmTMB::delta_gamma()","catch_weight ~ 0 + fyear",-55,-500,-Inf,Inf,-Inf,Inf,TRUE,500,"off","iid",FALSE
-"widow rockfish","nwfscSurvey::pull_catch(common_name = species,survey=source)","NWFSC.Combo","sdmTMB::delta_gamma()","catch_weight ~ 0 + fyear + pass_scaled",-55,-675,33.5,Inf,-Inf,Inf,TRUE,200,"iid","off",TRUE
+"widow rockfish","nwfscSurvey::pull_catch(common_name = species,survey=source)","NWFSC.Combo","sdmTMB::delta_lognormal()","catch_weight ~ 0 + fyear + pass_scaled",-55,-500,33.5,Inf,-Inf,Inf,TRUE,200,"iid","off",TRUE
 "yelloweye rockfish","nwfscSurvey::pull_catch(common_name = species,survey=source)","NWFSC.Combo","sdmTMB::delta_gamma()","catch_weight ~ 0 + fyear + pass_scaled",-55,-325,34.5,Inf,-Inf,Inf,TRUE,200,"off","off",TRUE
 "yellowtail rockfish","nwfscSurvey::pull_catch(common_name = species,survey=source)","NWFSC.Combo","sdmTMB::delta_gamma()","catch_weight ~ 0 + fyear*split_mendocino + pass_scaled",-55,-425,33.5,Inf,-Inf,Inf,TRUE,400,"iid","off",TRUE
 "yellowtail rockfish","nwfscSurvey::pull_catch(common_name = species,survey=source)","Triennial","sdmTMB::delta_gamma()","catch_weight ~ 0 + fyear*split_mendocino",-55,-425,33.5,Inf,1980,Inf,TRUE,400,"iid","off",TRUE
