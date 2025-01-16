@@ -207,6 +207,6 @@ best <- data |>
 Output and diagnostics for all models and predictions are stored in a folder that `indexwc` creates; it's location is "yellowtail_rockfish/wcgbts/delta_gamma..". The "index" folder contains  diagnostics and predictions for 10 sets of indices. These 10 indices represent (1) N/S of Cape Mendocino, (2) N/S of Monterrey, (3) N/S of Pt Conception, a coastwide index, and state-specific indices. For multi-region models, like the yellowtail rockfish used here, it wouldn't make sense to interpret indices other than the split used in the model (here, N/S of Cape Mendocino) and the coastwide index. 
 
 ```{r echo = FALSE}
-knitr::include_graphics(system.file("figures/all_yellowtail_indices.png", package = "indexwc"))
+knitr::include_graphics(system.file("all_yellowtail_indices.png", package = "indexwc"))
 ```
 
