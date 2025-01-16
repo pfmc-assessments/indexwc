@@ -1,18 +1,24 @@
 # Run with configuration file associated with
-# commit 1d05a26e09f99e003120a18d0171b7249ea00654
+# commit 4fe162b73f370bbfa519c83ec9ee9f06a7fd8c57
+#
+# The below script documents how indices for 2025 assessments
+# where run.  The script includes benchmark and update species
+# and runs for each survey with sufficient data to support index
+# estimation. The script is broken into multiple sections for
+# based upon the survey and any special species-specific settings
+# required.
+
 library(dplyr)
 library(indexwc)
 
 savedir <- here::here("2025")
-configuration_all <- tibble::as_tibble(read.csv(
-  file.path("data-raw", "configuration.csv")
-))
-
+# The configuration file is a rda file in the package
+configuration_all <- configuration
 
 #===============================================================================
 # NWFSC Combo All default setting species
+# Code to run default WCGBT index estimation for 2025 assessment species.
 #===============================================================================
-
 wcgbt_species_list <- c(
   "chilipepper",
   "rougheye rockfish",
@@ -25,6 +31,9 @@ wcgbt_species_list <- c(
 configuration_sub <- configuration_all |>
   dplyr::filter(source == "NWFSC.Combo",
                 species %in% wcgbt_species_list,
+                # Checking the formula because I don't want to include
+                # a unique formala option for yellowtail rockfish that
+                # is also in the configuration file for this survey.
                 formula == "catch_weight ~ 0 + fyear + pass_scaled")
 
 for(sp in wcgbt_species_list){
@@ -71,12 +80,15 @@ for(sp in wcgbt_species_list){
 
 #===============================================================================
 # Yellowtail rockfish north - WCGBT
+# Code to run WCGBT index for yellowtail rockfish
+# north that includes year*area based interactions.  Designed to
+# improve estimates along the boundaries (e.g., 40.10).
 #===============================================================================
 savedir <- "yellowtail_interaction"
 configuration <- configuration_all |>
   dplyr::filter(source == "NWFSC.Combo",
                 species == "yellowtail rockfish",
-                formula != "catch_weight ~ 0 + fyear + pass_scaled")
+                formula == "catch_weight ~ 0 + fyear*split_mendocino + pass_scaled")
 
 for (run in 1:nrow(configuration)){
   data <- configuration[run, ] |>
@@ -147,11 +159,16 @@ for (run in 1:nrow(configuration)){
 
 #===============================================================================
 # Widow rockfish - WCGBT
+# Code to run a unique index WCGBT for widow rockfish
+# that includes priors in attempt to match the 2019 VAST index. This
+# index currently errors in the diagnostics code due to poor
+# parameter estimates.
 #===============================================================================
 savedir <- "2025"
 configuration <- configuration_all |>
   dplyr::filter(source == "NWFSC.Combo",
                 species == "widow rockfish")
+configuration[,"spatiotemporal2"] <- "iid"
 
 for (run in 1:nrow(configuration)){
   data <- configuration[run, ] |>
@@ -183,10 +200,10 @@ for (run in 1:nrow(configuration)){
           anisotropy = anisotropy,
           n_knots = knots,
           share_range = share_range,
-          spatiotemporal = purrr::map2(spatiotemporal1, spatiotemporal2, list)#,
-          #priors = list(sdmTMB::sdmTMBpriors(
-          #  matern_s = sdmTMB::pc_matern(range_gt = 10, sigma_lt = 5)
-          #))
+          spatiotemporal = purrr::map2(spatiotemporal1, spatiotemporal2, list),
+          priors = list(sdmTMB::sdmTMBpriors(
+            matern_s = sdmTMB::pc_matern(range_gt = 10, sigma_lt = 5)
+          ))
         ),
         .f = indexwc::run_sdmtmb
       )
@@ -195,6 +212,7 @@ for (run in 1:nrow(configuration)){
 
 #===============================================================================
 # NWFSC Slope
+# Code to run indices for NWFSC Slope
 #===============================================================================
 nw_slope_species_list <- c(
   "sablefish",
@@ -249,6 +267,7 @@ for(sp in nw_slope_species_list){
 
 #===============================================================================
 # AFSC Slope
+# Code to run AFSC Slope index for rougheye rockfish
 #===============================================================================
 af_slope_species_list <- c(
   "rougheye and blackspotted rockfish"
@@ -274,12 +293,7 @@ for(sp in af_slope_species_list){
                                  depth <= min_depth, depth >= max_depth,
                                  latitude >= min_latitude, latitude <= max_latitude,
                                  year >= min_year, year <= max_year
-                               ) |>
-                               dplyr::mutate(
-                                 split_mendocino = 1,
-                                 split_conception = 1,
-                                 split_monterey = 1,
-                                 split_state = 1))
+                               ))
       ) |>
       dplyr::ungroup()
 
@@ -307,6 +321,13 @@ for(sp in af_slope_species_list){
 
 #===============================================================================
 # AFSC Slope - sablefish tweedie
+# Code to run AFSC Slope survey index for sablefish
+# Nearly all tows in this survey are positive for sablefish
+# which is why the tweedie distribution is used.  This
+# approach could not be added to the configuration file because
+# a log link is required to be specified sdmTMB::tweedie(link = "log")
+# The inner paratheses were causing error when added to the configuration
+# file.
 #===============================================================================
 savedir <- here::here("2025")
 sp <- "sablefish"
@@ -336,8 +357,8 @@ fit <- run_sdmtmb(
 
 #===============================================================================
 # Triennial early
+# Code to run the Triennial early index 1980-1992
 #===============================================================================
-
 savedir <- file.path(here::here(), "2025", "triennial-early")
 
 tri_survey_sp <- c(
@@ -396,6 +417,10 @@ for(sp in tri_survey_sp ){
 
 #===============================================================================
 # Triennial late
+# Code to run the Triennial late index 1995-2004
+# rougheye is not included due to the species being
+# listed under two names for the late triennial time period
+# in the data warehouse (rougheye specific code is further down)
 #===============================================================================
 savedir <- file.path(here::here(), "2025", "triennial-late")
 
@@ -403,8 +428,6 @@ tri_late_survey_sp <- c(
   "sablefish",
   "chilipepper",
   "yellowtail rockfish")
-# rougheye not included due to the species being listed under two names for the
-# late triennial time period
 
 configuration_sub <- configuration_all |>
   dplyr::filter(source == "Triennial",
@@ -455,67 +478,10 @@ for(sp in tri_late_survey_sp){
 }
 
 #===============================================================================
-# Triennial early
-#===============================================================================
-
-savedir <- file.path(here::here(), "2025", "triennial-early")
-
-tri_survey_sp <- c(
-  "sablefish",
-  "chilipepper",
-  "rougheye and blackspotted rockfish",
-  "yellowtail rockfish")
-
-configuration_sub <- configuration_all |>
-  dplyr::filter(source == "Triennial",
-                species %in% tri_survey_sp)
-configuration_sub$max_year <- 1992
-
-for(sp in tri_survey_sp){
-  configuration <- configuration_sub |>
-    dplyr::filter(species == sp)
-
-  for(run in 1:nrow(configuration)) {
-    data <- configuration[run, ] |>
-      # Row by row ... do stuff then ungroup
-      dplyr::rowwise() |>
-      # Pull the data based on the function found in fxn column
-      dplyr::mutate(
-        data_raw = list(format_data(eval(parse(text = fxn)))),
-        data_filtered = list(data_raw |>
-                               dplyr::filter(
-                                 depth <= min_depth, depth >= max_depth,
-                                 latitude >= min_latitude, latitude <= max_latitude,
-                                 year >= min_year, year <= max_year
-                               ) |>
-                               dplyr::mutate(split_mendocino = ifelse(latitude > 40.1666667, "N", "S")))
-      ) |>
-      dplyr::ungroup()
-
-    best <- data |>
-      dplyr::mutate(
-        # Evaluate the call in family
-        family = purrr::map(family, .f = ~ eval(parse(text = .x))),
-        # Run the model on each row in data
-        results = purrr::pmap(
-          .l = list(
-            dir_main = savedir,
-            data = data_filtered,
-            formula = formula,
-            family = family,
-            anisotropy = anisotropy,
-            n_knots = knots,
-            share_range = share_range,
-            spatiotemporal = purrr::map2(spatiotemporal1, spatiotemporal2, list)
-          ),
-          .f = indexwc::run_sdmtmb
-        )
-      )
-  }
-}
-
-#===============================================================================
 # Triennial full - rougheye
+# Code to run the triennial full index for rougheye rockfish
+# Both c("rougheye and blackspotted rockfish", "rougheye rockfish")
+# species names are required to pull the all data years
 #===============================================================================
 sp <- "rougheye and blackspotted rockfish"
 
@@ -598,6 +564,8 @@ fit <- run_sdmtmb(
 
 #===============================================================================
 # Yellowtail rockfish north - Triennial full
+# Code to run the triennial full index for yellowtail rockfish
+# The below code includes the year*area interactions
 #===============================================================================
 configuration <- configuration_all |>
   dplyr::filter(species == "yellowtail rockfish" & source == "Triennial")

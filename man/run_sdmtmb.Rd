@@ -63,11 +63,7 @@ estimation for data limited applications}
 \item{sdmtmb_control}{Optional list, in the format of \code{\link[sdmTMB:sdmTMBcontrol]{sdmTMB::sdmTMBcontrol()}}.
 By default, this is includes 3 newton loops}
 
-\item{...}{Optional arguments passed to \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}}. Note that users
-cannot pass \code{anisotropy} because this are set
-internal to this function, where \code{anisotropy = TRUE} because the coastline
-of the western coastline of the U.S.A. is not perpendicular to the country
-and three newton loops are specified in the control parameters.}
+\item{...}{Optional arguments passed to \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}}.}
 }
 \value{
 An list object of class sdmTMB. This object is returned by \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}}
