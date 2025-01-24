@@ -8,8 +8,8 @@
 "canary rockfish","nwfscSurvey::pull_catch(common_name = species,survey=source)","Triennial","sdmTMB::delta_lognormal()","catch_weight ~ 0 + fyear",-55,-366,37,Inf,1980,Inf,TRUE,200,"iid","off",FALSE
 "chilipepper","nwfscSurvey::pull_catch(common_name = species,survey=source)","AFSC.Slope","sdmTMB::delta_gamma()","catch_weight ~ 0 + fyear",-183,-Inf,34.5,Inf,1997,Inf,FALSE,100,"off","off",TRUE
 "chilipepper","nwfscSurvey::pull_catch(common_name = species,survey=source)","AFSC.Slope","sdmTMB::delta_lognormal()","catch_weight ~ 0 + fyear",-183,-Inf,34.5,Inf,1997,Inf,FALSE,100,"off","off",TRUE
-"chilipepper","nwfscSurvey::pull_catch(common_name = species,survey=source)","NWFSC.Combo","sdmTMB::delta_gamma()","catch_weight ~ 0 + fyear + pass_scaled",-55,-500,-Inf,Inf,-Inf,Inf,TRUE,300,"iid","off",TRUE
-"chilipepper","nwfscSurvey::pull_catch(common_name = species,survey=source)","NWFSC.Combo","sdmTMB::delta_lognormal()","catch_weight ~ 0 + fyear + pass_scaled",-55,-500,-Inf,Inf,-Inf,Inf,TRUE,300,"iid","off",TRUE
+"chilipepper","nwfscSurvey::pull_catch(common_name = species,survey=source)","NWFSC.Combo","sdmTMB::delta_gamma()","catch_weight ~ 0 + fyear + pass_scaled",-55,-500,-Inf,46.25,-Inf,Inf,TRUE,300,"iid","off",TRUE
+"chilipepper","nwfscSurvey::pull_catch(common_name = species,survey=source)","NWFSC.Combo","sdmTMB::delta_lognormal()","catch_weight ~ 0 + fyear + pass_scaled",-55,-500,-Inf,46.25,-Inf,Inf,TRUE,300,"iid","off",TRUE
 "chilipepper","nwfscSurvey::pull_catch(common_name = species,survey=source)","NWFSC.Slope","sdmTMB::delta_lognormal()","catch_weight ~ 0 + fyear",-183,-520,34.5,Inf,1999,Inf,FALSE,100,"off","off",TRUE
 "chilipepper","nwfscSurvey::pull_catch(common_name = species,survey=source)","NWFSC.Slope","sdmTMB::delta_gamma()","catch_weight ~ 0 + fyear",-183,-520,34.5,Inf,1999,Inf,FALSE,100,"off","off",TRUE
 "chilipepper","nwfscSurvey::pull_catch(common_name = species,survey=source)","Triennial","sdmTMB::delta_lognormal()","catch_weight ~ 0 + fyear",-55,-Inf,-Inf,Inf,1980,Inf,FALSE,250,"off","off",FALSE
@@ -64,3 +64,4 @@
 "yellowtail rockfish","nwfscSurvey::pull_catch(common_name = species,survey=source)","NWFSC.Combo","sdmTMB::delta_gamma()","catch_weight ~ 0 + fyear + pass_scaled",-55,-425,40.1667,Inf,-Inf,Inf,TRUE,400,"iid","off",TRUE
 "yellowtail rockfish","nwfscSurvey::pull_catch(common_name = species,survey=source)","Triennial","sdmTMB::delta_gamma()","catch_weight ~ 0 + fyear*split_mendocino",-55,-425,33.5,Inf,1980,Inf,TRUE,400,"iid","off",TRUE
 "yellowtail rockfish","nwfscSurvey::pull_catch(common_name = species,survey=source)","Triennial","sdmTMB::delta_lognormal()","catch_weight ~ 0 + fyear*split_mendocino",-55,-425,33.5,Inf,1980,Inf,TRUE,400,"iid","off",TRUE
+"widow rockfish","nwfscSurvey::pull_catch(common_name = species,survey=source)","NWFSC.Combo","sdmTMB::delta_gamma()","catch_weight ~ 0 + fyear + pass_scaled",-55,-500,33.5,Inf,-Inf,Inf,FALSE,200,"iid","off",TRUE
