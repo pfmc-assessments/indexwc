@@ -1,5 +1,7 @@
 pandoc: 3.1.11
 pkgdown: 2.1.1
 pkgdown_sha: ~
-articles: {}
-last_built: 2024-12-13T20:28Z
+articles:
+  a1_single_index: a1_single_index.html
+  a2_multiple_area_indices: a2_multiple_area_indices.html
+last_built: 2025-01-25T21:26Z
