@@ -1,7 +1,15 @@
+Coastwide
+GLMM
 Groundfish
 Monterey
+NLL
+NWFSC
+Rdata
 SPDE
+WCGBT
 WCGBTS
+Yellowtail
+anisotropy
 california
 coastwide
 csv
@@ -12,7 +20,10 @@ loc
 magrittr
 png
 rf
+rockfish
 sd
 sdmTMB
 spatio
 spatiotemporal
+wcgbts
+yellowtail

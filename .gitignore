@@ -4,7 +4,6 @@
 .Rhistory
 *.RData
 *.rds
-*.rda
 **/wcgbts/*
 **/afsc*
 **/nwfsc*

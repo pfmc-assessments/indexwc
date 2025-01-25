@@ -37,20 +37,16 @@ Imports:
     raster,
     rnaturalearth,
     rnaturalearthdata,
-    sdmTMB (>= 0.3.0.9001),
+    sdmTMB (>= 0.6.0),
     sf,
     tibble,
     tidyr,
     viridis
 Suggests:
     knitr,
-    nmfspalette,
     testthat
 Remotes:
-    github::nmfs-general-modeling-tools/nmfspalette,
-    github::pbs-assess/sdmTMB,
     github::pfmc-assessments/nwfscSurvey,
-    github::r4ss/r4ss
 Encoding: UTF-8
 LazyData: true
 LazyDataCompression: xz
