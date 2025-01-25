@@ -46,7 +46,7 @@ Suggests:
     knitr,
     testthat
 Remotes:
-    github::pfmc-assessments/nwfscSurvey,
+    github::pfmc-assessments/nwfscSurvey
 Encoding: UTF-8
 LazyData: true
 LazyDataCompression: xz

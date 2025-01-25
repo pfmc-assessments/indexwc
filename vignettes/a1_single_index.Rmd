@@ -67,7 +67,8 @@ we are going to use the default configuration.  Please see the vignette on multi
 ```{r}
 configuration_to_run <- configuration_ytk_wcgbt |>
   dplyr::filter(
-    formula == "catch_weight ~ 0 + fyear + pass_scaled")
+    formula == "catch_weight ~ 0 + fyear + pass_scaled"
+  )
 ```
 
 ### Preparing the data
