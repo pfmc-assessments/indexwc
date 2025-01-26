@@ -12,4 +12,3 @@ usethis::use_data(
   configuration,
   overwrite = TRUE
 )
-

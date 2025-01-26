@@ -68,7 +68,8 @@ There are many ways to build on this general framework to allow for multi-area i
 ```{r}
 configuration_to_run <- configuration_ytk_wcgbt |>
   dplyr::filter(
-    formula == "catch_weight ~ 0 + fyear*split_mendocino + pass_scaled")
+    formula == "catch_weight ~ 0 + fyear*split_mendocino + pass_scaled"
+  )
 ```
 
 As a quick aside, the `indexwc` package allows for other spatial splits, and in implementing them, the choice of names must be consistent with those used in the package (and specifically in the prediction grid). Variables currently included are:
