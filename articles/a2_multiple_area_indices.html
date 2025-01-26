@@ -72,7 +72,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Index example with multiple areas</h1>
             
-            <h4 data-toc-skip class="date">2025-01-25</h4>
+            <h4 data-toc-skip class="date">2025-01-26</h4>
       
 
       <div class="hidden name"><code>a2_multiple_area_indices.Rmd</code></div>
@@ -151,7 +151,8 @@ trend, and because no interaction is included with
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">configuration_to_run</span> <span class="op">&lt;-</span> <span class="va">configuration_ytk_wcgbt</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span></span>
-<span>    <span class="va">formula</span> <span class="op">==</span> <span class="st">"catch_weight ~ 0 + fyear*split_mendocino + pass_scaled"</span><span class="op">)</span></span></code></pre></div>
+<span>    <span class="va">formula</span> <span class="op">==</span> <span class="st">"catch_weight ~ 0 + fyear*split_mendocino + pass_scaled"</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
 <p>As a quick aside, the <code>indexwc</code> package allows for other
 spatial splits, and in implementing them, the choice of names must be
 consistent with those used in the package (and specifically in the
