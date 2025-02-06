@@ -483,7 +483,13 @@ for(sp in tri_late_survey_sp){
 # Both c("rougheye and blackspotted rockfish", "rougheye rockfish")
 # species names are required to pull the all data years
 #===============================================================================
-sp <- "rougheye and blackspotted rockfish"
+sp <- c(
+  "chilipepper"
+  "rougheye and blackspotted rockfish",
+  "widow rockfish",
+  "yelloweye rockfish",
+  "yellowtail rockfish"
+  )
 
 configuration <- configuration_sub |>
   dplyr::filter(species == sp, source == "Triennial")
