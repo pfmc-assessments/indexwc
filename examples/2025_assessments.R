@@ -11,7 +11,7 @@
 library(dplyr)
 library(indexwc)
 
-savedir <- here::here("2025")
+savedir <- here::here("2025_extras")
 # The configuration file is a rda file in the package
 configuration_all <- configuration
 
@@ -483,13 +483,7 @@ for(sp in tri_late_survey_sp){
 # Both c("rougheye and blackspotted rockfish", "rougheye rockfish")
 # species names are required to pull the all data years
 #===============================================================================
-sp <- c(
-  "chilipepper"
-  "rougheye and blackspotted rockfish",
-  "widow rockfish",
-  "yelloweye rockfish",
-  "yellowtail rockfish"
-  )
+sp <- "rougheye and blackspotted rockfish",
 
 configuration <- configuration_sub |>
   dplyr::filter(species == sp, source == "Triennial")
@@ -625,5 +619,57 @@ best <- data |>
     )
   )
 
+#===============================================================================
+# Triennial full - additional runs on 2025-02-05
+#===============================================================================
+sp_tri_extras <- c(
+  "chilipepper",
+  "widow rockfish",
+  "yelloweye rockfish"
+  )
+configuration_sub <- configuration_all |>
+  dplyr::filter(source == "Triennial",
+                species %in% sp_tri_extras)
+                
 
+for(sp in sp_tri_extras){
+  configuration <- configuration_sub |>
+    dplyr::filter(species == sp)
 
+  for(run in 1:nrow(configuration)) {
+    data <- configuration[run, ] |>
+      # Row by row ... do stuff then ungroup
+      dplyr::rowwise() |>
+      # Pull the data based on the function found in fxn column
+      dplyr::mutate(
+        data_raw = list(format_data(eval(parse(text = fxn)))),
+        data_filtered = list(data_raw |>
+                               dplyr::filter(
+                                 depth <= min_depth, depth >= max_depth,
+                                 latitude >= min_latitude, latitude <= max_latitude,
+                                 year >= min_year, year <= max_year
+                               ))
+      ) |>
+      dplyr::ungroup()
+
+    best <- data |>
+      dplyr::mutate(
+        # Evaluate the call in family
+        family = purrr::map(family, .f = ~ eval(parse(text = .x))),
+        # Run the model on each row in data
+        results = purrr::pmap(
+          .l = list(
+            dir_main = savedir,
+            data = data_filtered,
+            formula = formula,
+            family = family,
+            anisotropy = anisotropy,
+            n_knots = knots,
+            share_range = share_range,
+            spatiotemporal = purrr::map2(spatiotemporal1, spatiotemporal2, list)
+          ),
+          .f = indexwc::run_sdmtmb
+        )
+      )
+  }
+}
