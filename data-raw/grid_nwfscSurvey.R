@@ -15,6 +15,7 @@ california_current_grid <- california_current_grid |>
     pass_scaled = 0,
     vessel_year = 0,
     region = 0,
+    split_42 = dplyr::case_when(Lat > 42.0 ~ "ORWA", .default = "CA"),
     split_mendocino = dplyr::case_when(Lat > 40.1666667 ~ "N", .default = "S"),
     split_conception = dplyr::case_when(Lat > 34.45 ~ "N", .default = "S"),
     split_monterey = dplyr::case_when(Lat > 36.0 ~ "N", .default = "S"),
