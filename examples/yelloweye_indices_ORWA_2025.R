@@ -5,7 +5,7 @@ library(here)
 
 
 
-#load configuration file!!
+#load boundaries_data, california_current_grid, and configuration rda files that are in the data folder!!
 
 configuration_all <- configuration
 
