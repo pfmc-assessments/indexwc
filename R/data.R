@@ -35,4 +35,6 @@
 #' * South of Cape Mendocino
 #' * North of Monterey Bay
 #' * South of Monterey Bay
+#' * ORWA
+#' * CA
 "boundaries_data"
