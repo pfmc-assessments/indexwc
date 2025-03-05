@@ -3,8 +3,6 @@ library(nwfscSurvey)
 library(indexwc)
 library(here)
 
-
-
 #load boundaries_data, california_current_grid, and configuration rda files that are in the data folder
 
 configuration_all <- configuration
@@ -15,7 +13,7 @@ configuration_all <- configuration
 
 #===============================================================================
 # set min lat to 42 to have estimate that is just OR & WA
-#like was in 2017 yelloweye assessment
+# like was in 2017 yelloweye assessment
 #===============================================================================
 savedir <- here::here("2025/yelloweye_split_42_point")
 
@@ -29,6 +27,67 @@ configuration_sub <- configuration_all |>
                 formula == "catch_weight ~ 0 + fyear + pass_scaled")
 
 configuration_sub$min_latitude <- 42.0
+
+for(sp in wcgbt_species_list){
+  configuration <- configuration_sub |>
+    dplyr::filter(species == sp)
+
+  for(run in 1:nrow(configuration)) {
+    data <- configuration[run, ] |>
+      # Row by row ... do stuff then ungroup
+      dplyr::rowwise() |>
+      # Pull the data based on the function found in fxn column
+      dplyr::mutate(
+        data_raw = list(format_data(eval(parse(text = fxn)))),
+        data_filtered = list(data_raw |>
+                               dplyr::filter(
+                                 depth <= min_depth, depth >= max_depth,
+                                 latitude >= min_latitude, latitude <= max_latitude,
+                                 year >= min_year, year <= max_year
+                               ))
+      ) |>
+      dplyr::ungroup()
+
+    best <- data |>
+      dplyr::mutate(
+        # Evaluate the call in family
+        family = purrr::map(family, .f = ~ eval(parse(text = .x))),
+        # Run the model on each row in data
+        results = purrr::pmap(
+          .l = list(
+            dir_main = savedir,
+            data = data_filtered,
+            formula = formula,
+            family = family,
+            anisotropy = anisotropy,
+            n_knots = knots,
+            share_range = share_range,
+            spatiotemporal = purrr::map2(spatiotemporal1, spatiotemporal2, list)
+          ),
+          .f = indexwc::run_sdmtmb
+        )
+      )
+  }
+}
+
+###################################################
+# Option 1 with anisotropy = FALSE
+# set min lat to 42 to have estimate that is just OR & WA
+# like was in 2017 yelloweye assessment
+###################################################
+savedir <- here::here("2025/yelloweye_split_42_point_anisotropy")
+
+wcgbt_species_list <- c(
+  "yelloweye rockfish"
+)
+
+configuration_sub <- configuration_all |>
+  dplyr::filter(source == "NWFSC.Combo",
+                species %in% wcgbt_species_list,
+                formula == "catch_weight ~ 0 + fyear + pass_scaled")
+
+configuration_sub$min_latitude <- 42.0
+configuration_sub$anisotropy <- FALSE
 
 for(sp in wcgbt_species_list){
   configuration <- configuration_sub |>
