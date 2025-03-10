@@ -75,7 +75,7 @@ for(sp in wcgbt_species_list){
 # set min lat to 42 to have estimate that is just OR & WA
 # like was in 2017 yelloweye assessment
 ###################################################
-savedir <- here::here("2025/yelloweye_split_42_point_anisotropy")
+savedir <- here::here("2025/yelloweye_split_42_point_offanisotropy")
 
 wcgbt_species_list <- c(
   "yelloweye rockfish"
