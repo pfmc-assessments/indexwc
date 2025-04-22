@@ -7,7 +7,7 @@ header-includes:
   - \loadglsentries{indexwc_glossaries.tex}
 bibliography: indexwc.bib
 format:
-  pdf
+  html
 ---
 
 
@@ -34,40 +34,19 @@ https://github.com/pfmc-assessments/indexwc.
 #| echo: false 
 #| eval: true 
 load(here::here("data/configuration.rda")) # not sure if this is needed
-info <- configuration |> dplyr::filter(species == "petrale sole", source == "NWFSC.Combo")
-dist <- dplyr::case_when(
-    info$family == "sdmTMB::delta_gamma()" ~ "gamma",
-    info$family == "sdmTMB::delta_lognormal()" ~ "lognormal",
-    info$family == "sdmTMB::delta_tweedie()" ~ "tweedie"
-)
-covariates <- "pass" # TODO
-if (length(covariates) > 0) {
-  covariates_text <- paste0("The following additional covariates were included: ", paste(covariates, collapse = ", "), ".")
-} else {
-  covariates_text <- "No other covariates were modeled."
-}
-
-if (info$spatiotemporal1 == "iid" & info$spatiotemporal2 == "iid") { 
-  spatiotemporal_text <- "Spatial and spatiotemporal variation was included in the encounter probability and the positive catch rate model."
-}
-if (info$spatiotemporal1 == "off" & info$spatiotemporal2 == "iid") { 
-  spatiotemporal_text <- "Spatial and spatiotemporal variation was included in the positive catch rate model but not the encounter probability."
-}
-if (info$spatiotemporal1 == "iid" & info$spatiotemporal2 == "off") { 
-  spatiotemporal_text <- "Spatial and spatiotemporal variation was included in the encounter probability but not the positive catch rate model."
-}
-if (info$spatiotemporal1 == "off" & info$spatiotemporal2 == "off") { 
-  spatiotemporal_text <- "Spatial and spatiotemporal variation was not included in the encounter probability or the positive catch rate model."
-}
+source(here::here("R/get_info.R"))
+info <- get_info(species = "yellowtail rockfish", source = "NWFSC.Combo")
 
 ```
 
-The data were truncated to depths less than `r abs(info$max_depth)` m prior to modelling given that there were zero positive encounters in depths deeper than `r abs(info$max_depth)` m. The prediction grid was also truncated to only include available survey locations in depths between `r abs(info$min_depth)`--`r abs(info$max_depth)` m to limit extrapolating beyond the data and edge effects.
 
-The model used a delta model with a `r dist` distribution for the catch-rate component.
+`r info$truncation_text`
+`r info$grid_text`
+
+The model used a delta model with a `r info$dist` distribution for the catch-rate component.
 A logit-link was used for encounter probability and a log-link for positive catch rates.
 The response variable was catch (mt) with an offset of area (km$^2$) to account for differences in effort. Fixed effects were estimated for each year.
-`r covariates_text`
+`r info$covariates_text`
 Vessel-year effects, which have traditionally been included in index standardization for this survey,
 were not included as the estimated variance for the random effect was close to zero. Vessel-year effects
 were more prominent when models did not include spatial effects and were included for each unique combination of
@@ -75,7 +54,7 @@ vessel and year in the data to account for the random selection of
 commercial vessels used during sampling
 [@helser_generalized_2004; @thorson_accounting_2014].
 
-`r spatiotemporal_text` Spatial variation was approximated using `r info$knots` knots, where more knots led to non-estimable standard errors because the positive encounters are too sparse to support the dense spatiotemporal structure.
+`r info$spatiotemporal_text` Spatial variation was approximated using `r info$knots` knots, where more knots led to non-estimable standard errors because the positive encounters are too sparse to support the dense spatiotemporal structure.
 
 ### Triennial Survey
 <!-- ### \gls{s-tri} -->
@@ -84,40 +63,17 @@ commercial vessels used during sampling
 #| echo: false 
 #| eval: true 
 load(here::here("data/configuration.rda")) # not sure if this is needed
-info <- configuration |> dplyr::filter(species == "petrale sole", source == "Triennial")
-dist <- dplyr::case_when(
-    info$family == "sdmTMB::delta_gamma()" ~ "gamma",
-    info$family == "sdmTMB::delta_lognormal()" ~ "lognormal",
-    info$family == "sdmTMB::delta_tweedie()" ~ "tweedie"
-)
-covariates <- "pass" # TODO
-if (length(covariates) > 0) {
-  covariates_text <- paste0("The following additional covariates were included: ", paste(covariates, collapse = ", "), ".")
-} else {
-  covariates_text <- "No additional covariates were included."
-}
-
-if (info$spatiotemporal1 == "iid" & info$spatiotemporal2 == "iid") { 
-  spatiotemporal_text <- "Spatial and spatiotemporal variation was included in the encounter probability and the positive catch rate model."
-}
-if (info$spatiotemporal1 == "off" & info$spatiotemporal2 == "iid") { 
-  spatiotemporal_text <- "Spatial and spatiotemporal variation was included in the positive catch rate model but not the encounter probability."
-}
-if (info$spatiotemporal1 == "iid" & info$spatiotemporal2 == "off") { 
-  spatiotemporal_text <- "Spatial and spatiotemporal variation was included in the encounter probability but not the positive catch rate model."
-}
-if (info$spatiotemporal1 == "off" & info$spatiotemporal2 == "off") { 
-  spatiotemporal_text <- "Spatial and spatiotemporal variation was not included in the encounter probability or the positive catch rate model."
-}
-
+source(here::here("R/get_info.R"))
+info <- get_info(species = "yellowtail rockfish", source = "NWFSC.Combo")
 ```
 
-The data were truncated to depths less than `r abs(info$max_depth)` m prior to modelling given that there were zero positive encounters in depths deeper than `r abs(info$max_depth)` m. The prediction grid was also truncated to only include available survey locations in depths between `r abs(info$min_depth)`--`r abs(info$max_depth)` m to limit extrapolating beyond the data and edge effects.
+`r info$truncation_text`
+`r info$grid_text`
 
-The model used a delta model with a `r dist` distribution for the catch-rate component.
+The model used a delta model with a `r info$dist` distribution for the catch-rate component.
 A logit-link was used for encounter probability and a log-link for positive catch rates.
 The response variable was catch (mt) with an offset of area (km$^2$) to account for differences in effort. Fixed effects were estimated for each year.
-`r covariates_text`
+`r info$covariates_text`
 Vessel-year effects, which were included in some index standardizations for this survey up to 2021,
 were not included as the estimated variance for the random effect was close to zero. Vessel-year effects
 were more prominent when models did not include spatial effects and were included for each unique combination of
@@ -125,6 +81,4 @@ vessel and year in the data to account for the random selection of
 commercial vessels used during sampling
 [@helser_generalized_2004; @thorson_accounting_2014].
 
-`r spatiotemporal_text` Spatial variation was approximated using `r info$knots` knots, where more knots led to non-estimable standard errors because the positive encounters are too sparse to support the dense spatiotemporal structure.
-
-
+`r info$spatiotemporal_text` Spatial variation was approximated using `r info$knots` knots, where more knots led to non-estimable standard errors because the positive encounters are too sparse to support the dense spatiotemporal structure.
