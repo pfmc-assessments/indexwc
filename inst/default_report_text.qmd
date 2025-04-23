@@ -7,7 +7,7 @@ header-includes:
   - \loadglsentries{indexwc_glossaries.tex}
 bibliography: indexwc.bib
 format:
-  html
+  pdf
 ---
 
 
@@ -35,7 +35,14 @@ https://github.com/pfmc-assessments/indexwc.
 #| eval: true 
 load(here::here("data/configuration.rda")) # not sure if this is needed
 source(here::here("R/get_info.R"))
-info <- get_info(species = "yellowtail rockfish", source = "NWFSC.Combo")
+info <- configuration |> 
+  dplyr::filter(
+    species == "yellowtail rockfish", 
+    source == "NWFSC.Combo",
+    grepl("split", formula),
+    grepl("lognormal", family)
+  ) |> 
+  get_info()
 
 ```
 
@@ -64,7 +71,13 @@ commercial vessels used during sampling
 #| eval: true 
 load(here::here("data/configuration.rda")) # not sure if this is needed
 source(here::here("R/get_info.R"))
-info <- get_info(species = "yellowtail rockfish", source = "NWFSC.Combo")
+info <- configuration |> 
+  dplyr::filter(
+    species == "yellowtail rockfish", 
+    source == "Triennial",
+    grepl("lognormal", family)
+  ) |> 
+  get_info()
 ```
 
 `r info$truncation_text`

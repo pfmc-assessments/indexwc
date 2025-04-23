@@ -1,12 +1,11 @@
-get_info <- function(species = "yellowtail rockfish", source = "NWFSC.Combo") {
-  info <- configuration |>
-    dplyr::filter(species == species, source == source)
-
+#' @param info is a row from the configuration table
+#' 
+get_info <- function(info) {
+  
   if (nrow(info) > 1) {
-    warning(
+    stop(
       "multiple rows in configuration for this species/survey combination"
     )
-    info <- info[1, ]
   }
 
   if (info$min_depth != -55) {
