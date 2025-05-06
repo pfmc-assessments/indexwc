@@ -7,11 +7,12 @@ title: "`r stringr::str_to_sentence(params$common)`"
 header-includes:
   - \usepackage[acronym]{glossaries}
   - \glsdisablehyper
-  - \loadglsentries{sa4ss_glossaries.tex}
-bibliography: sa4ss.bib
-output: 
-    pdf_document: 
-    keep_tex:  true
+  - \loadglsentries{indexwc_glossaries.tex}
+bibliography: indexwc.bib
+format: 
+  pdf:
+    documentclass: report
+    keep-tex: true
 ---
 
 ```{r setup, echo = FALSE, warnings = FALSE, message = FALSE}
@@ -29,8 +30,8 @@ options(knitr.duplicate.label = "allow")
 knitr::opts_chunk$set(echo = FALSE)
 knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 configuration <- read.csv(
-  # file = "https://raw.githubusercontent.com/kellijohnson-NOAA/indexwc/main/data-raw/configuration.csv"
-  file = "data-raw/configuration.csv"
+  file = "https://raw.githubusercontent.com/pfmc-assessments/indexwc/main/data-raw/configuration.csv"
+  # file = "data-raw/configuration.csv"
 ) %>%
   dplyr::filter(
     species == params$common
@@ -49,6 +50,7 @@ configuration <- read.csv(
       source == "NWFSC.Combo" ~ "s-wcgbt",
       source == "Triennial" ~ "s-tri",
       source == "AFSC.Slope" ~ "s-aslope",
+      source == "NWFSC.Slope" ~ "s-nwslope",
       TRUE ~ "unknown survey"
     )
   )
@@ -64,8 +66,7 @@ knit_engines$set(asis = function(options) {
 
 ## Survey indices of abundance
 
-Geostatistical models of biomass density were fit to survey data using \gls{tmb}
-[@kristensen_tmb:_2016] via the R package \gls{sdmtmb} [@Anderson:2022:SRP].
+Geostatistical models of biomass density were fit to survey data using the R package \gls{sdmtmb} [@Anderson:2022:SRP].
 These models can account for latent spatial factors with a constant spatial Gaussian random
 field and spatiotemporal deviations to evolve as a random walk Guassian random
 field [@thorson_geostatistical_2015]. Tweedie, delta-binomial, delta-gamma, and mixture distributions, which
@@ -74,11 +75,12 @@ the distribution that led to the best model diagnostics, e.g., similar
 distributions of theoretical normal quantiles and model quantiles, high
 precision, lack of extreme predictions that are incompatible with the life
 history, and low \gls{aic}. Estimates of biomass from this best model were
-predicted using a grid based on available survey locations. Code to
+predicted using a grid based on available survey locations. The {indexwc} R 
+package [@johnson_indexwc_2025] was used to conduct the analysis and code to
 reproduce the analysis is available at
-https://github.com/pfmc-assessments/indexwc.
+https://pfmc-assessments.github.io/indexwc/.
 
-```{r, results='asis'}
+```{r, knit-child, results='asis'}
 knit_child_with_params <- function(data) {
   env_local <- new.env()
   assign("species", data[["species"]], envir = env_local)
