@@ -1,0 +1,53 @@
+---
+tag: "Child document"
+title: "Child document"
+---
+
+```{r}
+data <- format_data(eval(parse(text = fxn)))
+data_filtered <- data %>%
+  dplyr::filter(
+    depth <= min_depth, depth >= max_depth,
+    latitude >= min_latitude, latitude <= max_latitude,
+    year >= min_year, year <= max_year
+  )
+data_discards <- data_filtered %>%
+  dplyr::filter(catch_weight > 0, depth < max_depth)
+temp <- unlist(strsplit(gsub(
+  "catch_weight\\s*|\\s*~\\s*|0\\s*\\+|fyear\\s*\\+*\\s*|_scaled",
+  "",
+  formula), "\\s"
+))
+temp2 <- glue::glue_collapse(
+  temp[-which(temp %in% c("", "+"))],
+  sep = ", ",
+  last = " and"
+)
+text_covariates <- ifelse(
+  length(temp2) == 0,
+  "No other covariates were modelled.",
+  glue::glue("The following additional covariates were included: {temp2}.")
+)
+```
+
+### \gls{`r text_survey`}
+
+The data were truncated to depths less than `r ifelse(abs(max_depth) == "Inf", "the maximum depth surveyed", abs(max_depth))` m prior to modelling given that there were `r xfun::numbers_to_words(NROW(data_discards))` positive encounters in depths deeper than `r abs(max_depth)` m. The prediction grid was also truncated to only include available survey locations in depths between `r abs(min_depth)`--`r abs(max_depth)` m to limit extrapolating beyond the data and edge effects.
+
+The model used a delta model with a `r distribution` distribution for the catch-rate component.
+A logit-link was used for encounter probability and a log-link for positive catch rates.
+The response variable was catch (mt) with an offset of area (km$^2$) to account for differences in effort. Fixed effects were estimated for each year.
+`r text_covariates`
+Vessel-year effects, which have traditionally been included in index standardization for this survey,
+were not included as the estimated variance for the random effect was close to zero. Vessel-year effects
+were more prominent when models did not include spatial effects and were included for each unique combination of
+vessel and year in the data to account for the random selection of
+commercial vessels used during sampling
+[@helser_generalized_2004; @thorson_accounting_2014].
+
+
+```{asis, echo = data$common_name[1] != "canary rockfish"}
+Spatial and spatiotemporal variation was included in the encounter
+probability and the positive catch rate model.
+```
+Spatial variation was approximated using `r n_knots` knots, where more knots led to non-estimable standard errors because the positive encounters are too sparse to support the dense spatiotemporal structure.

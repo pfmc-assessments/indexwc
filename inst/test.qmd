@@ -1,0 +1,113 @@
+---
+author: Kelli F. Johnson
+date: August 15, 2023
+params:
+  common: "sablefish"
+title: "`r stringr::str_to_sentence(params$common)`"
+header-includes:
+  - \usepackage[acronym]{glossaries}
+  - \glsdisablehyper
+  - \loadglsentries{sa4ss_glossaries.tex}
+bibliography: sa4ss.bib
+output: 
+    pdf_document: 
+    keep_tex:  true
+---
+
+```{r setup, echo = FALSE, warnings = FALSE, message = FALSE}
+library(devtools)
+library(dplyr)
+library(glue)
+library(knitr)
+library(nwfscSurvey)
+library(purrr)
+library(stringr)
+library(tidyr)
+library(xfun)
+load_all()
+options(knitr.duplicate.label = "allow")
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+configuration <- read.csv(
+  # file = "https://raw.githubusercontent.com/kellijohnson-NOAA/indexwc/main/data-raw/configuration.csv"
+  file = "data-raw/configuration.csv"
+) %>%
+  dplyr::filter(
+    species == params$common
+  ) %>%
+  dplyr::mutate(
+    family_parsed = purrr::map(
+      .x = family,
+      .f = ~ eval(parse(text = .x))
+    ),
+    distribution = gsub(
+      "_mix",
+      " mixture",
+      purrr::map(family_parsed, .f = ~ .x[["family"]][2])
+    ),
+    text_survey = dplyr::case_when(
+      source == "NWFSC.Combo" ~ "s-wcgbt",
+      source == "Triennial" ~ "s-tri",
+      source == "AFSC.Slope" ~ "s-aslope",
+      TRUE ~ "unknown survey"
+    )
+  )
+```
+
+```{r setup-asis, include=FALSE}
+knit_engines$set(asis = function(options) {
+  # if (options$echo && options$eval)
+  paste(options$code, collapse = ' ')
+})
+```
+
+
+## Survey indices of abundance
+
+Geostatistical models of biomass density were fit to survey data using \gls{tmb}
+[@kristensen_tmb:_2016] via the R package \gls{sdmtmb} [@Anderson:2022:SRP].
+These models can account for latent spatial factors with a constant spatial Gaussian random
+field and spatiotemporal deviations to evolve as a random walk Guassian random
+field [@thorson_geostatistical_2015]. Tweedie, delta-binomial, delta-gamma, and mixture distributions, which
+allow for extreme catch events, were investigated. Results are only shown for
+the distribution that led to the best model diagnostics, e.g., similar
+distributions of theoretical normal quantiles and model quantiles, high
+precision, lack of extreme predictions that are incompatible with the life
+history, and low \gls{aic}. Estimates of biomass from this best model were
+predicted using a grid based on available survey locations. Code to
+reproduce the analysis is available at
+https://github.com/pfmc-assessments/indexwc.
+
+```{r, results='asis'}
+knit_child_with_params <- function(data) {
+  env_local <- new.env()
+  assign("species", data[["species"]], envir = env_local)
+  assign("fxn", data[["fxn"]], envir = env_local)
+  assign("source", data[["source"]], envir = env_local)
+  assign("family", data[["family"]], envir = env_local)
+  assign("formula", data[["formula"]], envir = env_local)
+  assign("min_depth", data[["min_depth"]], envir = env_local)
+  assign("max_depth", data[["max_depth"]], envir = env_local)
+  assign("min_latitude", data[["min_latitude"]], envir = env_local)
+  assign("max_latitude", data[["max_latitude"]], envir = env_local)
+  assign("min_year", data[["min_year"]], envir = env_local)
+  assign("max_year", data[["max_year"]], envir = env_local)
+  assign("anisotropy", data[["anisotropy"]], envir = env_local)
+  assign("n_knots", data[["knots"]], envir = env_local)
+  assign("family_parsed", data[["family_parsed"]], envir = env_local)
+  assign("distribution", data[["distribution"]], envir = env_local)
+  assign("text_survey", data[["text_survey"]], envir = env_local)
+  knitr::knit_child(
+    "child.qmd",
+    envir = env_local,
+    quiet = TRUE
+  )
+}
+
+res <- configuration %>%
+    dplyr::group_nest(dplyr::row_number()) %>%
+    dplyr::pull(data) %>%
+    purrr::map(.f = knit_child_with_params)
+
+cat(unlist(res), sep = '\n')
+```
