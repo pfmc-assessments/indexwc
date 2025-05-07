@@ -2,7 +2,7 @@
 author: Kelli F. Johnson
 date: August 15, 2023
 params:
-  common: "sablefish"
+  common: "widow rockfish"
 title: "`r stringr::str_to_sentence(params$common)`"
 header-includes:
   - \usepackage[acronym]{glossaries}
@@ -30,12 +30,13 @@ options(knitr.duplicate.label = "allow")
 knitr::opts_chunk$set(echo = FALSE)
 knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 configuration <- read.csv(
-  file = "https://raw.githubusercontent.com/pfmc-assessments/indexwc/main/data-raw/configuration.csv"
-  # file = "data-raw/configuration.csv"
-) %>%
+  #file = "https://raw.githubusercontent.com/pfmc-assessments/indexwc/main/data-raw/configuration.csv"
+  file = here::here("data-raw/configuration.csv")
+) |>
   dplyr::filter(
-    species == params$common
-  ) %>%
+    species == params$common,
+    used # TRUE/FALSE used in final assessment report?
+  ) |>
   dplyr::mutate(
     family_parsed = purrr::map(
       .x = family,
@@ -106,9 +107,9 @@ knit_child_with_params <- function(data) {
   )
 }
 
-res <- configuration %>%
-    dplyr::group_nest(dplyr::row_number()) %>%
-    dplyr::pull(data) %>%
+res <- configuration |>
+    dplyr::group_nest(dplyr::row_number()) |>
+    dplyr::pull(data) |>
     purrr::map(.f = knit_child_with_params)
 
 cat(unlist(res), sep = '\n')
