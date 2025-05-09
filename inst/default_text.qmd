@@ -12,10 +12,10 @@ bibliography: indexwc.bib
 format: 
   pdf:
     documentclass: report
-    keep-tex: true
+    keep-md: true
 ---
 
-```{r setup, echo = FALSE, warnings = FALSE, message = FALSE}
+```{r setup, echo = FALSE, warnings = FALSE, message = FALSE, include = FALSE}
 library(devtools)
 library(dplyr)
 library(glue)
