@@ -18,6 +18,7 @@ ggforce
 ggplot
 loc
 magrittr
+md
 png
 rf
 rockfish
@@ -25,5 +26,6 @@ sd
 sdmTMB
 spatio
 spatiotemporal
+standardizations
 wcgbts
 yellowtail
