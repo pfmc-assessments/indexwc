@@ -1,7 +1,15 @@
-#' Create a default text describing the index standardizations run from the {indexwc} package
+#' Write default text describing the index standardizations run from the {indexwc} package
+#'
+#' Writes both a markdown (.md) file which can be copied into an Quarto assessment report as
+#' well as the PDF showing the formatted text. Relies on `inst/default_text.Rmd` and
+#' `inst/child.Rmd` files where the child file is populated with information for each survey
+#' associated with the species.
 #'
 #' @param species_list vector with strings matching a subset of those in the "species" column of the configuration file. If NULL, this will be the set of species that have at least one TRUE value in the "used" column.
-
+#' @export
+#' @author Ian G. Taylor
+#' @examples
+#' write_default_text()
 write_default_text <- function(species_list = NULL) {
   # If species_list is NULL, read the configuration file and extract the list of species
   if (is.null(species_list)) {
