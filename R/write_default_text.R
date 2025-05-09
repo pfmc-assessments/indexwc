@@ -7,6 +7,9 @@
 #'
 #' @param species_list vector with strings matching a subset of those in the "species" column of the configuration file. If NULL, this will be the set of species that have at least one TRUE value in the "used" column.
 #' @export
+#' @import cli
+#' @import here
+#' @importFrom rmarkdown render
 #' @author Ian G. Taylor
 #' @examples
 #' write_default_text()
