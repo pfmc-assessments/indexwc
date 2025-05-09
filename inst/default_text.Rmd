@@ -1,0 +1,125 @@
+---
+author: indexwc team
+date: "`r Sys.Date()`"
+params:
+  common: yellowtail rockfish
+title: "`r stringr::str_to_sentence(params$common)`"
+header-includes:
+  - \usepackage[acronym]{glossaries}
+  - \glsdisablehyper
+  - \loadglsentries{indexwc_glossaries.tex}
+bibliography: indexwc.bib
+output:
+  pdf_document:
+    keep_md: true
+---
+
+```{r setup, echo = FALSE, warnings = FALSE, message = FALSE}
+library(devtools)
+library(dplyr)
+library(glue)
+library(knitr)
+library(nwfscSurvey)
+library(purrr)
+library(stringr)
+library(tidyr)
+library(xfun)
+load_all()
+options(knitr.duplicate.label = "allow")
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+configuration <- read.csv(
+  #file = "https://raw.githubusercontent.com/pfmc-assessments/indexwc/main/data-raw/configuration.csv"
+  file = here::here("data-raw/configuration.csv") # using local file because branch is not yet merged 
+) |>
+  dplyr::filter(
+    species == params$common,
+    used # TRUE/FALSE used in final assessment report?
+  ) |>
+  dplyr::mutate(
+    family_parsed = purrr::map(
+      .x = family,
+      .f = ~ eval(parse(text = .x))
+    ),
+    distribution = gsub(
+      "_mix",
+      " mixture",
+      purrr::map(family_parsed, .f = ~ .x[["family"]][2])
+    ),
+    text_survey = dplyr::case_when(
+      source == "NWFSC.Combo" ~ "s-wcgbt",
+      source == "Triennial" ~ "s-tri",
+      source == "AFSC.Slope" ~ "s-aslope",
+      source == "NWFSC.Slope" ~ "s-nwslope",
+      TRUE ~ "unknown survey"
+    ),
+    text_spatiotemporal <- dplyr::case_when(
+      spatiotemporal1 == "iid" & spatiotemporal2 == "iid" ~
+        "Spatial and spatiotemporal variation were included in the encounter probability and the positive catch rate model.",
+      spatiotemporal1 == "off" & spatiotemporal2 == "iid" ~
+        "Spatial and spatiotemporal variation were included in the positive catch rate model but not the encounter probability.",
+      spatiotemporal1 == "iid" & spatiotemporal2 == "off" ~
+        "Spatial and spatiotemporal variation were included in the encounter probability but not the positive catch rate model.",
+      spatiotemporal1 == "off" & spatiotemporal2 == "off" ~
+        "Spatial and spatiotemporal variation were not included in either the encounter probability nor the positive catch rate model."
+    )
+  )
+```
+
+```{r setup-asis, include=FALSE}
+knit_engines$set(asis = function(options) {
+  # if (options$echo && options$eval)
+  paste(options$code, collapse = ' ')
+})
+```
+
+## Survey indices of abundance
+
+Geostatistical models of biomass density were fit to survey data using the R package \gls{sdmtmb} [@Anderson:2022:SRP].
+These models can account for latent spatial factors with a constant spatial Gaussian random
+field and spatiotemporal deviations to evolve as a random walk Guassian random
+field [@thorson_geostatistical_2015]. Tweedie, delta-binomial, delta-gamma, and mixture distributions, which
+allow for extreme catch events, were investigated. Results are only shown for
+the distribution that led to the best model diagnostics, e.g., similar
+distributions of theoretical normal quantiles and model quantiles, high
+precision, lack of extreme predictions that are incompatible with the life
+history, and low \gls{aic}. Estimates of biomass from this best model were
+predicted using a grid based on available survey locations. The {indexwc} R 
+package [@johnson_indexwc_2025] was used to conduct the analysis and code to
+reproduce the analysis is available at
+https://pfmc-assessments.github.io/indexwc/.
+
+```{r, knit-child, results='asis'}
+knit_child_with_params <- function(data) {
+  env_local <- new.env()
+  assign("species", data[["species"]], envir = env_local)
+  assign("fxn", data[["fxn"]], envir = env_local)
+  assign("source", data[["source"]], envir = env_local)
+  assign("family", data[["family"]], envir = env_local)
+  assign("formula", data[["formula"]], envir = env_local)
+  assign("min_depth", data[["min_depth"]], envir = env_local)
+  assign("max_depth", data[["max_depth"]], envir = env_local)
+  assign("min_latitude", data[["min_latitude"]], envir = env_local)
+  assign("max_latitude", data[["max_latitude"]], envir = env_local)
+  assign("min_year", data[["min_year"]], envir = env_local)
+  assign("max_year", data[["max_year"]], envir = env_local)
+  assign("anisotropy", data[["anisotropy"]], envir = env_local)
+  assign("n_knots", data[["knots"]], envir = env_local)
+  assign("family_parsed", data[["family_parsed"]], envir = env_local)
+  assign("distribution", data[["distribution"]], envir = env_local)
+  assign("text_survey", data[["text_survey"]], envir = env_local)
+  assign("text_spatiotemporal", data[["text_spatiotemporal"]], envir = env_local)
+  knitr::knit_child(
+    "child.qmd",
+    envir = env_local,
+    quiet = TRUE
+  )
+}
+
+res <- configuration |>
+    dplyr::group_nest(dplyr::row_number()) |>
+    dplyr::pull(data) |>
+    purrr::map(.f = knit_child_with_params)
+
+cat(unlist(res), sep = '\n')
+```
