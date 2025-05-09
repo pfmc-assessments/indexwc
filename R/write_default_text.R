@@ -12,7 +12,9 @@
 #' @importFrom rmarkdown render
 #' @author Ian G. Taylor
 #' @examples
+#' \dontrun{
 #' write_default_text()
+#' }
 write_default_text <- function(species_list = NULL) {
   # If species_list is NULL, read the configuration file and extract the list of species
   if (is.null(species_list)) {

@@ -16,7 +16,9 @@ well as the PDF showing the formatted text. Relies on \code{inst/default_text.Rm
 associated with the species.
 }
 \examples{
+\dontrun{
 write_default_text()
+}
 }
 \author{
 Ian G. Taylor
