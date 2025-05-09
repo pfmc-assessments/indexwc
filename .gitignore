@@ -9,3 +9,9 @@
 **/nwfsc*
 **/triennial/*
 nul
+
+*.log
+*.tex
+bootstrap-*
+*.js
+*.html
