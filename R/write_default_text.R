@@ -16,6 +16,10 @@
 #' write_default_text()
 #' }
 write_default_text <- function(species_list = NULL) {
+  # check for internet connection
+  if (!curl::has_internet()) {
+    cli::cli_abort("No internet connection detected. The function may not work.")
+  }
   # If species_list is NULL, read the configuration file and extract the list of species
   if (is.null(species_list)) {
     species_list <- read.csv(
@@ -26,6 +30,16 @@ write_default_text <- function(species_list = NULL) {
       dplyr::pull(species) |>
       unique() |>
       sort() # Get unique and sorted list of species marked as "used"
+  } else {
+    # confirm that user input species_list is contained within the species in the configuration file
+    all_species <- read.csv(
+      # file = "https://raw.githubusercontent.com/pfmc-assessments/indexwc/main/data-raw/configuration.csv"
+      file = here::here("data-raw/configuration.csv") # Using local file because branch is not yet merged
+    ) |>
+      dplyr::pull(species)
+    if (!all(species_list %in% all_species)) {
+      cli::cli_abort("Some species in species_list are not found in the configuration file: {setdiff(species_list, all_species)}")
+    }
   }
   cli::cli_alert_info("species_list: {paste(species_list, sep = ', ')}")
 

@@ -47,6 +47,7 @@ Imports:
     tidyr,
     viridis
 Suggests:
+    curl,
     knitr,
     testthat
 Remotes:

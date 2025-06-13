@@ -44,8 +44,10 @@ configuration <- read.csv(
     distribution = gsub(
       "_mix",
       " mixture",
-      purrr::map(family_parsed, .f = ~ .x[["family"]][2])
+      purrr::map(family_parsed, .f = ~ tail(.x[["family"]], 1))
     ),
+    distribution = gsub("tweedie", "Tweedie", distribution),
+    distribution = gsub("Gamma", "gamma", distribution),
     text_survey = dplyr::case_when(
       source == "NWFSC.Combo" ~ "s-wcgbt",
       source == "Triennial" ~ "s-tri",
@@ -53,7 +55,7 @@ configuration <- read.csv(
       source == "NWFSC.Slope" ~ "s-nwslope",
       TRUE ~ "unknown survey"
     ),
-    text_spatiotemporal <- dplyr::case_when(
+    text_spatiotemporal = dplyr::case_when(
       spatiotemporal1 == "iid" & spatiotemporal2 == "iid" ~
         "Spatial and spatiotemporal variation were included in the encounter probability and the positive catch rate model.",
       spatiotemporal1 == "off" & spatiotemporal2 == "iid" ~
@@ -110,7 +112,7 @@ knit_child_with_params <- function(data) {
   assign("text_survey", data[["text_survey"]], envir = env_local)
   assign("text_spatiotemporal", data[["text_spatiotemporal"]], envir = env_local)
   knitr::knit_child(
-    "child.qmd",
+    "child.Rmd",
     envir = env_local,
     quiet = TRUE
   )
