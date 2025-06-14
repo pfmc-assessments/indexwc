@@ -114,8 +114,8 @@ section below.</p></dd>
 
 
 <dt id="arg-formula">formula<a class="anchor" aria-label="anchor" href="#arg-formula"></a></dt>
-<dd><p>Model formula. IID random intercepts are possible using
-<span class="pkg">lme4</span> syntax, e.g., <code>+ (1 | g)</code> where <code>g</code> is a column of class
+<dd><p>Model formula. IID random intercepts and slopes are possible using
+<span class="pkg">lme4</span> syntax, e.g., <code>+ (1 | g)</code> or <code>+ (0 + depth | g)</code> or <code>+ (1 + depth | g)</code> where <code>g</code> is a column of class
 character or factor representing groups. Penalized splines are possible via
 <span class="pkg">mgcv</span> with <code>s()</code>. Optionally a list for delta (hurdle) models.  See
 examples and details below.</p></dd>
@@ -166,7 +166,7 @@ when fitting data to the model.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
       </footer></div>
