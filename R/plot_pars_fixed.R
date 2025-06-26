@@ -7,17 +7,17 @@
 #' @export
 plot_pars_fixed <- function(fit, dir) {
   plot_fixed_helper <- function(fit, model_number = 1) {
-    out <- tidy(fit, model = model_number, silent = TRUE) %>%
+    out <- tidy(fit, model = model_number, silent = TRUE) |>
       dplyr::mutate(
         model = as.factor(model_number),
         term = gsub("fyear", "", term),
         lower_ci = estimate - 2 * std.error,
         upper_ci = estimate + 2 * std.error,
-      ) %>%
-      dplyr::filter(grepl("^[0-9]+$", term)) %>%
+      ) |>
+      dplyr::filter(grepl("^[0-9]+$", term)) |>
       dplyr::mutate(
         term = as.numeric(term)
-      ) %>%
+      ) |>
       dplyr::arrange(term)
     return(out)
   }

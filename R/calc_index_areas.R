@@ -60,6 +60,12 @@ calc_index_areas <- function(data,
   # There is no way project the index with bias correction in sdmTMB::sdmTMB
   # which is why we have to call [sdmTMB::get_index()] even if predictions are
   # specified in [sdmTMB::sdmTMB()].
+  if (mean(prediction_grid$depth) > 0) {
+    cli::cli_abort("The depth of the prediction grid must negative.")
+  }
+  if (mean(data$depth) > 0) {
+    cli::cli_abort("The depth of the raw / filtered data must negative.")
+  }
   latitudes_of_catches <- data |>
     dplyr::filter(catch_weight > 0) |>
     dplyr::pull(latitude)

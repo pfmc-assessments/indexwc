@@ -12,6 +12,8 @@
 #'   spatial and spatiotemporal fields. This defaults to FALSE, but adds extra
 #'   parameters. The default in sdmTMB is TRUE, and sharing the range may improve
 #'   estimation for data limited applications
+#' @param spatial_varying Optional spatial varying formula from [sdmTMB::sdmTMB()].
+#'   Defaults to `NULL`
 #' @param sdmtmb_control Optional list, in the format of [sdmTMB::sdmTMBcontrol()].
 #'   By default, this is includes 3 newton loops
 #' @param ... Optional arguments passed to [sdmTMB::sdmTMB()].
@@ -27,6 +29,7 @@ run_sdmtmb <- function(dir_main = getwd(),
                        formula,
                        n_knots = 500,
                        share_range = FALSE,
+                       spatial_varying = NULL,
                        sdmtmb_control = sdmTMB::sdmTMBcontrol(newton_loops = 3),
                        ...) {
   # Checks
@@ -70,8 +73,8 @@ run_sdmtmb <- function(dir_main = getwd(),
   ))
 
   # Create prediction grid
-  ranges <- data %>%
-    dplyr::filter(catch_weight > 0) %>%
+  ranges <- data |>
+    dplyr::filter(catch_weight > 0) |>
     dplyr::summarize(
       dplyr::across(
         dplyr::matches("tude"),
@@ -80,12 +83,12 @@ run_sdmtmb <- function(dir_main = getwd(),
       # depth_min = min(abs(depth), na.rm = TRUE),
       depth_max = min(depth, na.rm = TRUE)
     )
-  data_truncated <- data %>%
+  data_truncated <- data |>
     dplyr::filter(
       latitude > ranges[["latitude_min"]] & latitude < ranges[["latitude_max"]],
       longitude > ranges[["longitude_min"]] & longitude < ranges[["longitude_max"]],
       depth > ranges[["depth_max"]]
-    ) %>%
+    ) |>
     droplevels()
 
   grid <- lookup_grid(
@@ -116,6 +119,7 @@ run_sdmtmb <- function(dir_main = getwd(),
     family = family,
     control = sdmtmb_control,
     share_range = share_range,
+    spatial_varying = spatial_varying,
     ...
   )
   # Refit the model if the hessian is not positive definite
