@@ -61,7 +61,7 @@ calc_index_areas <- function(data,
   # which is why we have to call [sdmTMB::get_index()] even if predictions are
   # specified in [sdmTMB::sdmTMB()].
   if (mean(prediction_grid$depth) > 0) {
-    cli::cli_abort("The depth of the prediction grid must negative.")
+    cli::cli_abort("The depth of the prediction grid must be negative.")
   }
   if (mean(data$depth) > 0) {
     cli::cli_abort("The depth of the raw / filtered data must negative.")
