@@ -2,7 +2,7 @@
 author: indexwc team
 date: "`r Sys.Date()`"
 params:
-  common: yellowtail rockfish
+  common: rougheye and blackspotted rockfish
 title: "`r stringr::str_to_sentence(params$common)`"
 header-includes:
   - \usepackage[acronym]{glossaries}
@@ -59,11 +59,11 @@ configuration <- read.csv(
       spatiotemporal1 == "iid" & spatiotemporal2 == "iid" ~
         "Spatial and spatiotemporal variation were included in the encounter probability and the positive catch rate model.",
       spatiotemporal1 == "off" & spatiotemporal2 == "iid" ~
-        "Spatial and spatiotemporal variation were included in the positive catch rate model but not the encounter probability.",
+        "Spatial and spatiotemporal variation were included in the positive catch rate model but only spatial variation was included in the encounter probability.",
       spatiotemporal1 == "iid" & spatiotemporal2 == "off" ~
-        "Spatial and spatiotemporal variation were included in the encounter probability but not the positive catch rate model.",
+        "Spatial and spatiotemporal variation were included in the encounter probability but only spatial variation was included in the positive catch rate model.",
       spatiotemporal1 == "off" & spatiotemporal2 == "off" ~
-        "Spatial and spatiotemporal variation were not included in either the encounter probability nor the positive catch rate model."
+        "Spatiotemporal variation was not included in either the encounter probability nor the positive catch rate model (but spatial variation was included in both models)."
     )
   )
 ```
@@ -78,9 +78,8 @@ knit_engines$set(asis = function(options) {
 ## Survey indices of abundance
 
 Geostatistical models of biomass density were fit to survey data using the R package \gls{sdmtmb} [@Anderson:2022:SRP].
-These models can account for latent spatial factors with a constant spatial Gaussian random
-field and spatiotemporal deviations to evolve as a random walk Guassian random
-field [@thorson_geostatistical_2015]. Tweedie, delta-binomial, delta-gamma, and mixture distributions, which
+These models can account for latent spatial factors with a constant spatial Gaussian Markov random
+field (GRMF) and spatiotemporal deviations as independent draws from the GRMF [@thorson_geostatistical_2015]. Tweedie, delta-binomial, delta-gamma, and mixture distributions, which
 allow for extreme catch events, were investigated. Results are only shown for
 the distribution that led to the best model diagnostics, e.g., similar
 distributions of theoretical normal quantiles and model quantiles, high
