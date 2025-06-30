@@ -11,10 +11,8 @@ test_that("configuration.rda matches configuration.csv", {
     ))
 
     # Check if the configuration and configuration_csv tibbles are identical
-    expect_true(
-        all.equal(
-            indexwc::configuration,
-            configuration_csv
-        )
+    expect_equal(
+        indexwc::configuration,
+        configuration_csv
     )
 })
