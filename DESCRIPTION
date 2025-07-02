@@ -34,7 +34,6 @@ Imports:
     ggplot2,
     gridExtra,
     lifecycle,
-    magrittr,
     nwfscSurvey,
     purrr,
     raster,
@@ -48,6 +47,8 @@ Imports:
 Suggests:
     knitr,
     testthat
+VignetteBuilder: 
+    knitr
 Remotes:
     github::pfmc-assessments/nwfscSurvey
 Encoding: UTF-8

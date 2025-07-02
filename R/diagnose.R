@@ -62,7 +62,7 @@ diagnose <- function(dir,
       silent = TRUE
     ),
     .id = "model"
-  ) %>%
+  ) |>
     dplyr::mutate(
       model = unlist(all_combos[model, "x"])
     )

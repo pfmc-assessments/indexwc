@@ -38,7 +38,7 @@ map_density <- function(predictions,
   predictions <- dplyr::rename(
     .data = predictions,
     plot_me = column
-  ) %>%
+  ) |>
     suppressWarnings(sdmTMB::add_utm_columns(
       ll_crs = utm_zone_10
     ))
@@ -48,19 +48,19 @@ map_density <- function(predictions,
     ncol = floor((slot(data_extent, "xmax") - slot(data_extent, "xmin")) / 2),
     nrow = floor((slot(data_extent, "ymax") - slot(data_extent, "ymin")) / 2)
   )
-  data_grouped <- predictions %>%
+  data_grouped <- predictions |>
     dplyr::group_by(year)
   split_names <- unlist(dplyr::group_keys(data_grouped))
   x <- purrr::map(
-    data_grouped %>%
+    data_grouped |>
       dplyr::group_split(),
     .f = ~ raster::rasterize(
       x = data.frame(.x[["x"]], .x[["y"]]),
       y = data_raster,
       field = .x[["plot_me"]],
       fun = mean
-    ) %>%
-      raster::rasterToPoints() %>%
+    ) |>
+      raster::rasterToPoints() |>
       as.data.frame()
   )
   names(x) <- split_names
