@@ -12,10 +12,9 @@
 #'   spatial and spatiotemporal fields. This defaults to FALSE, but adds extra
 #'   parameters. The default in sdmTMB is TRUE, and sharing the range may improve
 #'   estimation for data limited applications
-#' @param spatial_varying Optional spatial varying formula from [sdmTMB::sdmTMB()].
-#'   Defaults to `NULL`
 #' @param sdmtmb_control Optional list, in the format of [sdmTMB::sdmTMBcontrol()].
 #'   By default, this is includes 3 newton loops
+#' @param skip_results_diagnostics Logical, whether or not to skip the results (for testing). Defaults to `FALSE`
 #' @param ... Optional arguments passed to [sdmTMB::sdmTMB()].
 #'
 #' @author Chantel R. Wetzel
@@ -29,8 +28,8 @@ run_sdmtmb <- function(dir_main = getwd(),
                        formula,
                        n_knots = 500,
                        share_range = FALSE,
-                       spatial_varying = NULL,
                        sdmtmb_control = sdmTMB::sdmTMBcontrol(newton_loops = 3),
+                       skip_results_diagnostics = FALSE,
                        ...) {
   # Checks
   stopifnot(inherits(family, "family"))
@@ -119,7 +118,6 @@ run_sdmtmb <- function(dir_main = getwd(),
     family = family,
     control = sdmtmb_control,
     share_range = share_range,
-    spatial_varying = spatial_varying,
     ...
   )
   # Refit the model if the hessian is not positive definite
@@ -145,21 +143,29 @@ run_sdmtmb <- function(dir_main = getwd(),
     )
     dev.off()
   }
-  results_by_area <- calc_index_areas(
-    data = data_truncated,
-    fit = fit,
-    prediction_grid = grid,
-    dir = dir_index
-  )
+  results_by_area <- NULL
+  if(skip_results_diagnostics == FALSE) {
+    # Calculate results by area
+    results_by_area <- calc_index_areas(
+      data = data_truncated,
+      fit = fit,
+      prediction_grid = grid,
+      dir = dir_index
+    )
+  }
+
 
   # Add diagnostics
   # 1) QQ plot
   # 2) Residuals by year
-  diagnostics <- diagnose(
-    dir = dir_index,
-    fit = fit,
-    prediction_grid = grid
-  )
+  diagnostics <- NULL
+  if(skip_results_diagnostics == FALSE) {
+    diagnostics <- diagnose(
+      dir = dir_index,
+      fit = fit,
+      prediction_grid = grid
+    )
+  }
 
   save(
     data,
