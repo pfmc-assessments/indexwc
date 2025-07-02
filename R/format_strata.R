@@ -10,9 +10,9 @@
 format_strata <- function(strata = nwfscSurvey::GetStrata.fn("coast"),
                           min_depth = 55,
                           max_depth = 1280) {
-  strata_temp <- strata %>%
-    tidyr::separate(name, into = c("dname", "STRATA"), sep = "_") %>%
-    dplyr::group_by(STRATA) %>%
+  strata_temp <- strata |>
+    tidyr::separate(name, into = c("dname", "STRATA"), sep = "_") |>
+    dplyr::group_by(STRATA) |>
     dplyr::summarize(
       north_border = min(Latitude_dd.2),
       south_border = min(Latitude_dd.1),

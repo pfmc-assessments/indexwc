@@ -20,19 +20,19 @@ map_residuals <- function(data,
   #   nrow = floor((slot(data_extent, "ymax") - slot(data_extent, "ymin")) / 2)
   # )
   # proj4string(data_raster) <- CRS(paste("+proj=utm +zone=10 ellps=WGS84"))
-  # data_grouped <- data %>%
+  # data_grouped <- data |>
   #   dplyr::group_by(year)
   # split_names <- unlist(dplyr::group_keys(data_grouped))
   # x <- purrr::map(
-  #   data_grouped %>%
+  #   data_grouped |>
   #     dplyr::group_split(),
   #   .f = ~ raster::rasterize(
   #     x = data.frame(.x[["x"]], .x[["y"]]),
   #     y = data_raster,
   #     field = .x[["residuals"]],
   #     fun = mean
-  #   ) %>%
-  #     raster::rasterToPoints() %>%
+  #   ) |>
+  #     raster::rasterToPoints() |>
   #     as.data.frame()
   # )
   # names(x) <- split_names

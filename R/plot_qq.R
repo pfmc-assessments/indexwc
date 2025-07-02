@@ -43,12 +43,12 @@ plot_qq <- function(fit, file_name = "qq.png") {
     .f = stats::qqnorm,
     .id = "model",
     plot.it = FALSE
-  ) %>%
+  ) |>
     dplyr::filter(!is.na(x))
 
-  slopes_intercepts <- data %>%
-    dplyr::select(-x) %>%
-    dplyr::group_split(model, .keep = FALSE) %>%
+  slopes_intercepts <- data |>
+    dplyr::select(-x) |>
+    dplyr::group_split(model, .keep = FALSE) |>
     purrr::map_df(
       .f = ~ qqline_parameters(.x[["y"]]),
       .id = "model"

@@ -34,7 +34,6 @@ Imports:
     ggplot2,
     gridExtra,
     lifecycle,
-    magrittr,
     nwfscSurvey,
     purrr,
     raster,
