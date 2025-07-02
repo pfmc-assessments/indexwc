@@ -144,7 +144,7 @@ run_sdmtmb <- function(dir_main = getwd(),
     dev.off()
   }
   results_by_area <- NULL
-  if(skip_results_diagnostics == FALSE) {
+  if (skip_results_diagnostics == FALSE) {
     # Calculate results by area
     results_by_area <- calc_index_areas(
       data = data_truncated,
@@ -159,7 +159,7 @@ run_sdmtmb <- function(dir_main = getwd(),
   # 1) QQ plot
   # 2) Residuals by year
   diagnostics <- NULL
-  if(skip_results_diagnostics == FALSE) {
+  if (skip_results_diagnostics == FALSE) {
     diagnostics <- diagnose(
       dir = dir_index,
       fit = fit,
