@@ -47,8 +47,6 @@ Imports:
 Suggests:
     knitr,
     testthat
-VignetteBuilder: 
-    knitr
 Remotes:
     github::pfmc-assessments/nwfscSurvey
 Encoding: UTF-8
