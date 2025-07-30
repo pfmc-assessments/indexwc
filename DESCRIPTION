@@ -19,7 +19,8 @@ Description: A system to run and summarize models that estimate indices of
     models to complex spatio-temporal models with lots of random effects
     and non-linear relationships.
 License: MIT + file LICENSE
-URL: https://github.com/pfmc-assessments/indexwc, https://pfmc-assessments.github.io/indexwc/
+URL: https://github.com/pfmc-assessments/indexwc,
+    https://pfmc-assessments.github.io/indexwc/
 BugReports: https://github.com/pfmc-assessments/indexwc/issues
 Depends:
     R (>= 4.2)
@@ -34,7 +35,6 @@ Imports:
     gridExtra,
     here,
     lifecycle,
-    magrittr,
     nwfscSurvey,
     purrr,
     raster,

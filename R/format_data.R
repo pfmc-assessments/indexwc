@@ -58,7 +58,7 @@ format_data.default <- function(data, ...) {
   # TODO: Further develop the default code to ensure that all
   #       necessary columns are present
   cols <- colnames(data)
-  data <- data %>%
+  data <- data |>
     dplyr::rename_with(.fn = tolower)
 
   return(data)
@@ -88,13 +88,13 @@ format_data.nwfscSurvey <- function(data, ...) {
       "to pull your data."
     )
   }
-  data <- data %>%
-    dplyr::rename_with(tolower) %>%
-    dplyr::rename_with(gsub, pattern = "_dd", replace = "") %>%
+  data <- data |>
+    dplyr::rename_with(tolower) |>
+    dplyr::rename_with(gsub, pattern = "_dd", replace = "") |>
     dplyr::rename(
       catch_numbers = total_catch_numbers,
       survey_name = project,
-    ) %>%
+    ) |>
     dplyr::mutate(
       # TODO: complete the case_when statement for all known survey names
       #       make them match the sa4ss glossary
@@ -117,7 +117,7 @@ format_data.nwfscSurvey <- function(data, ...) {
       depth_scaled = scale(depth),
       depth_scaled_squared = depth_scaled^2,
       pass_scaled = pass - mean(range(pass))
-    ) %>%
+    ) |>
     dplyr::select(
       year,
       fyear,
@@ -133,7 +133,7 @@ format_data.nwfscSurvey <- function(data, ...) {
       depth,
       depth_scaled,
       depth_scaled_squared
-    ) %>%
+    ) |>
     dplyr::filter(
       # TODO: fix the survey  names
       # 1997, 1999, 2000, and 2001 are the only years that fully sampled the coast
@@ -153,8 +153,8 @@ format_data.nwfscSurvey <- function(data, ...) {
     data,
     utm_crs = utm_zone_10,
     utm_names = c("x", "y")
-  )) %>%
-    dplyr::rename_with(tolower) %>%
+  )) |>
+    dplyr::rename_with(tolower) |>
     tibble::as_tibble()
 
   return(data_utm)

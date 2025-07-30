@@ -61,9 +61,9 @@
 # length(which(dat$ling.pa==1))/dim(dat)[1] # positive rate
 
 # # positive rate by year without any filtering
-# pos_rate_year<-dat %>%
-#   dplyr::group_by(Year)%>%
-#   dplyr::summarise(No.Drifts=n(),Pos.Drifts=round((sum(ling.pa)/n()),3)) %>%
+# pos_rate_year<-dat |>
+#   dplyr::group_by(Year)|>
+#   dplyr::summarise(No.Drifts=n(),Pos.Drifts=round((sum(ling.pa)/n()),3)) |>
 #   as.data.frame()
 # pos_rate_year
 
@@ -104,7 +104,7 @@
 #   }
 #   return(x > limit)
 # }
-# test %>%
+# test |>
 #   dplyr::mutate(filter_drift = filter_odfw_drift_quantile(DriftMinutes))
 # # positive rate of overall dataset
 # dim(dat)[1] # total records
@@ -126,13 +126,13 @@
 # length(which(dat$ling.pa==1))/dim(dat)[1] # positive rate
 
 # #creating a depth bin from the start depth in FMs
-# dat<- dat %>%
-#   mutate(DepthBin=cut(dat$SDEPTH_fm,breaks = c(seq(0,60,by = 5)))) %>%
+# dat<- dat |>
+#   mutate(DepthBin=cut(dat$SDEPTH_fm,breaks = c(seq(0,60,by = 5)))) |>
 #   as.data.frame()
 
 # # look at drifts by depth bin
-# drifts_by_depth<-dat %>%
-#   group_by(DepthBin) %>%
+# drifts_by_depth<-dat |>
+#   group_by(DepthBin) |>
 #   summarise(drifts=n())
 # drifts_by_depth
 # histogram(dat$DepthBin)
@@ -186,9 +186,9 @@
 # length(which(dat$ling.pa==1))/dim(dat)[1] # positive rate
 
 # # positive rate by year without any filtering
-# pos_rate_year<-dat %>%
-#   dplyr::group_by(Year)%>%
-#   dplyr::summarise(No.Drifts=n(),Pos.Drifts=sum(ling.pa),Pos.Perc=round((sum(ling.pa)/n()),3)) %>%
+# pos_rate_year<-dat |>
+#   dplyr::group_by(Year)|>
+#   dplyr::summarise(No.Drifts=n(),Pos.Drifts=sum(ling.pa),Pos.Perc=round((sum(ling.pa)/n()),3)) |>
 #   as.data.frame()
 # pos_rate_year
 
@@ -201,9 +201,9 @@
 # length(which(dat$ling.pa==1)) # total positive drifts
 # length(which(dat$ling.pa==1))/dim(dat)[1] # positive rate
 
-# pos_rate_year<-dat %>%
-#   dplyr::group_by(Year)%>%
-#   dplyr::summarise(No.Drifts=n(),Pos.Drifts=sum(ling.pa),Pos.Perc=round((sum(ling.pa)/n()),3)) %>%
+# pos_rate_year<-dat |>
+#   dplyr::group_by(Year)|>
+#   dplyr::summarise(No.Drifts=n(),Pos.Drifts=sum(ling.pa),Pos.Perc=round((sum(ling.pa)/n()),3)) |>
 #   as.data.frame()
 # pos_rate_year
 
