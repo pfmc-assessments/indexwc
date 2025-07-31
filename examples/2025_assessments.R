@@ -21,7 +21,6 @@ configuration_all <- configuration
 #===============================================================================
 wcgbt_species_list <- c(
   "chilipepper",
-  "rougheye rockfish",
   "sablefish",
   "widow rockfish",
   "yelloweye rockfish",
@@ -77,6 +76,57 @@ for(sp in wcgbt_species_list){
       )
   }
 }
+
+#===============================================================================
+# Rougheye and Blackspotted rockfishes
+# Code to run WCGBT index for Rougheye and Blackspotted rockfishes
+# Because there are three species codes for the species complex,
+# have to use the nwfscSurvey::combine_tows() function
+#===============================================================================
+
+#filter configuration file for sp and source
+sp <- "rougheye rockfish"
+
+configuration <- configuration |>
+  dplyr::filter(species == sp, source == "NWFSC.Combo")
+
+pulled_data <- nwfscSurvey::pull_catch(
+  common_name = c("rougheye and blackspotted rockfish", "rougheye rockfish", "blackspotted rockfish"),
+  survey = "NWFSC.Combo")
+
+pulled_data <- nwfscSurvey::combine_tows(pulled_data) #have to combine tows with multiple species names
+
+data_filtered <- format_data(pulled_data) |>
+  dplyr::filter(depth <= configuration$min_depth[1], depth >= configuration$max_depth[1],
+                latitude >= configuration$min_latitude[1], latitude <= configuration$max_latitude[1],
+                year >= configuration$min_year[1], year <= configuration$max_year[1]) |>
+  dplyr::mutate(
+    common_name = "rougheye rockfish"
+  )
+
+fit_delta_gamma <- run_sdmtmb(
+  dir_main = savedir,
+  data = data_filtered,
+  family = sdmTMB::delta_gamma(),
+  formula = configuration$formula[1],
+  n_knots = configuration$knots[1],
+  share_range = configuration$share_range[1],
+  anisotropy = configuration$anisotropy[1],
+  spatial = "on",
+  spatiotemporal = "off"
+)
+
+fit_delta_lognormal <- run_sdmtmb(
+  dir_main = savedir,
+  data = data_filtered,
+  family = sdmTMB::delta_lognormal(),
+  formula = configuration$formula[1],
+  n_knots = configuration$knots[1],
+  share_range = configuration$share_range[1],
+  anisotropy = configuration$anisotropy[1],
+  spatial = "on",
+  spatiotemporal = "off"
+)
 
 #===============================================================================
 # Yellowtail rockfish north - WCGBT
