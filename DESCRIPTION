@@ -1,6 +1,6 @@
 Package: indexwc
 Title: Run indices for West Coast Groundfish assessments
-Version: 0.7
+Version: 0.8
 Authors@R: c(
     person(c("Kelli", "F."), "Johnson", , "kelli.johnson@noaa.gov", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-5149-451X")),
@@ -33,10 +33,12 @@ Imports:
     ggforce,
     ggplot2,
     gridExtra,
+    here,
     lifecycle,
     nwfscSurvey,
     purrr,
     raster,
+    rmarkdown,
     rnaturalearth,
     rnaturalearthdata,
     sdmTMB (>= 0.6.0),
@@ -45,6 +47,7 @@ Imports:
     tidyr,
     viridis
 Suggests:
+    curl,
     knitr,
     testthat
 Remotes:

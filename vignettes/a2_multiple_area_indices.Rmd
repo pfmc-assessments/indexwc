@@ -26,8 +26,8 @@ For some stocks, a goal might be to create multiple coastwide indices, where the
 As a multi-area index example, we'll focus on yellowtail rockfish
 
 ```{r}
-library(dplyr)
 library(indexwc)
+library(dplyr)
 library(purrr)
 library(sdmTMB)
 library(tibble)
@@ -49,7 +49,7 @@ In this example, we are going to only run a single-index for the Northwest Fishe
 
 ```{r}
 configuration_ytk_wcgbt <- configuration_ytk |>
-  dplyr::filter(source == "NWFSC.Combo" & family == "sdmTMB::delta_gamma()")
+  dplyr::filter(source == "NWFSC.Combo" & family == "sdmTMB::delta_gamma()" & min_latitude == 33.5)
 ```
 
 ### Statistical model
