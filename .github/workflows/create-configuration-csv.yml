@@ -1,10 +1,11 @@
 
 name: create-configuration-csv
 on:
-  # this workflow runs on pushing to main, pull requests to main, and manually.
+  # This workflow runs when 'data/configuration.rda' is pushed or when triggered manually.
   push:
     paths:
       - 'data/configuration.rda'
+  workflow_dispatch:
 
 jobs:
   convert_data:
