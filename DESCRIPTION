@@ -50,8 +50,6 @@ Suggests:
     curl,
     knitr,
     testthat (>= 3.0.0)
-VignetteBuilder: 
-    knitr
 Remotes:
     github::pfmc-assessments/nwfscSurvey
 Encoding: UTF-8
