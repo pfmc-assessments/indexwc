@@ -3,16 +3,16 @@ name: create-configuration-csv
 on:
   # this workflow runs on pushing to main, pull requests to main, and manually.
   push:
-    path:
-      'data/configuration.rda'
+    paths:
+      - 'data/configuration.rda'
 
 jobs:
   convert-data:
-  runs-on: windows
+    runs-on: windows
 
-  steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
     - name: Set up R
       uses: r-lib/actions/setup-r@v2
