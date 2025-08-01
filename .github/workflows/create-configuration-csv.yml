@@ -3,8 +3,9 @@ name: create-configuration-csv
 on:
   # This workflow runs when 'data/configuration.rda' is pushed or when triggered manually.
   push:
-  #  paths:
-  #    - 'data/configuration.rda'
+    paths:
+      - 'data/configuration.rda'
+      - 'data-raw/configuration.csv'
   workflow_dispatch:
 
 jobs:
