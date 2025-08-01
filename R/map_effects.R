@@ -5,9 +5,6 @@
 #' @template dir
 #' @template verbose
 #'
-#' @import ggplot2
-#' @import gridExtra
-#'
 #' @author Chantel R. Wetzel
 #' @export
 map_effects <- function(predictions, dir, verbose = FALSE) {
@@ -22,9 +19,9 @@ map_effects <- function(predictions, dir, verbose = FALSE) {
 
   if (column != "skip") {
     p1 <- map_nwfsc(predictions, exp(predictions[, column])) +
-      scale_fill_viridis_c(trans = "sqrt", name = "Fixed \nEffects") +
-      labs(x = "Longitude", y = "Latitude") +
-      ggtitle("Fixed pass effects")
+      ggplot2::scale_fill_viridis_c(trans = "sqrt", name = "Fixed \nEffects") +
+      ggplot2::labs(x = "Longitude", y = "Latitude") +
+      ggplot2::ggtitle("Fixed pass effects")
   } else {
     if (verbose) {
       message("The est_non_rf column not found in the predictions. Fixed effects map not created.")
@@ -43,9 +40,9 @@ map_effects <- function(predictions, dir, verbose = FALSE) {
 
   if (column != "skip") {
     p2 <- map_nwfsc(predictions, predictions[, column]) +
-      scale_fill_viridis_c(name = "Random \nEffects") +
-      labs(x = "Longitude", y = "Latitude") +
-      ggtitle("Spatial random effects")
+      ggplot2::scale_fill_viridis_c(name = "Random \nEffects") +
+      ggplot2::labs(x = "Longitude", y = "Latitude") +
+      ggplot2::ggtitle("Spatial random effects")
   } else {
     if (verbose) {
       message("The omega_s column not found in the predictions. Spatial random effects map not created.")
@@ -54,7 +51,7 @@ map_effects <- function(predictions, dir, verbose = FALSE) {
 
   g <- gridExtra::grid.arrange(p1, p2, nrow = 1)
 
-  suppressMessages(ggsave(
+  suppressMessages(ggplot2::ggsave(
     plot = g,
     filename = file.path(dir, paste0("fixed_and_spatial_effects.png")),
     width = 14, height = 10, units = "in"
