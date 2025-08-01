@@ -45,7 +45,7 @@ lookup_grid <- function(x,
     grepl("AFSC_*\\s*Slope", x) ~ "area_km2_Slope98_00",
     grepl("NWFSC_*\\s*Slope", x) ~ "area_km2_Slope02",
     .default = as.character(x)
-  ) %>%
+  ) |>
     dplyr::sym()
 
   out <- dplyr::mutate(
@@ -54,12 +54,12 @@ lookup_grid <- function(x,
     vessel_year = "0",
     depth_scaled = scale(depth, center = mean_depth, scale = sd_depth),
     depth_scaled_squared = depth_scaled^2
-  ) %>%
+  ) |>
     dplyr::filter(
       area_km2 > 0
     )
 
-  out_truncated <- out %>%
+  out_truncated <- out |>
     dplyr::filter(
       latitude > min_latitude & latitude < max_latitude,
       longitude > min_longitude & longitude < max_longitude,
@@ -71,7 +71,7 @@ lookup_grid <- function(x,
     out_truncated,
     c("longitude", "latitude"),
     utm_crs = utm_zone_10
-  )) %>%
+  )) |>
     dplyr::select(
       x,
       y,
@@ -97,7 +97,7 @@ lookup_grid <- function(x,
       data
     },
     data = out_utm
-  ) %>%
+  ) |>
     dplyr::mutate(
       fyear = as.factor(year)
     )

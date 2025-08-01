@@ -1,6 +1,6 @@
 Package: indexwc
 Title: Run indices for West Coast Groundfish assessments
-Version: 0.7
+Version: 0.8
 Authors@R: c(
     person(c("Kelli", "F."), "Johnson", , "kelli.johnson@noaa.gov", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-5149-451X")),
@@ -19,6 +19,9 @@ Description: A system to run and summarize models that estimate indices of
     models to complex spatio-temporal models with lots of random effects
     and non-linear relationships.
 License: MIT + file LICENSE
+URL: https://github.com/pfmc-assessments/indexwc,
+    https://pfmc-assessments.github.io/indexwc/
+BugReports: https://github.com/pfmc-assessments/indexwc/issues
 Depends:
     R (>= 4.2)
 Imports:
@@ -30,11 +33,12 @@ Imports:
     ggforce,
     ggplot2,
     gridExtra,
+    here,
     lifecycle,
-    magrittr,
     nwfscSurvey,
     purrr,
     raster,
+    rmarkdown,
     rnaturalearth,
     rnaturalearthdata,
     sdmTMB (>= 0.6.0),
@@ -43,8 +47,9 @@ Imports:
     tidyr,
     viridis
 Suggests:
+    curl,
     knitr,
-    testthat
+    testthat (>= 3.0.0)
 Remotes:
     github::pfmc-assessments/nwfscSurvey
 Encoding: UTF-8
@@ -52,3 +57,4 @@ LazyData: true
 LazyDataCompression: xz
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
+Config/testthat/edition: 3

@@ -12,6 +12,7 @@ run_sdmtmb(
   n_knots = 500,
   share_range = FALSE,
   sdmtmb_control = sdmTMB::sdmTMBcontrol(newton_loops = 3),
+  skip_results_diagnostics = FALSE,
   ...
 )
 }
@@ -44,8 +45,8 @@ Supports the delta/hurdle models:
 For binomial family options, see 'Binomial families' in the Details
 section below.}
 
-\item{formula}{Model formula. IID random intercepts are possible using
-\pkg{lme4} syntax, e.g., \code{+ (1 | g)} where \code{g} is a column of class
+\item{formula}{Model formula. IID random intercepts and slopes are possible using
+\pkg{lme4} syntax, e.g., \code{+ (1 | g)} or \code{+ (0 + depth | g)} or \code{+ (1 + depth | g)} where \code{g} is a column of class
 character or factor representing groups. Penalized splines are possible via
 \pkg{mgcv} with \code{s()}. Optionally a list for delta (hurdle) models.  See
 examples and details below.}
@@ -62,6 +63,8 @@ estimation for data limited applications}
 
 \item{sdmtmb_control}{Optional list, in the format of \code{\link[sdmTMB:sdmTMBcontrol]{sdmTMB::sdmTMBcontrol()}}.
 By default, this is includes 3 newton loops}
+
+\item{skip_results_diagnostics}{Logical, whether or not to skip the results (for testing). Defaults to \code{FALSE}}
 
 \item{...}{Optional arguments passed to \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}}.}
 }

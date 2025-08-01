@@ -40,10 +40,10 @@ run <- function(data,
   ))
 
   # Objects
-  data_grouped <- data %>%
+  data_grouped <- data |>
     dplyr::group_by(survey_name, common_name)
-  combinations <- data_grouped %>%
-    dplyr::count() %>%
+  combinations <- data_grouped |>
+    dplyr::count() |>
     dplyr::mutate(
       common_without = format_common_name(common_name),
       survey_without = format_common_name(survey_name)
@@ -54,7 +54,7 @@ run <- function(data,
     combinations[["survey_without"]],
     format_family(family)
   )
-  data_split <- data_grouped %>%
+  data_split <- data_grouped |>
     dplyr::group_split()
 
   # Run

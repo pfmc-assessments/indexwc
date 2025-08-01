@@ -14,6 +14,7 @@
 #'   estimation for data limited applications
 #' @param sdmtmb_control Optional list, in the format of [sdmTMB::sdmTMBcontrol()].
 #'   By default, this is includes 3 newton loops
+#' @param skip_results_diagnostics Logical, whether or not to skip the results (for testing). Defaults to `FALSE`
 #' @param ... Optional arguments passed to [sdmTMB::sdmTMB()].
 #'
 #' @author Chantel R. Wetzel
@@ -28,6 +29,7 @@ run_sdmtmb <- function(dir_main = getwd(),
                        n_knots = 500,
                        share_range = FALSE,
                        sdmtmb_control = sdmTMB::sdmTMBcontrol(newton_loops = 3),
+                       skip_results_diagnostics = FALSE,
                        ...) {
   # Checks
   stopifnot(inherits(family, "family"))
@@ -70,8 +72,8 @@ run_sdmtmb <- function(dir_main = getwd(),
   ))
 
   # Create prediction grid
-  ranges <- data %>%
-    dplyr::filter(catch_weight > 0) %>%
+  ranges <- data |>
+    dplyr::filter(catch_weight > 0) |>
     dplyr::summarize(
       dplyr::across(
         dplyr::matches("tude"),
@@ -80,12 +82,12 @@ run_sdmtmb <- function(dir_main = getwd(),
       # depth_min = min(abs(depth), na.rm = TRUE),
       depth_max = min(depth, na.rm = TRUE)
     )
-  data_truncated <- data %>%
+  data_truncated <- data |>
     dplyr::filter(
       latitude > ranges[["latitude_min"]] & latitude < ranges[["latitude_max"]],
       longitude > ranges[["longitude_min"]] & longitude < ranges[["longitude_max"]],
       depth > ranges[["depth_max"]]
-    ) %>%
+    ) |>
     droplevels()
 
   grid <- lookup_grid(
@@ -141,21 +143,29 @@ run_sdmtmb <- function(dir_main = getwd(),
     )
     dev.off()
   }
-  results_by_area <- calc_index_areas(
-    data = data_truncated,
-    fit = fit,
-    prediction_grid = grid,
-    dir = dir_index
-  )
+  results_by_area <- NULL
+  if (skip_results_diagnostics == FALSE) {
+    # Calculate results by area
+    results_by_area <- calc_index_areas(
+      data = data_truncated,
+      fit = fit,
+      prediction_grid = grid,
+      dir = dir_index
+    )
+  }
+
 
   # Add diagnostics
   # 1) QQ plot
   # 2) Residuals by year
-  diagnostics <- diagnose(
-    dir = dir_index,
-    fit = fit,
-    prediction_grid = grid
-  )
+  diagnostics <- NULL
+  if (skip_results_diagnostics == FALSE) {
+    diagnostics <- diagnose(
+      dir = dir_index,
+      fit = fit,
+      prediction_grid = grid
+    )
+  }
 
   save(
     data,
