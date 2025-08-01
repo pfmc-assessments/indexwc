@@ -49,7 +49,9 @@ Imports:
 Suggests:
     curl,
     knitr,
-    testthat (>= 3.0.0)
+    testthat
+VignetteBuilder: 
+    knitr
 Remotes:
     github::pfmc-assessments/nwfscSurvey
 Encoding: UTF-8
@@ -57,4 +59,3 @@ LazyData: true
 LazyDataCompression: xz
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
-Config/testthat/edition: 3
