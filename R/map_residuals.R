@@ -50,9 +50,9 @@ map_residuals <- function(data,
     #   width = 10000,
     #   height = 10000
     # ) +
-    scale_fill_viridis_c() +
-    scale_colour_viridis_c() +
-    labs(fill = "Residuals") +
+    ggplot2::scale_fill_viridis_c() +
+    ggplot2::scale_colour_viridis_c() +
+    ggplot2::labs(fill = "Residuals") +
     ggplot2::theme(
       axis.text.x = ggplot2::element_text(angle = 90, vjust = 0.5, hjust = 1)
     ) +

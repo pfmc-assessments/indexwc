@@ -48,7 +48,7 @@ map_year_re <- function(predictions, dir, nrow = 3, ncol = 4, verbose = FALSE) {
         predictions[predictions$Year %in% g[[page]], column]
       ) +
         # scale_fill_gradient2() +
-        scale_fill_viridis_c(
+        ggplot2::scale_fill_viridis_c(
           name = "Spatial \neffects",
           # trim extreme high values to make spatial variation more visible
           na.value = "yellow",
@@ -57,15 +57,15 @@ map_year_re <- function(predictions, dir, nrow = 3, ncol = 4, verbose = FALSE) {
             quantile(predictions[, column], 0.995)
           )
         ) +
-        facet_wrap(~Year, ncol = ncol, nrow = nrow) +
-        labs(x = "Longitude", y = "Latitude") +
-        ggtitle("Spatio-temporal random effects of the catch rate model")
+        ggplot2::facet_wrap(~Year, ncol = ncol, nrow = nrow) +
+        ggplot2::labs(x = "Longitude", y = "Latitude") +
+        ggplot2::ggtitle("Spatio-temporal random effects of the catch rate model")
 
       height <- ifelse(
         length(g[[page]]) == nrow * ncol, 10, 7
       )
 
-      suppressMessages(ggsave(
+      suppressMessages(ggplot2::ggsave(
         filename = file.path(dir, paste0("year_random_effects_", page, ".png")),
         width = 10,
         height = height,
