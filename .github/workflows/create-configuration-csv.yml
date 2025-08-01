@@ -1,6 +1,5 @@
 
 name: create-configuration-csv
-# on specifies the build triggers. See more info at https://docs.github.com/en/actions/learn-github-actions/events-that-trigger-workflows
 on:
   # this workflow runs on pushing to main, pull requests to main, and manually.
   push:
@@ -9,7 +8,7 @@ on:
 
 jobs:
   convert-data:
-  runs-on: ubuntu-latest
+  runs-on: windows
 
   steps:
     - name: Checkout repository
