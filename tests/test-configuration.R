@@ -1,4 +1,3 @@
-# check that configuration.rda matches configuration.csv
 # This test file checks the contents of the configuration.rda data file
 # to ensure it contains all expected columns and values.
 # It also verifies that the values in certain columns match expected sets.
