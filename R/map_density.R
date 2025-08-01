@@ -44,8 +44,8 @@ map_density <- function(predictions,
 
   data_extent <- raster::extent(predictions[, c("x", "y")])
   data_raster <- raster::raster(data_extent,
-    ncol = floor((slot(data_extent, "xmax") - slot(data_extent, "xmin")) / 2),
-    nrow = floor((slot(data_extent, "ymax") - slot(data_extent, "ymin")) / 2)
+    ncol = floor((methods::slot(data_extent, "xmax") - methods::slot(data_extent, "xmin")) / 2),
+    nrow = floor((methods::slot(data_extent, "ymax") - methods::slot(data_extent, "ymin")) / 2)
   )
   data_grouped <- predictions |>
     dplyr::group_by(year)

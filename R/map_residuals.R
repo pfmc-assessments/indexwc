@@ -16,8 +16,8 @@ map_residuals <- function(data,
                           save_prefix = file.path(getwd(), "data_")) {
   # data_extent <- raster::extent(data[, c("x", "y")])
   # data_raster <- raster::raster(data_extent,
-  #   ncol = floor((slot(data_extent, "xmax") - slot(data_extent, "xmin")) / 2),
-  #   nrow = floor((slot(data_extent, "ymax") - slot(data_extent, "ymin")) / 2)
+  #   ncol = floor((methods::slot(data_extent, "xmax") - methods::slot(data_extent, "xmin")) / 2),
+  #   nrow = floor((methods::slot(data_extent, "ymax") - methods::slot(data_extent, "ymin")) / 2)
   # )
   # proj4string(data_raster) <- CRS(paste("+proj=utm +zone=10 ellps=WGS84"))
   # data_grouped <- data |>

@@ -35,6 +35,7 @@ Imports:
     gridExtra,
     here,
     lifecycle,
+    methods,
     nwfscSurvey,
     purrr,
     raster,
