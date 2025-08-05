@@ -25,7 +25,7 @@ This vignette highlights the ability to generate coastwide indices for stocks us
 
 As a case study, we'll focus on yellowtail rockfish
 
-```{r}
+```{r, eval=FALSE, echo=TRUE}
 library(dplyr)
 library(indexwc)
 library(purrr)
@@ -35,7 +35,7 @@ library(tibble)
 
 First we'll load in the configuration file. This is bringing in specific settings by survey and species that are used to subset the data and define the parameterization of the index estimation.  This file is included as both an `rda` file that is loaded with the package but is also available for users who download the source code in the `data-raw` folder (download the package to see this). 
 
-```{r}
+```{r, eval=FALSE, echo=TRUE}
 # Load from the rda file
 configuration_ytk <- configuration |>
   dplyr::filter(species == "yellowtail rockfish")
@@ -47,7 +47,7 @@ The configuration includes multiple entries for a single species for separate su
 
 In this example, we are going to only run a single-index for the Northwest Fisheries Science Center (NWFSC) West Coast Groundfish Bottom Trawl (WCGBT) survey (i.e., also referred to as the NWFSC.Combo survey in the data NWFSC data warehouse).
 
-```{r}
+```{r, eval=FALSE, echo=TRUE}
 configuration_ytk_wcgbt <- configuration_ytk |>
   dplyr::filter(source == "NWFSC.Combo" & family == "sdmTMB::delta_gamma()")
 ```
@@ -58,13 +58,13 @@ For most indices developed on the west coast of the USA, the main formula is usu
 
 There are two unique index formula's available for yellowtail rockfish:
 
-```{r}
+```{r, eval=FALSE, echo=TRUE}
 configuration_ytk_wcgbt[, "formula"]
 ```
 
 we are going to use the default configuration.  Please see the vignette on multiple area indices for an example run with the other formulation available for yellowtail rockfish. 
 
-```{r}
+```{r, eval=FALSE, echo=TRUE}
 configuration_to_run <- configuration_ytk_wcgbt |>
   dplyr::filter(
     formula == "catch_weight ~ 0 + fyear + pass_scaled"
@@ -75,7 +75,7 @@ configuration_to_run <- configuration_ytk_wcgbt |>
 
 This block pulls trawl survey from the NWFSC data warehouse and applies filters (based on latitude, depth, and year) to each observation.
 
-```{r}
+```{r, eval=FALSE, echo=TRUE}
 data <- configuration_to_run |>
   dplyr::rowwise() |>
   dplyr::mutate(
@@ -100,7 +100,7 @@ This code is optimized to fit multiple models (across stocks / species, or model
 
 Note: this code will fit a single model for each row 
 
-```{r}
+```{r, eval=FALSE, echo=TRUE}
 best <- data |>
   dplyr::mutate(
     # Evaluate the call in family
