@@ -30,4 +30,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: converted-csv
-          path: data-raw/configuration.csv # Path to the generated CSV file
+          path: configuration/configuration.csv # Path to the generated CSV file
