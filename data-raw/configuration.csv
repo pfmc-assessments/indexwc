@@ -4,7 +4,7 @@
 "big skate","nwfscSurvey::pull_catch(common_name = species,survey=source)","NWFSC.Combo","sdmTMB::delta_gamma()","catch_weight ~ 0 + fyear + pass_scaled",-55,-500,-Inf,Inf,-Inf,Inf,TRUE,500,"iid","iid",FALSE,FALSE
 "blackgill rockfish","nwfscSurvey::pull_catch(common_name = species,survey=source)","NWFSC.Combo","sdmTMB::delta_gamma()","catch_weight ~ 0 + fyear",-183,-850,35,Inf,-Inf,Inf,TRUE,200,"off","off",FALSE,FALSE
 "bocaccio","nwfscSurvey::pull_catch(common_name = species,survey=source)","NWFSC.Combo","sdmTMB::delta_gamma()","catch_weight ~ 0 + fyear + pass_scaled",-55,-500,-Inf,Inf,-Inf,Inf,TRUE,500,"iid","iid",FALSE,FALSE
-"canary rockfish","nwfscSurvey::pull_catch(common_name = species,survey=source)","NWFSC.Combo","sdmTMB::delta_lognormal()","catch_weight ~ 0 + fyear + pass_scaled",-55,-275,-Inf,Inf,-Inf,Inf,FALSE,200,"iid","off",FALSE,FALSE
+"canary rockfish","nwfscSurvey::pull_catch(common_name = species,survey=source)","NWFSC.Combo","sdmTMB::delta_lognormal()","catch_weight ~ 0 + fyear + pass_scaled",-55,-275,-Inf,Inf,-Inf,Inf,FALSE,200,"iid","off",FALSE,TRUE
 "canary rockfish","nwfscSurvey::pull_catch(common_name = species,survey=source)","Triennial","sdmTMB::delta_lognormal()","catch_weight ~ 0 + fyear",-55,-366,37,Inf,1980,Inf,TRUE,200,"iid","off",FALSE,FALSE
 "chilipepper","nwfscSurvey::pull_catch(common_name = species,survey=source)","AFSC.Slope","sdmTMB::delta_gamma()","catch_weight ~ 0 + fyear",-183,-Inf,34.5,Inf,1997,Inf,FALSE,100,"off","off",TRUE,FALSE
 "chilipepper","nwfscSurvey::pull_catch(common_name = species,survey=source)","AFSC.Slope","sdmTMB::delta_lognormal()","catch_weight ~ 0 + fyear",-183,-Inf,34.5,Inf,1997,Inf,FALSE,100,"off","off",TRUE,FALSE
