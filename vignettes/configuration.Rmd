@@ -60,7 +60,7 @@ configuration |>
 ```
 
 
-# AFSC/NWFSC Trienial Shelf Survey
+# AFSC/NWFSC Triennial Shelf Survey
 
 The below configurations were used in the most recent assessment:
 
