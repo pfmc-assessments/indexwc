@@ -77,7 +77,7 @@ configuration |>
 
 # Other Configurations
 
-The below configurations are alterntive configurations that were not used in the most recent assessment:
+The below configurations are alternative configurations that were not used in the most recent assessment:
 
 ```{r, echo=FALSE}
 configuration |>
