@@ -9,6 +9,8 @@ vignette: >
 ---
 
 ```{r, echo=FALSE}
+library(gt)
+library(dplyr)
 load(here::here("data", "configuration.rda"))
 ```
 
