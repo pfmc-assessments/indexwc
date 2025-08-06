@@ -1,6 +1,7 @@
 # check that configuration.rda matches configuration.csv
 test_that("configuration.rda matches configuration.csv", {
   # Note: configuration.rda is automatically loaded when package is installed
+  load(file.path("data", "configuration.rda"))
 
   # Read the CSV version of configuration
   # (reading from github because data-raw folder doesn't seem to be visible
@@ -12,7 +13,7 @@ test_that("configuration.rda matches configuration.csv", {
 
   # Check if the configuration and configuration_csv tibbles are identical
   expect_equal(
-    indexwc::configuration,
+    configuration,
     configuration_csv
   )
 })
