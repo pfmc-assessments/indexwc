@@ -33,6 +33,7 @@ Imports:
     ggforce,
     ggplot2,
     gridExtra,
+    gt,
     here,
     lifecycle,
     methods,
