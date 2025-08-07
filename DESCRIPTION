@@ -33,14 +33,15 @@ Imports:
     ggforce,
     ggplot2,
     gridExtra,
+    gt,
     here,
     lifecycle,
+    methods,
     nwfscSurvey,
     purrr,
     raster,
-    rmarkdown,
     rnaturalearth,
-    rnaturalearthdata,
+    rmarkdown,
     sdmTMB (>= 0.6.0),
     sf,
     tibble,
@@ -50,6 +51,8 @@ Suggests:
     curl,
     knitr,
     testthat (>= 3.0.0)
+VignetteBuilder: 
+    knitr
 Remotes:
     github::pfmc-assessments/nwfscSurvey
 Config/testthat/edition: 3
