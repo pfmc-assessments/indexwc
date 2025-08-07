@@ -23,8 +23,7 @@ configuration |>
   gt::gt() |>
   gt::tab_options(
     table.font.size = 10
-  ) 
-
+  )
 ```
 
 # NWFSC Slope Survey
@@ -38,8 +37,7 @@ configuration |>
   gt::gt() |>
   gt::tab_options(
     table.font.size = 10
-  ) 
-
+  )
 ```
 
 # AFSC Slope Survey
@@ -53,8 +51,7 @@ configuration |>
   gt::gt() |>
   gt::tab_options(
     table.font.size = 10
-  ) 
-
+  )
 ```
 
 
@@ -69,8 +66,7 @@ configuration |>
   gt::gt() |>
   gt::tab_options(
     table.font.size = 10
-  ) 
-
+  )
 ```
 
 # Other Configurations
@@ -84,7 +80,6 @@ configuration |>
   gt::gt() |>
   gt::tab_options(
     table.font.size = 10
-  ) 
-
+  )
 ```
 

@@ -4,11 +4,10 @@
 # 3. Run the below script to update the configuration.rda file that is loaded with the package
 
 configuration <- read.csv(
-  file.path("data-raw", "configuration.csv"))
+  file.path("data-raw", "configuration.csv")
+)
 
 usethis::use_data(
   configuration,
   overwrite = TRUE
 )
-
-
