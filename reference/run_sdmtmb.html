@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">indexwc</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.8</span>
       </span>
     </div>
 
@@ -36,6 +36,9 @@
     </li>
     <li>
       <a href="../articles/a2_multiple_area_indices.html">Index example with multiple areas</a>
+    </li>
+    <li>
+      <a href="../articles/configuration.html">Configuration File</a>
     </li>
   </ul></li>
       </ul><ul class="nav navbar-nav navbar-right"><li>
@@ -71,6 +74,7 @@
 <span>  n_knots <span class="op">=</span> <span class="fl">500</span>,</span>
 <span>  share_range <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  sdmtmb_control <span class="op">=</span> <span class="fu">sdmTMB</span><span class="fu">::</span><span class="fu"><a href="https://pbs-assess.github.io/sdmTMB/reference/sdmTMBcontrol.html" class="external-link">sdmTMBcontrol</a></span><span class="op">(</span>newton_loops <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>,</span>
+<span>  skip_results_diagnostics <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -138,6 +142,10 @@ estimation for data limited applications</p></dd>
 <dt id="arg-sdmtmb-control">sdmtmb_control<a class="anchor" aria-label="anchor" href="#arg-sdmtmb-control"></a></dt>
 <dd><p>Optional list, in the format of <code><a href="https://pbs-assess.github.io/sdmTMB/reference/sdmTMBcontrol.html" class="external-link">sdmTMB::sdmTMBcontrol()</a></code>.
 By default, this is includes 3 newton loops</p></dd>
+
+
+<dt id="arg-skip-results-diagnostics">skip_results_diagnostics<a class="anchor" aria-label="anchor" href="#arg-skip-results-diagnostics"></a></dt>
+<dd><p>Logical, whether or not to skip the results (for testing). Defaults to <code>FALSE</code></p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>

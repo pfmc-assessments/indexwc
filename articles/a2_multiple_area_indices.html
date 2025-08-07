@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">indexwc</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.8</span>
       </span>
     </div>
 
@@ -53,6 +53,9 @@
     </li>
     <li>
       <a href="../articles/a2_multiple_area_indices.html">Index example with multiple areas</a>
+    </li>
+    <li>
+      <a href="../articles/configuration.html">Configuration File</a>
     </li>
   </ul>
 </li>
@@ -79,7 +82,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Index example with multiple areas</h1>
             
-            <h4 data-toc-skip class="date">2025-06-13</h4>
+            <h4 data-toc-skip class="date">2025-08-07</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/pfmc-assessments/indexwc/blob/main/vignettes/a2_multiple_area_indices.Rmd" class="external-link"><code>vignettes/a2_multiple_area_indices.Rmd</code></a></small>
       <div class="hidden name"><code>a2_multiple_area_indices.Rmd</code></div>
@@ -102,8 +105,8 @@ observations</p>
 </h2>
 <p>As a multi-area index example, we’ll focus on yellowtail rockfish</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/pfmc-assessments/indexwc" class="external-link">indexwc</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/pfmc-assessments/indexwc" class="external-link">indexwc</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://purrr.tidyverse.org/" class="external-link">purrr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://pbs-assess.github.io/sdmTMB/" class="external-link">sdmTMB</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tibble.tidyverse.org/" class="external-link">tibble</a></span><span class="op">)</span></span></code></pre></div>
@@ -129,7 +132,7 @@ Trawl (WCGBT) survey (i.e., also referred to as the NWFSC.Combo survey
 in the data NWFSC data warehouse).</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">configuration_ytk_wcgbt</span> <span class="op">&lt;-</span> <span class="va">configuration_ytk</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">source</span> <span class="op">==</span> <span class="st">"NWFSC.Combo"</span> <span class="op">&amp;</span> <span class="va">family</span> <span class="op">==</span> <span class="st">"sdmTMB::delta_gamma()"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">source</span> <span class="op">==</span> <span class="st">"NWFSC.Combo"</span> <span class="op">&amp;</span> <span class="va">family</span> <span class="op">==</span> <span class="st">"sdmTMB::delta_gamma()"</span> <span class="op">&amp;</span> <span class="va">min_latitude</span> <span class="op">==</span> <span class="fl">33.5</span><span class="op">)</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="statistical-model">Statistical model<a class="anchor" aria-label="anchor" href="#statistical-model"></a>
 </h3>
@@ -140,12 +143,7 @@ formula is usually something similar to the following, where
 of pass 1 (early season) or pass 2 (late season). There are two unique
 index formula’s available for yellowtail rockfish:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">configuration_ytk_wcgbt</span><span class="op">[</span>, <span class="st">"formula"</span><span class="op">]</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 1</span></span></span>
-<span><span class="co">#&gt;   formula                                               </span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                                 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> catch_weight ~ 0 + fyear*split_mendocino + pass_scaled</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> catch_weight ~ 0 + fyear + pass_scaled</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">configuration_ytk_wcgbt</span><span class="op">[</span>, <span class="st">"formula"</span><span class="op">]</span></span></code></pre></div>
 <p>we are going to use the formula with an area based term. Please see
 the vignette on single area indices for an example run with the other
 formulation available for yellowtail rockfish.</p>
@@ -204,13 +202,7 @@ filtering shows that no positive catches exist for 2007.</p>
 <code class="sourceCode R"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">data_filtered</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">split_mendocino</span>, <span class="va">year</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>sum_catch_weight <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">catch_weight</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">sum_catch_weight</span> <span class="op">==</span> <span class="fl">0</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 3</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># Groups:   split_mendocino [1]</span></span></span>
-<span><span class="co">#&gt;   split_mendocino  year sum_catch_weight</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> S                <span style="text-decoration: underline;">2</span>007                0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> S                <span style="text-decoration: underline;">2</span>024                0</span></span></code></pre></div>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">sum_catch_weight</span> <span class="op">==</span> <span class="fl">0</span><span class="op">)</span></span></code></pre></div>
 <p>This is a problem because if we try to estimate the
 <code>fyear:split_mendocino</code> interaction, the coefficient will not
 be identifiable for 2007. This is not a unique problem for
@@ -229,35 +221,12 @@ simplicity, but other approaches could also be used.</p>
 <span></span>
 <span><span class="va">coef_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">lm</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">coef_names</span><span class="op">)</span></span>
-<span><span class="co">#&gt;  [1] "fyear2003"                  "fyear2004"                 </span></span>
-<span><span class="co">#&gt;  [3] "fyear2005"                  "fyear2006"                 </span></span>
-<span><span class="co">#&gt;  [5] "fyear2007"                  "fyear2008"                 </span></span>
-<span><span class="co">#&gt;  [7] "fyear2009"                  "fyear2010"                 </span></span>
-<span><span class="co">#&gt;  [9] "fyear2011"                  "fyear2012"                 </span></span>
-<span><span class="co">#&gt; [11] "fyear2013"                  "fyear2014"                 </span></span>
-<span><span class="co">#&gt; [13] "fyear2015"                  "fyear2016"                 </span></span>
-<span><span class="co">#&gt; [15] "fyear2017"                  "fyear2018"                 </span></span>
-<span><span class="co">#&gt; [17] "fyear2019"                  "fyear2021"                 </span></span>
-<span><span class="co">#&gt; [19] "fyear2022"                  "fyear2023"                 </span></span>
-<span><span class="co">#&gt; [21] "fyear2024"                  "split_mendocinoS"          </span></span>
-<span><span class="co">#&gt; [23] "pass_scaled"                "fyear2004:split_mendocinoS"</span></span>
-<span><span class="co">#&gt; [25] "fyear2005:split_mendocinoS" "fyear2006:split_mendocinoS"</span></span>
-<span><span class="co">#&gt; [27] "fyear2007:split_mendocinoS" "fyear2008:split_mendocinoS"</span></span>
-<span><span class="co">#&gt; [29] "fyear2009:split_mendocinoS" "fyear2010:split_mendocinoS"</span></span>
-<span><span class="co">#&gt; [31] "fyear2011:split_mendocinoS" "fyear2012:split_mendocinoS"</span></span>
-<span><span class="co">#&gt; [33] "fyear2013:split_mendocinoS" "fyear2014:split_mendocinoS"</span></span>
-<span><span class="co">#&gt; [35] "fyear2015:split_mendocinoS" "fyear2016:split_mendocinoS"</span></span>
-<span><span class="co">#&gt; [37] "fyear2017:split_mendocinoS" "fyear2018:split_mendocinoS"</span></span>
-<span><span class="co">#&gt; [39] "fyear2019:split_mendocinoS" "fyear2021:split_mendocinoS"</span></span>
-<span><span class="co">#&gt; [41] "fyear2022:split_mendocinoS" "fyear2023:split_mendocinoS"</span></span>
-<span><span class="co">#&gt; [43] "fyear2024:split_mendocinoS"</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">coef_names</span><span class="op">)</span></span></code></pre></div>
 <p>All of the coefficients from the presence - absence model look to be
 identifiable</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pres_not_identifiable</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">lm</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">pres_not_identifiable</span><span class="op">)</span></span>
-<span><span class="co">#&gt; character(0)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">pres_not_identifiable</span><span class="op">)</span></span></code></pre></div>
 <p>To identify the labels of the coefficients from the positive model
 that are not estimable, we can re-fit the regression, using only
 positive observations.</p>
@@ -268,8 +237,7 @@ positive observations.</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">pos_not_identifiable</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">lm_pos</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">pos_not_identifiable</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "fyear2007:split_mendocinoS" "fyear2024:split_mendocinoS"</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">pos_not_identifiable</span><span class="op">)</span></span></code></pre></div>
 <p>Finally, we can create some mapping variables to be passed to
 <code>sdmTMB</code>. We’ll do this separately for the presence-absence
 and positive models.</p>
@@ -345,7 +313,6 @@ Conception, a coastwide index, and state-specific indices. For
 multi-region models, like the yellowtail rockfish used here, it wouldn’t
 make sense to interpret indices other than the split used in the model
 (here, N/S of Cape Mendocino) and the coastwide index.</p>
-<p><img src="../../../_temp/Library/indexwc/all_yellowtail_indices.png"><!-- --></p>
 </div>
 </div>
   </div>

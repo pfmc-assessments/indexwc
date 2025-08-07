@@ -4,4 +4,5 @@ pkgdown_sha: ~
 articles:
   a1_single_index: a1_single_index.html
   a2_multiple_area_indices: a2_multiple_area_indices.html
-last_built: 2025-06-13T23:30Z
+  configuration: configuration.html
+last_built: 2025-08-07T13:26Z
