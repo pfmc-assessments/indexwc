@@ -8,11 +8,12 @@ models to complex spatio-temporal models with lots of random effects
 and non-linear relationships.
 
 ## Running
-Indices for a large set of species/survey combinations can be run by sourcing the `data-raw/configuration.R` file. The package is currently not set up to run a single index or an index for a single species, but you can modify `data-raw/configurations.R` to filter a subset of the rows in `data-raw/configuration.csv` using a command like
-`configuration <- configuration |> dplyr::filter(species == "yellowtail rockfish")`.
+Indices for a large set of species/survey combinations can be run using the `configuration` data object which is loaded with the package. The configuration file contains setting for a large number of species and surveys with multiple error distribution or model covariates with a `used` column that indicates which configuration was used for the most recent stock assessment for a species.  To understand how to run an index for a particular species, please see the Articles on the package [webpage](https://pfmc-assessments.github.io/indexwc/index.html).  Additionally, there is an [example script](https://github.com/pfmc-assessments/indexwc_runs/blob/main/code/general_run_example.R) available that shows how to run indices for all species and surveys included in the configuration file.
+
+## U.S. West Coast Groundfish Assessments
+This package is used to run indices for U.S. West Coast Groundfish species for stock assessments. The script used to run indices for species assessed in 2025 is available [here](https://github.com/pfmc-assessments/indexwc_runs/blob/main/code/2025_assessments.R).
 
 ## Contributors
-
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
