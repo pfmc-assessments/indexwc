@@ -46,8 +46,8 @@ Supports the delta/hurdle models:
 For binomial family options, see 'Binomial families' in the Details
 section below.}
 
-\item{formula}{Model formula. IID random intercepts and slopes are possible using
-\pkg{lme4} syntax, e.g., \code{+ (1 | g)} or \code{+ (0 + depth | g)} or \code{+ (1 + depth | g)} where \code{g} is a column of class
+\item{formula}{Model formula. IID random intercepts are possible using
+\pkg{lme4} syntax, e.g., \code{+ (1 | g)} where \code{g} is a column of class
 character or factor representing groups. Penalized splines are possible via
 \pkg{mgcv} with \code{s()}. Optionally a list for delta (hurdle) models.  See
 examples and details below.}
@@ -77,12 +77,7 @@ be turned into factors. The default value uses a data object called
 Coast, including a coastwide area going from the northern Washington
 border to the southern California border.}
 
-\item{...}{Optional arguments passed to \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}}. Note that users
-cannot pass \code{anisotropy} or \code{sdmTMBcontrol} because both of these are set
-internal to this function, where \code{anisotropy = TRUE} because the coastline
-of the western coastline of the U.S.A. is not perpendicular to the country
-and three newton loops are specified in the control parameters.}
-
+\item{...}{Optional arguments passed to \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}}.}
 }
 \value{
 An list object of class sdmTMB. This object is returned by \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}}

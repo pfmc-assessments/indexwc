@@ -15,12 +15,16 @@
 #' @param sdmtmb_control Optional list, in the format of [sdmTMB::sdmTMBcontrol()].
 #'   By default, this is includes 3 newton loops
 #' @param skip_results_diagnostics Logical, whether or not to skip the results (for testing). Defaults to `FALSE`
-#' @template boundaries
-#' @param ... Optional arguments passed to [sdmTMB::sdmTMB()]. Note that users
-#'   cannot pass `anisotropy` or `sdmTMBcontrol` because both of these are set
-#'   internal to this function, where `anisotropy = TRUE` because the coastline
-#'   of the western coastline of the U.S.A. is not perpendicular to the country
-#'   and three newton loops are specified in the control parameters.
+#' @param boundaries A named list of northern and southern boundaries for a
+#'   set of areas. The list can contain as many areas as you would like but
+#'   it must contain at least one area and each area must be a vector of two
+#'   real numbers specified in decimal degrees. The order of the areas only
+#'   matters if you care what order they are plotted because the names will
+#'   be turned into factors. The default value uses a data object called
+#'   `boundaries_data`, which is a list of several areas along the U.S. West
+#'   Coast, including a coastwide area going from the northern Washington
+#'   border to the southern California border.
+#' @param ... Optional arguments passed to [sdmTMB::sdmTMB()].
 #'
 #' @author Chantel R. Wetzel
 #' @export
