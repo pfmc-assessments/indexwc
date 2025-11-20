@@ -13,6 +13,7 @@ run_sdmtmb(
   share_range = FALSE,
   sdmtmb_control = sdmTMB::sdmTMBcontrol(newton_loops = 3),
   skip_results_diagnostics = FALSE,
+  boundaries = boundaries_data["Coastwide"],
   ...
 )
 }
@@ -45,8 +46,8 @@ Supports the delta/hurdle models:
 For binomial family options, see 'Binomial families' in the Details
 section below.}
 
-\item{formula}{Model formula. IID random intercepts and slopes are possible using
-\pkg{lme4} syntax, e.g., \code{+ (1 | g)} or \code{+ (0 + depth | g)} or \code{+ (1 + depth | g)} where \code{g} is a column of class
+\item{formula}{Model formula. IID random intercepts are possible using
+\pkg{lme4} syntax, e.g., \code{+ (1 | g)} where \code{g} is a column of class
 character or factor representing groups. Penalized splines are possible via
 \pkg{mgcv} with \code{s()}. Optionally a list for delta (hurdle) models.  See
 examples and details below.}
@@ -65,6 +66,16 @@ estimation for data limited applications}
 By default, this is includes 3 newton loops}
 
 \item{skip_results_diagnostics}{Logical, whether or not to skip the results (for testing). Defaults to \code{FALSE}}
+
+\item{boundaries}{A named list of northern and southern boundaries for a
+set of areas. The list can contain as many areas as you would like but
+it must contain at least one area and each area must be a vector of two
+real numbers specified in decimal degrees. The order of the areas only
+matters if you care what order they are plotted because the names will
+be turned into factors. The default value uses a data object called
+\code{boundaries_data}, which is a list of several areas along the U.S. West
+Coast, including a coastwide area going from the northern Washington
+border to the southern California border.}
 
 \item{...}{Optional arguments passed to \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}}.}
 }

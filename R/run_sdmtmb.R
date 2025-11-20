@@ -15,6 +15,7 @@
 #' @param sdmtmb_control Optional list, in the format of [sdmTMB::sdmTMBcontrol()].
 #'   By default, this is includes 3 newton loops
 #' @param skip_results_diagnostics Logical, whether or not to skip the results (for testing). Defaults to `FALSE`
+#' @template boundaries
 #' @param ... Optional arguments passed to [sdmTMB::sdmTMB()].
 #'
 #' @author Chantel R. Wetzel
@@ -30,6 +31,7 @@ run_sdmtmb <- function(dir_main = getwd(),
                        share_range = FALSE,
                        sdmtmb_control = sdmTMB::sdmTMBcontrol(newton_loops = 3),
                        skip_results_diagnostics = FALSE,
+                       boundaries = boundaries_data["Coastwide"],
                        ...) {
   # Checks
   stopifnot(inherits(family, "family"))
@@ -150,10 +152,10 @@ run_sdmtmb <- function(dir_main = getwd(),
       data = data_truncated,
       fit = fit,
       prediction_grid = grid,
-      dir = dir_index
+      dir = dir_index,
+      boundaries = boundaries
     )
   }
-
 
   # Add diagnostics
   # 1) QQ plot
