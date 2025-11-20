@@ -3,15 +3,16 @@
 #' @param strata An object returned from [nwfscSurvey::GetStrata.fn()].
 #' @param min_depth,max_depth The minimum and maximum depths you want to use
 #'   for all strata if you want to override the values in `strata`.
+#' @export
 #' @examples
 #' format_strata()
 #' format_strata(nwfscSurvey::GetStrata.fn("sablefish"))
 format_strata <- function(strata = nwfscSurvey::GetStrata.fn("coast"),
                           min_depth = 55,
-                          max_depth = 1280){
-  strata_temp <- strata %>%
-    tidyr::separate(name, into = c("dname", "STRATA"), sep = "_") %>%
-    dplyr::group_by(STRATA) %>%
+                          max_depth = 1280) {
+  strata_temp <- strata |>
+    tidyr::separate(name, into = c("dname", "STRATA"), sep = "_") |>
+    dplyr::group_by(STRATA) |>
     dplyr::summarize(
       north_border = min(Latitude_dd.2),
       south_border = min(Latitude_dd.1),

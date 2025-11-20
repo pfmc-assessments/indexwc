@@ -4,8 +4,14 @@
 .Rhistory
 *.RData
 *.rds
-*.rda
 **/wcgbts/*
 **/afsc*
 **/nwfsc*
 **/triennial/*
+nul
+
+*.log
+*.tex
+bootstrap-*
+*.js
+*.html

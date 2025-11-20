@@ -8,7 +8,7 @@
 #' @param data A data frame created by [sdmTMB::get_index()] with an additional
 #'   column giving the `.id` of each index called `area`. If `area` is not
 #'   not present, then all data points will be assumed to be from one default
-#'   area. It behoves you to make `area` an ordered factor such that the areas
+#'   area. It behooves you to make `area` an ordered factor such that the areas
 #'   are plotted in the order that you desire.
 #' @param save_loc A string providing the location of the directory you wish to
 #'   save the png file to. The default is your current working directory.
@@ -49,9 +49,9 @@ plot_indices <- function(data,
     ) +
     ggplot2::theme_bw() +
     ggplot2::theme(
-    # If we want legend on the figure
-    #   legend.justification = c(0, 1),
-    #   legend.direction = "horizontal"
+      # If we want legend on the figure
+      #   legend.justification = c(0, 1),
+      #   legend.direction = "horizontal"
       legend.position = legend_loc,
     ) +
     ggplot2::scale_colour_viridis_d() +

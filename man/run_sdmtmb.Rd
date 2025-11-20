@@ -10,6 +10,9 @@ run_sdmtmb(
   family,
   formula,
   n_knots = 500,
+  share_range = FALSE,
+  sdmtmb_control = sdmTMB::sdmTMBcontrol(newton_loops = 3),
+  skip_results_diagnostics = FALSE,
   boundaries = boundaries_data["Coastwide"],
   ...
 )
@@ -43,16 +46,26 @@ Supports the delta/hurdle models:
 For binomial family options, see 'Binomial families' in the Details
 section below.}
 
-\item{formula}{Model formula. IID random intercepts are possible using
-\pkg{lme4} syntax, e.g., \code{+ (1 | g)} where \code{g} is a column of class
+\item{formula}{Model formula. IID random intercepts and slopes are possible using
+\pkg{lme4} syntax, e.g., \code{+ (1 | g)} or \code{+ (0 + depth | g)} or \code{+ (1 + depth | g)} where \code{g} is a column of class
 character or factor representing groups. Penalized splines are possible via
 \pkg{mgcv} with \code{s()}. Optionally a list for delta (hurdle) models.  See
 examples and details below.}
 
 \item{n_knots}{An integer specifying the number of knots you want in your
-mesh that is created by {INLA}. More knots is not always better. The
+mesh that is created by {fmesher}. More knots is not always better. The
 default is to use 500 knots. Future work will look at specifying a
 threshold distance between points rather than number of knots.}
+
+\item{share_range}{Logical, whether or not to share the range between the
+spatial and spatiotemporal fields. This defaults to FALSE, but adds extra
+parameters. The default in sdmTMB is TRUE, and sharing the range may improve
+estimation for data limited applications}
+
+\item{sdmtmb_control}{Optional list, in the format of \code{\link[sdmTMB:sdmTMBcontrol]{sdmTMB::sdmTMBcontrol()}}.
+By default, this is includes 3 newton loops}
+
+\item{skip_results_diagnostics}{Logical, whether or not to skip the results (for testing). Defaults to \code{FALSE}}
 
 \item{boundaries}{A named list of northern and southern boundaries for a
 set of areas. The list can contain as many areas as you would like but
@@ -69,6 +82,7 @@ cannot pass \code{anisotropy} or \code{sdmTMBcontrol} because both of these are 
 internal to this function, where \code{anisotropy = TRUE} because the coastline
 of the western coastline of the U.S.A. is not perpendicular to the country
 and three newton loops are specified in the control parameters.}
+
 }
 \value{
 An list object of class sdmTMB. This object is returned by \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}}

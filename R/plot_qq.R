@@ -35,7 +35,7 @@ plot_qq <- function(fit, file_name = "qq.png") {
     .f = stats::residuals,
     # mcmc_samples = samples,
     # type = "mle-mcmc",
-    type = "mle-laplace",
+    type = "mle-mvn",
     object = fit
   )
   data <- purrr::map_df(
@@ -43,12 +43,12 @@ plot_qq <- function(fit, file_name = "qq.png") {
     .f = stats::qqnorm,
     .id = "model",
     plot.it = FALSE
-  ) %>%
+  ) |>
     dplyr::filter(!is.na(x))
 
-  slopes_intercepts <- data %>%
-    dplyr::select(-x) %>%
-    dplyr::group_split(model, .keep = FALSE) %>%
+  slopes_intercepts <- data |>
+    dplyr::select(-x) |>
+    dplyr::group_split(model, .keep = FALSE) |>
     purrr::map_df(
       .f = ~ qqline_parameters(.x[["y"]]),
       .id = "model"
@@ -75,12 +75,13 @@ plot_qq <- function(fit, file_name = "qq.png") {
     ggplot2::ylab("Sample quantiles") +
     ggplot2::labs(title = "Normal quantile-quantile plot") +
     ggplot2::theme_bw() +
-    ggplot2::theme(legend.position =
-      if (length(unique(data[["model"]])) > 1) {
-        c(0.15, 0.9)
-      } else {
-        "none"
-      }
+    ggplot2::theme(
+      legend.position =
+        if (length(unique(data[["model"]])) > 1) {
+          c(0.15, 0.9)
+        } else {
+          "none"
+        }
     ) +
     ggplot2::geom_abline(
       mapping = ggplot2::aes(

@@ -1,0 +1,56 @@
+---
+tag: "Child document"
+title: "Child document"
+---
+
+```{r}
+data <- format_data(eval(parse(text = fxn)))
+data_filtered <- data |>
+  dplyr::filter(
+    depth <= min_depth, depth >= max_depth,
+    latitude >= min_latitude, latitude <= max_latitude,
+    year >= min_year, year <= max_year
+  )
+data_discards <- data_filtered |>
+  dplyr::filter(catch_weight > 0, depth < max_depth)
+# This step processes the 'formula' string by removing specific patterns such as 'catch_weight', '~', '0 +', 'fyear', '_scaled', and '*' using regular expressions.
+# It then splits the cleaned string into individual components based on whitespace, and unlists the result to create a character vector of formula terms.
+temp <- unlist(strsplit(gsub(
+  "catch_weight\\s*|\\s*~\\s*|0\\s*\\+|fyear\\s*\\+*\\s*|_scaled|\\*",
+  "",
+  formula
+), "\\s"))
+temp2 <- glue::glue_collapse(
+  temp[-which(temp %in% c("", "+"))],
+  sep = ", ",
+  last = " and "
+) 
+temp2 <- gsub("split_mendocino", "annual proportion north and south of Cape Mendocino", temp2)
+text_covariates <- ifelse(
+  temp2 == "" | length(temp2) == 0,
+  "No other covariates were modeled.",
+  glue::glue("The following additional covariates were included: {temp2}.")
+)
+text_truncation <- ifelse(
+  abs(max_depth) != "Inf",
+  glue::glue("The data were truncated to depths less than {abs(max_depth)} m prior to modeling given that there were {xfun::numbers_to_words(NROW(data_discards))} positive encounters in depths deeper than {abs(max_depth)} m. The prediction grid was also truncated to only include available survey locations in depths between {abs(min_depth)}--{abs(max_depth)} m to limit extrapolating beyond the data and edge effects."),
+  glue::glue("The prediction grid was truncated to only include available survey locations in depths deeper than {abs(min_depth)} to limit extrapolating beyond the data and edge effects.")
+)
+text_distribution <- ifelse(
+  tolower(distribution) == "tweedie",
+  glue::glue("The chosen model used a {distribution} distribution."),
+  glue::glue("The chosen model used a delta model with a {distribution} distribution for the catch-rate component. A logit-link was used for encounter probability and a log-link for positive catch rates.")
+)
+```
+
+### \gls{`r text_survey`}
+
+`r text_truncation` 
+
+`r text_distribution`
+The response variable was catch (mt) with an offset of area (km^2^) to account for differences in effort. Fixed effects were estimated for each year.
+`r text_covariates`
+Vessel-year effects, which were historically used for index standardization of this survey, were not included because the estimated variance for the random effect was close to zero. Vessel-year effects were more prominent when models did not include spatial effects and instead vessel-year terms accounted for the random selection of commercial vessels used during sampling [@helser_generalized_2004; @thorson_accounting_2014].
+
+`r text_spatiotemporal`
+Spatial variation was approximated using `r n_knots` knots, where more knots led to non-estimable standard errors because the positive encounters are too sparse to support the dense spatiotemporal structure. Anisotropy `r ifelse(anisotropy, "was", "was not")` included in the model.

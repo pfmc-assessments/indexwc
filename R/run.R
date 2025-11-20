@@ -3,13 +3,19 @@
 #' Split your data into a list of data frames, e.g.,
 #' `dplyr::split(data, common_name)` and then use [purrr::map()] on the
 #' resulting list with `.f = run_sdmtmb`.
-#'
+#' @param data The data object being passed in
+#' @param family The name of the family used for the response variable
+#' @param formula  The formula used in the model
+#' @param dir_main The name of the main directory
+#' @param n_knots The number of knots to specify for the SPDE mesh
+#' @param ... Extra arguments
 #' @return
 #' A `list` of {sdmTMB} `list`s, where each element in the list is the returned
 #' object from [sdmTMB::sdmTMB()] when fitting data to a model and of the class
 #' `sdmTMB`. The list of lists is because [purrr::map2()] is used to split the
 #' input data by species and survey/source in case your data contain
 #' combinations of these two categories in a long data frame.
+#'
 #' @family run
 #' @export
 run <- function(data,
@@ -30,14 +36,14 @@ run <- function(data,
       "year", "fyear", "survey_name", "common_name",
       "catch_weight", "effort", "x", "y"
     ) %in%
-    colnames(data)
+      colnames(data)
   ))
 
   # Objects
-  data_grouped <- data %>%
+  data_grouped <- data |>
     dplyr::group_by(survey_name, common_name)
-  combinations <- data_grouped %>%
-    dplyr::count() %>%
+  combinations <- data_grouped |>
+    dplyr::count() |>
     dplyr::mutate(
       common_without = format_common_name(common_name),
       survey_without = format_common_name(survey_name)
@@ -48,7 +54,7 @@ run <- function(data,
     combinations[["survey_without"]],
     format_family(family)
   )
-  data_split <- data_grouped %>%
+  data_split <- data_grouped |>
     dplyr::group_split()
 
   # Run

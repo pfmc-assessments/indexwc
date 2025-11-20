@@ -62,7 +62,7 @@ diagnose <- function(dir,
       silent = TRUE
     ),
     .id = "model"
-  ) %>%
+  ) |>
     dplyr::mutate(
       model = unlist(all_combos[model, "x"])
     )
@@ -72,9 +72,17 @@ diagnose <- function(dir,
     file = file.path(dir, "run_diagnostics_and_estimates.rdata")
   )
 
-  fit[["data"]][["residuals"]] <- stats::residuals(fit, model = 1)
+  fit[["data"]][["residuals"]] <- stats::residuals(
+    fit,
+    model = 1,
+    type = "mle-mvn"
+  )
   if (lookup_is_delta(fit) | lookup_is_mixture(fit)) {
-    fit[["data"]][["residuals2"]] <- stats::residuals(fit, model = 2)
+    fit[["data"]][["residuals2"]] <- stats::residuals(
+      fit,
+      model = 2,
+      type = "mle-mvn"
+    )
   }
 
   if (!lookup_is_mixture(fit[["formula"]])) {

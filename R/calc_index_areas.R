@@ -26,6 +26,24 @@
 #' each area specified in boundaries. Potentially, two figures are also saved
 #' to the disk displaying the index by year. The index for each area is also
 #' saved to a csv file in `dir` titled `est_by_area.csv`.
+#' @examples
+#' \dontrun{
+#' # Read back in the saved object
+#' load("sdmTMB_save.RData")
+#' # pick which boundary you want to use, e.g., 4 for California,
+#' boundaries_data[4]
+#' # or you can make your own named list, e.g.,
+#' list("test" = c(39, 38))
+#' # run the function
+#' index <- calc_index_areas(
+#'   data, fit, grid,
+#'   dir = getwd(), boundaries = list("test" = c(39, 38))
+#' )
+#' # look at the index, which will be in "test" because that is what we
+#' # named the boundary
+#' index[["test"]][["index"]]
+#' }
+#'
 calc_index_areas <- function(data,
                              fit,
                              prediction_grid,
@@ -34,11 +52,27 @@ calc_index_areas <- function(data,
   # There is no way project the index with bias correction in sdmTMB::sdmTMB
   # which is why we have to call [sdmTMB::get_index()] even if predictions are
   # specified in [sdmTMB::sdmTMB()].
+  if (mean(prediction_grid$depth) > 0) {
+    cli::cli_abort("The depth of the prediction grid must be negative.")
+  }
+  if (mean(data$depth) > 0) {
+    cli::cli_abort("The depth of the raw / filtered data must be negative.")
+  }
+  latitudes_of_catches <- data |>
+    dplyr::filter(catch_weight > 0) |>
+    dplyr::pull(latitude)
   boundaries_fixed <- filter_boundaries(
-    y = dplyr::filter(data, catch_weight > 0) |>
-      dplyr::pull(latitude),
+    y = latitudes_of_catches,
     boundaries = boundaries
   )
+  if (NROW(boundaries_fixed) == 0) {
+    cli::cli_abort(c(
+      "x" = "There are no data in your supplied boundaries.",
+      "i" = "We checked for data in {names(boundaries)}.",
+      "i" = "Your data ranged from {.val {max(latitudes_of_catches)}}
+             to {.val {min(latitudes_of_catches)}}."
+    ))
+  }
   boundaries_grids <- purrr::map2(
     .x = boundaries_fixed[, "upper"],
     .y = boundaries_fixed[, "lower"],

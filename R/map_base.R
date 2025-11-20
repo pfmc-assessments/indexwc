@@ -27,11 +27,11 @@ map_base <- function(x_min = -155,
   # Crop the polygon for plotting and efficiency:
   # sf::st_bbox(map_data) to find the rough coordinates
   coast <- suppressWarnings(suppressMessages(
-      sf::st_crop(
-        map_data,
-        c(xmin = x_min, ymin = y_min, xmax = x_max, ymax = y_max)
-      )
-    ))
+    sf::st_crop(
+      map_data,
+      c(xmin = x_min, ymin = y_min, xmax = x_max, ymax = y_max)
+    )
+  ))
   coast_proj <- sf::st_transform(coast, crs = utm_zone_10)
   gg <- ggplot2::ggplot(coast_proj) +
     ggplot2::geom_sf() +

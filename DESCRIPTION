@@ -1,11 +1,17 @@
 Package: indexwc
 Title: Run indices for West Coast Groundfish assessments
-Version: 0.6
+Version: 0.8
 Authors@R: c(
     person(c("Kelli", "F."), "Johnson", , "kelli.johnson@noaa.gov", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-5149-451X")),
+    person(c("Sean", "C."), "Anderson", role = "aut",
+           comment = c(ORCID = "0000-0001-9563-1937")),
     person(c("Chantel", "R."), "Wetzel", , "chantel.wetzel@noaa.gov", role = "aut",
-           comment = c(ORCID = "0000-0002-7573-8240"))
+           comment = c(ORCID = "0000-0002-7573-8240")),
+    person(c("Eric", "J."), "Ward", role = "aut",
+           comment = c(ORCID = "0000-0002-4359-0296")),
+    person(c("Ian", "G."), "Taylor", , "Ian.Taylor@noaa.gov", role = "aut",
+           comment = c(ORCID = "0000-0002-4232-5669"))
   )
 Description: A system to run and summarize models that estimate indices of
     abundance for various data sources specific to populations off the
@@ -13,40 +19,45 @@ Description: A system to run and summarize models that estimate indices of
     models to complex spatio-temporal models with lots of random effects
     and non-linear relationships.
 License: MIT + file LICENSE
+URL: https://github.com/pfmc-assessments/indexwc,
+    https://pfmc-assessments.github.io/indexwc/
+BugReports: https://github.com/pfmc-assessments/indexwc/issues
 Depends:
     R (>= 4.2)
 Imports:
     cli,
+    cowplot,
     dplyr,
+    forcats,
     fs,
     ggforce,
     ggplot2,
-    INLA,
-    magrittr,
+    gridExtra,
+    gt,
+    here,
+    lifecycle,
     methods,
     nwfscSurvey,
     purrr,
     raster,
     rmarkdown,
     rnaturalearth,
-    rnaturalearthdata,
-    sdmTMB (>= 0.3.0.9001),
+    sdmTMB (>= 0.6.0),
     sf,
-    stringr,
     tibble,
-    viridis,
-    visreg
+    tidyr,
+    viridis
 Suggests:
+    curl,
     knitr,
-    nmfspalette,
-    testthat
-Additional_repositories: https://inla.r-inla-download.org/R/testing
+    testthat (>= 3.0.0)
+VignetteBuilder: 
+    knitr
 Remotes:
-    github::nmfs-general-modeling-tools/nmfspalette,
-    github::pbs-assess/sdmTMB,
-    github::pfmc-assessments/nwfscSurvey,
-    github::r4ss/r4ss
+    github::pfmc-assessments/nwfscSurvey
+Config/testthat/edition: 3
 Encoding: UTF-8
 LazyData: true
+LazyDataCompression: xz
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2

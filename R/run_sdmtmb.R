@@ -5,9 +5,16 @@
 #' @inheritParams format_data
 #' @inheritParams sdmTMB::sdmTMB
 #' @param n_knots An integer specifying the number of knots you want in your
-#'   mesh that is created by {INLA}. More knots is not always better. The
+#'   mesh that is created by {fmesher}. More knots is not always better. The
 #'   default is to use 500 knots. Future work will look at specifying a
 #'   threshold distance between points rather than number of knots.
+#' @param share_range Logical, whether or not to share the range between the
+#'   spatial and spatiotemporal fields. This defaults to FALSE, but adds extra
+#'   parameters. The default in sdmTMB is TRUE, and sharing the range may improve
+#'   estimation for data limited applications
+#' @param sdmtmb_control Optional list, in the format of [sdmTMB::sdmTMBcontrol()].
+#'   By default, this is includes 3 newton loops
+#' @param skip_results_diagnostics Logical, whether or not to skip the results (for testing). Defaults to `FALSE`
 #' @template boundaries
 #' @param ... Optional arguments passed to [sdmTMB::sdmTMB()]. Note that users
 #'   cannot pass `anisotropy` or `sdmTMBcontrol` because both of these are set
@@ -25,6 +32,9 @@ run_sdmtmb <- function(dir_main = getwd(),
                        family,
                        formula,
                        n_knots = 500,
+                       share_range = FALSE,
+                       sdmtmb_control = sdmTMB::sdmTMBcontrol(newton_loops = 3),
+                       skip_results_diagnostics = FALSE,
                        boundaries = boundaries_data["Coastwide"],
                        ...) {
   # Checks
@@ -34,7 +44,7 @@ run_sdmtmb <- function(dir_main = getwd(),
       "year", "fyear", "survey_name", "common_name",
       "catch_weight", "effort", "x", "y"
     ) %in%
-    colnames(data)
+      colnames(data)
   ))
   # TODO:
   # * check if random effects in formula and if converged, if yes and no, then
@@ -68,22 +78,22 @@ run_sdmtmb <- function(dir_main = getwd(),
   ))
 
   # Create prediction grid
-  ranges <- data %>%
-      dplyr::filter(catch_weight > 0) %>%
-      dplyr::summarize(
-        dplyr::across(
-          dplyr::matches("tude"),
-          .fns = list("max" = ~ max(.) + 0.1, "min" = ~ min(.) - 0.1)
-        ),
-        # depth_min = min(abs(depth), na.rm = TRUE),
-        depth_max = min(depth, na.rm = TRUE)
-      )
-  data_truncated <- data %>%
+  ranges <- data |>
+    dplyr::filter(catch_weight > 0) |>
+    dplyr::summarize(
+      dplyr::across(
+        dplyr::matches("tude"),
+        .fns = list("max" = ~ max(.) + 0.1, "min" = ~ min(.) - 0.1)
+      ),
+      # depth_min = min(abs(depth), na.rm = TRUE),
+      depth_max = min(depth, na.rm = TRUE)
+    )
+  data_truncated <- data |>
     dplyr::filter(
       latitude > ranges[["latitude_min"]] & latitude < ranges[["latitude_max"]],
       longitude > ranges[["longitude_min"]] & longitude < ranges[["longitude_max"]],
       depth > ranges[["depth_max"]]
-    ) %>%
+    ) |>
     droplevels()
 
   grid <- lookup_grid(
@@ -112,8 +122,8 @@ run_sdmtmb <- function(dir_main = getwd(),
     data = data_truncated,
     mesh = mesh,
     family = family,
-    control = sdmTMB::sdmTMBcontrol(newton_loops = 3),
-    share_range = FALSE,
+    control = sdmtmb_control,
+    share_range = share_range,
     ...
   )
   # Refit the model if the hessian is not positive definite
@@ -139,22 +149,29 @@ run_sdmtmb <- function(dir_main = getwd(),
     )
     dev.off()
   }
-  results_by_area <- calc_index_areas(
-    data = data_truncated,
-    fit = fit,
-    prediction_grid = grid,
-    dir = dir_index,
-    boundaries = boundaries
-  )
+  results_by_area <- NULL
+  if (skip_results_diagnostics == FALSE) {
+    # Calculate results by area
+    results_by_area <- calc_index_areas(
+      data = data_truncated,
+      fit = fit,
+      prediction_grid = grid,
+      dir = dir_index,
+      boundaries = boundaries
+    )
+  }
 
   # Add diagnostics
   # 1) QQ plot
   # 2) Residuals by year
-  diagnostics <- diagnose(
-    dir = dir_index,
-    fit = fit,
-    prediction_grid = grid
-  )
+  diagnostics <- NULL
+  if (skip_results_diagnostics == FALSE) {
+    diagnostics <- diagnose(
+      dir = dir_index,
+      fit = fit,
+      prediction_grid = grid
+    )
+  }
 
   save(
     data,

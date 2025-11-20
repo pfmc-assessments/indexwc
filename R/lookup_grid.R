@@ -1,3 +1,16 @@
+#' Lookup the prediction grid
+#'
+#' @param x The raw survey data
+#' @param years The years to use for predictions
+#' @param max_latitude The maximum latitude for predictions
+#' @param min_latitude The minimum latitude for predictions
+#' @param max_longitude The maximum longitude for predictions
+#' @param min_longitude The minimum longitude for predictions
+#' @param mean_depth The mean depth to use
+#' @param sd_depth The sd of depth to use
+#' @param max_depth Maximum depth, defaults to Inf
+#' @param data the name of the grid, defaults to california_current_grid (WCGBTS)
+#' @export
 lookup_grid <- function(x,
                         years,
                         max_latitude,
@@ -32,21 +45,21 @@ lookup_grid <- function(x,
     grepl("AFSC_*\\s*Slope", x) ~ "area_km2_Slope98_00",
     grepl("NWFSC_*\\s*Slope", x) ~ "area_km2_Slope02",
     .default = as.character(x)
-  ) %>%
+  ) |>
     dplyr::sym()
 
   out <- dplyr::mutate(
     .data = data,
-    area_km2 = {{column}},
+    area_km2 = {{ column }},
     vessel_year = "0",
     depth_scaled = scale(depth, center = mean_depth, scale = sd_depth),
     depth_scaled_squared = depth_scaled^2
-  ) %>%
+  ) |>
     dplyr::filter(
       area_km2 > 0
     )
 
-  out_truncated <- out %>%
+  out_truncated <- out |>
     dplyr::filter(
       latitude > min_latitude & latitude < max_latitude,
       longitude > min_longitude & longitude < max_longitude,
@@ -58,7 +71,7 @@ lookup_grid <- function(x,
     out_truncated,
     c("longitude", "latitude"),
     utm_crs = utm_zone_10
-  )) %>%
+  )) |>
     dplyr::select(
       x,
       y,
@@ -69,7 +82,11 @@ lookup_grid <- function(x,
       latitude,
       depth,
       depth_scaled,
-      depth_scaled_squared
+      depth_scaled_squared,
+      split_mendocino,
+      split_conception,
+      split_monterey,
+      split_state
     )
 
   year_grid <- purrr::map_dfr(
@@ -79,7 +96,7 @@ lookup_grid <- function(x,
       data
     },
     data = out_utm
-  ) %>%
+  ) |>
     dplyr::mutate(
       fyear = as.factor(year)
     )
