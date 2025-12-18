@@ -126,13 +126,16 @@ attributes for this column so that you can reference them later</p></li>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Output will not be saved in dir because dir = NULL.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Pulling catch data for canary rockfish.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> There are 109 positive tows across all years pulled.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> There were 5 positive tows with non-satisfactory tow performance (e.g., no area swept estimate, net issues, etc.).</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> There are 104 positive tows remaining across all years after standard</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> filtering.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Error : lexical error: invalid char in json text.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                        &lt;!DOCTYPE HTML PUBLIC "-//IETF/</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                      (right here) ------^</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in nwfscSurvey::pull_catch(common_name = "canary rockfish", years = 2021:2022,     survey = "NWFSC.Combo"):</span> There are no tows where canary rockfish was caught.</span>
 <span class="r-in"><span><span class="co"># Must assign the data a class so {indexwc} knows how to format it</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">catch_wcgbts_canary</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"nwfscSurvey"</span>, <span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">catch_wcgbts_canary</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'catch_wcgbts_canary' not found</span>
 <span class="r-in"><span><span class="va">formatted_data</span> <span class="op">&lt;-</span> <span class="fu">format_data</span><span class="op">(</span>data <span class="op">=</span> <span class="va">catch_wcgbts_canary</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'catch_wcgbts_canary' not found</span>
 </code></pre></div>
     </div>
   </div>
