@@ -3,7 +3,7 @@ title: "Configuration File"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Index example with multiple areas}
+  %\VignetteIndexEntry{Configuration File}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
