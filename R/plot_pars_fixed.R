@@ -1,11 +1,13 @@
 #' Plot the annual parameter estimates from the fit model
 #'
 #' @param fit List created by [sdmTMB::sdmTMB()].
+#' @param file_name A string giving the file name. The default is
+#'   `"parameters_fixed_effects.png"`. If NULL, the file is not written but the ggplot object is returned
 #' @template dir
 #'
 #' @author Chantel R. Wetzel
 #' @export
-plot_pars_fixed <- function(fit, dir) {
+plot_pars_fixed <- function(fit, dir, file_name = "parameters_fixed_effects.png") {
   plot_fixed_helper <- function(fit, model_number = 1) {
     out <- tidy(fit, model = model_number, silent = TRUE) |>
       dplyr::mutate(
@@ -42,12 +44,14 @@ plot_pars_fixed <- function(fit, dir) {
     ggplot2::xlab("Year") +
     ggplot2::ylab("Fixed effects") +
     ggplot2::theme_bw()
-  suppressMessages(ggplot2::ggsave(
+  if(!is.null(file_name)) {
+    suppressMessages(ggplot2::ggsave(
     filename = file.path(dir, "parameters_fixed_effects.png"),
     plot = gg_out,
     height = 10,
     width = 10,
     units = "in"
   ))
+  }
   return(gg_out)
 }

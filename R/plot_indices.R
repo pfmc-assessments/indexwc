@@ -13,7 +13,7 @@
 #' @param save_loc A string providing the location of the directory you wish to
 #'   save the png file to. The default is your current working directory.
 #' @param file_name A string giving the file name. The default is
-#'   `"index.png"`.
+#'   `"index.png"`. If NULL, the file is not written but the ggplot object is returned
 #' @param legend_loc Location for the legend to be added to the figure where
 #'   the options are `"top"`, `"bottom"`, `"left"`, `"right"`, or a vector of
 #'   length 2 giving relative coordinate positions. The default is `"right"`.
@@ -59,7 +59,8 @@ plot_indices <- function(data,
     ggplot2::ylab("Index (mt)") +
     ggplot2::expand_limits(y = 0)
 
-  suppressMessages(ggplot2::ggsave(
+  if(!is.null(file_name)) {
+    suppressMessages(ggplot2::ggsave(
     plot = gg,
     filename = fs::path(save_loc, file_name),
     width = 10,
@@ -67,6 +68,7 @@ plot_indices <- function(data,
     dpi = 300,
     pointsize = 12
   ))
+  }
 
   return(gg)
 }
