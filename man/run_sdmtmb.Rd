@@ -25,6 +25,7 @@ and effort. Additional columns can be present such as depth.}
 
 \item{family}{The family and link. Supports \code{\link[=gaussian]{gaussian()}}, \code{\link[=Gamma]{Gamma()}},
 \code{\link[=binomial]{binomial()}}, \code{\link[=poisson]{poisson()}}, \code{\link[sdmTMB:families]{Beta()}},
+\code{\link[sdmTMB:families]{betabinomial()}},
 \code{\link[sdmTMB:families]{nbinom2()}},
 \code{\link[sdmTMB:families]{truncated_nbinom2()}},
 \code{\link[sdmTMB:families]{nbinom1()}},

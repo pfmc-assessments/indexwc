@@ -11,7 +11,8 @@
 #'   area. It behooves you to make `area` an ordered factor such that the areas
 #'   are plotted in the order that you desire.
 #' @param save_loc A string providing the location of the directory you wish to
-#'   save the png file to. The default is your current working directory.
+#'   save the png file to. The default is your current working directory, and if
+#'   `NULL` no directory will be created
 #' @param file_name A string giving the file name. The default is
 #'   `"index.png"`. If NULL, the file is not written but the ggplot object is returned
 #' @param legend_loc Location for the legend to be added to the figure where

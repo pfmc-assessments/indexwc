@@ -19,10 +19,11 @@ area. It behooves you to make \code{area} an ordered factor such that the areas
 are plotted in the order that you desire.}
 
 \item{save_loc}{A string providing the location of the directory you wish to
-save the png file to. The default is your current working directory.}
+save the png file to. The default is your current working directory, and if
+\code{NULL} no directory will be created}
 
 \item{file_name}{A string giving the file name. The default is
-\code{"index.png"}.}
+\code{"index.png"}. If NULL, the file is not written but the ggplot object is returned}
 
 \item{legend_loc}{Location for the legend to be added to the figure where
 the options are \code{"top"}, \code{"bottom"}, \code{"left"}, \code{"right"}, or a vector of

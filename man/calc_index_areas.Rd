@@ -13,25 +13,19 @@ calc_index_areas(
 )
 }
 \arguments{
-\item{data}{A data frame containing tow-level information on catch weight
-and effort. Additional columns can be present such as depth.}
+\item{data}{The data used for fitting the model}
 
-\item{fit}{List created by the sdmTMB:: fit function.}
+\item{fit}{A fitted sdmTMB model object}
 
 \item{prediction_grid}{The prediction grid for the survey that sdmTMB will
-use to make model predictions to.}
+use to make model predictions to}
 
-\item{dir}{A directory location where results and figures will be saved.}
+\item{dir}{Directory path where results will be saved. If \code{NULL}, results
+will only be returned (not saved to a file)}
 
-\item{boundaries}{A named list of northern and southern boundaries for a
-set of areas. The list can contain as many areas as you would like but
-it must contain at least one area and each area must be a vector of two
-real numbers specified in decimal degrees. The order of the areas only
-matters if you care what order they are plotted because the names will
-be turned into factors. The default value uses a data object called
-\code{boundaries_data}, which is a list of several areas along the U.S. West
-Coast, including a coastwide area going from the northern Washington
-border to the southern California border.}
+\item{boundaries}{A character vector specifying which areas to calculate
+indices for. These should be names from \link{boundaries_data}. The default is
+\code{"Coastwide"}, which calculates only the Coastwide index}
 }
 \value{
 A very large list is returned with predictions, model fits, and indices for
@@ -74,6 +68,7 @@ index[["test"]][["index"]]
 \seealso{
 \itemize{
 \item \link{boundaries_data}, a data object
+\item \code{\link[=available_areas]{available_areas()}}, helper function to list available areas
 \item \code{\link[sdmTMB:get_index]{sdmTMB::get_index()}}, used to generate the area-specific indices
 \item \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}}, used to create the \code{fit} object
 }

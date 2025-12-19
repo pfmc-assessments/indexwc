@@ -12,21 +12,20 @@
 #' once. This is helpful for species that are sparsely sampled because model
 #' convergence is poor when there are a lot of zeros.
 #'
-#' @inheritParams format_data
-#' @inheritParams diagnose
-#' @param boundaries A named list of northern and southern boundaries for a
-#'   set of areas. The list can contain as many areas as you would like but
-#'   it must contain at least one area and each area must be a vector of two
-#'   real numbers specified in decimal degrees. The order of the areas only
-#'   matters if you care what order they are plotted because the names will
-#'   be turned into factors. The default value uses a data object called
-#'   `boundaries_data`, which is a list of several areas along the U.S. West
-#'   Coast, including a coastwide area going from the northern Washington
-#'   border to the southern California border.
+#' @param data The data used for fitting the model
+#' @param fit A fitted sdmTMB model object
+#' @param prediction_grid The prediction grid for the survey that sdmTMB will
+#'   use to make model predictions to
+#' @param dir Directory path where results will be saved. If `NULL`, results
+#'   will only be returned (not saved to a file)
+#' @param boundaries A character vector specifying which areas to calculate
+#'   indices for. These should be names from [boundaries_data]. The default is
+#'   `"Coastwide"`, which calculates only the Coastwide index
 #' @export
 #' @author Kelli F. Johnson
 #' @seealso
 #' * [boundaries_data], a data object
+#' * [available_areas()], helper function to list available areas
 #' * [sdmTMB::get_index()], used to generate the area-specific indices
 #' * [sdmTMB::sdmTMB()], used to create the `fit` object
 #' @return
@@ -57,15 +56,37 @@ calc_index_areas <- function(data,
                              prediction_grid,
                              dir,
                              boundaries = boundaries_data["Coastwide"]) {
-  # There is no way project the index with bias correction in sdmTMB::sdmTMB
-  # which is why we have to call [sdmTMB::get_index()] even if predictions are
-  # specified in [sdmTMB::sdmTMB()].
+
+  # Make sure all boundaries are character vector
+  if (!is.character(boundaries)) {
+    cli::cli_abort(c(
+      "x" = "boundaries must be a character vector",
+      "i" = "Example: {.code boundaries = c('Coastwide', 'CA', 'OR')}"
+    ))
+  }
+
+  # Check that all requested areas exist in boundaries_data
+  if (!all(boundaries %in% names(boundaries_data))) {
+    unknown_areas <- setdiff(boundaries, names(boundaries_data))
+    available <- names(boundaries_data)
+    cli::cli_abort(c(
+      "x" = "Unknown areas: {.val {unknown_areas}}",
+      "i" = "Available areas: {.val {available}}",
+      "i" = "Use {.fn available_areas} to see all options"
+    ))
+  }
+
+  # Convert character vector to named list (subset boundaries_data)
+  boundaries <- boundaries_data[boundaries]
+
+  # Make sure prediction grid depth is < 0
   if (mean(prediction_grid$depth) > 0) {
     cli::cli_abort("The depth of the prediction grid must be negative.")
   }
   if (mean(data$depth) > 0) {
     cli::cli_abort("The depth of the raw / filtered data must be negative.")
   }
+
   latitudes_of_catches <- data |>
     dplyr::filter(catch_weight > 0) |>
     dplyr::pull(latitude)
@@ -121,28 +142,54 @@ calc_index_areas <- function(data,
       area = forcats::fct_inorder(area)
     )
 
+  out <- list(
+    results = results,
+    indices = index_areas
+  )
+
   # Make the directory to plot the index in and plot all areas on one figure
   # and then just the coastwide index on another figure by itself.
-  fs::dir_create(dir, recurse = TRUE)
-  gg_index_areas <- plot_indices(
-    data = index_areas,
-    save_loc = dir
-  )
-  write.csv(
-    index_areas,
-    file = file.path(dir, "est_by_area.csv"),
-    row.names = FALSE
-  )
-  if (any(grepl("wide", index_areas[["area"]], ignore.case = TRUE))) {
-    gg_index_coastwide <- plot_indices(
-      data = dplyr::filter(
-        index_areas,
-        grepl("wide", area, ignore.case = TRUE)
-      ),
-      save_loc = dir,
-      file_name = "index_coastwide.png"
+  if(!is.null(dir)) {
+    fs::dir_create(dir, recurse = TRUE)
+
+    write.csv(
+      index_areas,
+      file = file.path(dir, "est_by_area.csv"),
+      row.names = FALSE
     )
+    if (any(grepl("wide", index_areas[["area"]], ignore.case = TRUE))) {
+      gg_index_coastwide <- plot_indices(
+        data = dplyr::filter(
+          index_areas,
+          grepl("wide", area, ignore.case = TRUE)
+        ),
+        save_loc = dir,
+        file_name = "index_coastwide.png"
+      )
+    }
   }
 
-  return(results)
+  return(out)
+}
+
+
+#' Get available areas for index calculation
+#'
+#' A helper function to see what areas are available in
+#' [boundaries_data]. These area names can be passed to the `boundaries`
+#' argument of [calc_index_areas()].
+#'
+#' @export
+#' @seealso
+#' * [calc_index_areas()], calculate indices for specified areas
+#' * [boundaries_data], the data object containing area boundaries
+#' @return A character vector of available area names.
+#'
+#' @examples
+#' # See all available areas
+#' available_areas()
+#'
+#' # Use in calc_index_areas()
+available_areas <- function() {
+  names(boundaries_data)
 }
