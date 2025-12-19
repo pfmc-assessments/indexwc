@@ -14,8 +14,8 @@ map_residuals(
 \arguments{
 \item{data}{A data frame with at least the following three columns:
 \itemize{
-\item \code{x},
-\item \code{y}, and
+\item \code{X},
+\item \code{Y}, and
 \item \code{data},
 where the data column is the result of \code{\link[stats:residuals]{stats::residuals()}}.
 }}

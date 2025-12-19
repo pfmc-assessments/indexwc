@@ -44,7 +44,7 @@ plot_pars_fixed <- function(fit, dir, file_name = "parameters_fixed_effects.png"
     ggplot2::xlab("Year") +
     ggplot2::ylab("Fixed effects") +
     ggplot2::theme_bw()
-  if(!is.null(file_name)) {
+  if(!is.null(dir) && !is.null(file_name)) {
     suppressMessages(ggplot2::ggsave(
     filename = file.path(dir, "parameters_fixed_effects.png"),
     plot = gg_out,
