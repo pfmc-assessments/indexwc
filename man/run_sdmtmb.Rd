@@ -12,45 +12,25 @@ run_sdmtmb(
   n_knots = 500,
   share_range = FALSE,
   sdmtmb_control = sdmTMB::sdmTMBcontrol(newton_loops = 3),
-  skip_results_diagnostics = FALSE,
   ...
 )
 }
 \arguments{
 \item{dir_main}{A string specifying a path where results will be saved. The
-default is your current working directory.}
+default is your current working directory. A subdirectory structure will be
+created based on the species, survey, and model family. If \code{NULL}, the fitted
+object is returned with nothing saved to disk}
 
-\item{data}{A data frame containing tow-level information on catch weight
-and effort. Additional columns can be present such as depth.}
+\item{data}{A data frame containing the survey data. Must include columns:
+\code{year}, \code{fyear}, \code{survey_name}, \code{common_name}, \code{catch_weight}, \code{effort},
+\code{x}, \code{y}, \code{latitude}, \code{longitude}, and \code{depth}.}
 
-\item{family}{The family and link. Supports \code{\link[=gaussian]{gaussian()}}, \code{\link[=Gamma]{Gamma()}},
-\code{\link[=binomial]{binomial()}}, \code{\link[=poisson]{poisson()}}, \code{\link[sdmTMB:families]{Beta()}},
-\code{\link[sdmTMB:families]{betabinomial()}},
-\code{\link[sdmTMB:families]{nbinom2()}},
-\code{\link[sdmTMB:families]{truncated_nbinom2()}},
-\code{\link[sdmTMB:families]{nbinom1()}},
-\code{\link[sdmTMB:families]{truncated_nbinom1()}},
-\code{\link[sdmTMB:families]{censored_poisson()}},
-\code{\link[sdmTMB:families]{gamma_mix()}},
-\code{\link[sdmTMB:families]{lognormal_mix()}},
-\code{\link[sdmTMB:families]{student()}},
-\code{\link[sdmTMB:families]{tweedie()}}, and
-\code{\link[sdmTMB:families]{gengamma()}}.
-Supports the delta/hurdle models:
-\code{\link[sdmTMB:families]{delta_beta()}},
-\code{\link[sdmTMB:families]{delta_gamma()}},
-\code{\link[sdmTMB:families]{delta_gamma_mix()}},
-\code{\link[sdmTMB:families]{delta_lognormal_mix()}},
-\code{\link[sdmTMB:families]{delta_lognormal()}}, and
-\code{\link[sdmTMB:families]{delta_truncated_nbinom2()}},
-For binomial family options, see 'Binomial families' in the Details
-section below.}
+\item{family}{A family object specifying the response distribution and link.
+See \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}} for options. Common choices include
+\code{sdmTMB::delta_gamma()} and \code{sdmTMB::tweedie()}.}
 
-\item{formula}{Model formula. IID random intercepts and slopes are possible using
-\pkg{lme4} syntax, e.g., \code{+ (1 | g)} or \code{+ (0 + depth | g)} or \code{+ (1 + depth | g)} where \code{g} is a column of class
-character or factor representing groups. Penalized splines are possible via
-\pkg{mgcv} with \code{s()}. Optionally a list for delta (hurdle) models.  See
-examples and details below.}
+\item{formula}{A formula specifying the fixed effects structure. Should
+reference columns in \code{data}. See \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}} for details.}
 
 \item{n_knots}{An integer specifying the number of knots you want in your
 mesh that is created by {fmesher}. More knots is not always better. The
@@ -58,23 +38,51 @@ default is to use 500 knots. Future work will look at specifying a
 threshold distance between points rather than number of knots.}
 
 \item{share_range}{Logical, whether or not to share the range between the
-spatial and spatiotemporal fields. This defaults to FALSE, but adds extra
-parameters. The default in sdmTMB is TRUE, and sharing the range may improve
-estimation for data limited applications}
+spatial and spatiotemporal fields. This defaults to \code{FALSE}, but adds extra
+parameters. The default in sdmTMB is \code{TRUE}, and sharing the range may
+improve estimation for data limited applications.}
 
 \item{sdmtmb_control}{Optional list, in the format of \code{\link[sdmTMB:sdmTMBcontrol]{sdmTMB::sdmTMBcontrol()}}.
-By default, this is includes 3 newton loops}
-
-\item{skip_results_diagnostics}{Logical, whether or not to skip the results (for testing). Defaults to \code{FALSE}}
+By default, this includes 3 newton loops.}
 
 \item{...}{Optional arguments passed to \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}}.}
 }
 \value{
-An list object of class sdmTMB. This object is returned by \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}}
-when fitting data to the model.
+A list object of class \code{sdmTMB} returned by \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}} when fitting
+data to the model. Two additional components are attached for convenience:
+\itemize{
+\item \code{mesh} - The mesh object used for fitting (useful for plotting)
+}
+
+The fitted model's data (\code{fit$data}) contains the truncated data used for
+fitting. Original data and prediction grid can be accessed from saved files
+or recreated as needed.
 }
 \description{
-Run \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}}
+Fits a spatial or spatiotemporal GLMM using \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}}. This function
+handles data preparation, mesh creation, model fitting, and optionally saves
+results to a structured directory. The fitted model is returned with minimal
+attachments for downstream diagnostic and index calculations.
+}
+\details{
+The function performs the following steps:
+\itemize{
+\item Creates a structured directory for outputs
+\item Filters data to positive catch locations and truncates to data extent
+\item Creates a prediction grid using \code{\link[=lookup_grid]{lookup_grid()}}
+\item Builds a mesh with specified number of knots
+\item Fits the model using \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}}
+\item Refits with extra optimization if not converged
+\item Optionally saves fit, data, and mesh plot
+}
+}
+\seealso{
+\itemize{
+\item \code{\link[=diagnose]{diagnose()}}, run comprehensive diagnostics on the fitted model
+\item \code{\link[=calc_index_areas]{calc_index_areas()}}, calculate abundance indices from the fitted model
+\item \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}}, the underlying fitting function
+\item \code{\link[=lookup_grid]{lookup_grid()}}, creates the prediction grid
+}
 }
 \author{
 Chantel R. Wetzel

@@ -1,8 +1,8 @@
 #' Plot the data from a model fit by [sdmTMB::sdmTMB()]
 #'
 #' @param data A data frame with at least the following three columns:
-#'   * `x`,
-#'   * `y`, and
+#'   * `X`,
+#'   * `Y`, and
 #'   * `data`,
 #'   where the data column is the result of [stats::residuals()].
 #' @inheritParams map_density
@@ -40,7 +40,7 @@ map_residuals <- function(data,
   gg <- map_base() +
     ggplot2::geom_point(
       data = data,
-      ggplot2::aes(x * 1000, y * 1000, colour = residuals, fill = residuals),
+      ggplot2::aes(X * 1000, Y * 1000, colour = residuals, fill = residuals),
       pch = 15,
       alpha = 0.5
     ) +
@@ -59,13 +59,15 @@ map_residuals <- function(data,
     ggplot2::guides(colour = "none") +
     ggforce::facet_wrap_paginate("year", nrow = n_row, ncol = n_col)
 
-  purrr::map(
-    seq(ggforce::n_pages(gg)),
-    .f = ggsave_year,
-    y = gg,
-    prefix = save_prefix,
-    n_col = n_col,
-    n_row = n_row
-  )
+  if (!is.null(save_prefix)) {
+    purrr::map(
+      seq(ggforce::n_pages(gg)),
+      .f = ggsave_year,
+      y = gg,
+      prefix = save_prefix,
+      n_col = n_col,
+      n_row = n_row
+    )
+  }
   return(gg)
 }
