@@ -110,7 +110,7 @@ diagnose <- function(dir,
   # mesh plot
   filename <- NULL
   if(!is.null(dir)) filename = fs::path(dir, "mesh.png")
-  mesh_plot <- plot_mesh(mesh, file_name = filename)
+  mesh_plot <- plot_mesh(sdmtmb_fit$mesh, file_name = filename)
 
   # Get sanity diagnostics
   sanity_out <- sanity_data(sdmtmb_fit)
@@ -191,7 +191,8 @@ diagnose <- function(dir,
   )
 
   # Residual maps by year
-
+  sdmtmb_fit[["data"]]$X <- sdmtmb_fit[["data"]]$x
+  sdmtmb_fit[["data"]]$Y <- sdmtmb_fit[["data"]]$y
   residual_maps_by_year <- purrr::map(
     seq_along(sdmtmb_fit[["formula"]]),
     .f = function(x, y, f_dir) {
@@ -217,8 +218,8 @@ diagnose <- function(dir,
   # Anisotropy plot
   filename <- NULL
   if(!is.null(dir)) filename <- fs::path(dir, "anisotropy.png")
-  gg_aniso <- sdmTMB::plot_anisotropy(object = sdmtmb_fit) +
-    ggplot2::theme_bw()
+  gg_aniso <- try(sdmTMB::plot_anisotropy(object = sdmtmb_fit) +
+    ggplot2::theme_bw(), silent=TRUE)
   if(!is.null(filename)) {
     suppressMessages(ggplot2::ggsave(
       filename = filename,
@@ -239,7 +240,7 @@ diagnose <- function(dir,
     sdmtmb_fit,
     newdata = prediction_grid
   )
-
+  predictions <- add_utm_columns(predictions)
   # Density plots
   save_prefix <- NULL
   if(!is.null(dir)) save_prefix <- file.path(dir, "density")

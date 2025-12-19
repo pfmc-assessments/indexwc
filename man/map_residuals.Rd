@@ -4,12 +4,7 @@
 \alias{map_residuals}
 \title{Plot the data from a model fit by \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}}}
 \usage{
-map_residuals(
-  data,
-  n_row = 1,
-  n_col = 2,
-  save_prefix = file.path(getwd(), "data_")
-)
+map_residuals(data, n_row = 1, n_col = 2, save_prefix = NULL)
 }
 \arguments{
 \item{data}{A data frame with at least the following three columns:

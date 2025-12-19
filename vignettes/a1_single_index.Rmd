@@ -23,9 +23,9 @@ This vignette highlights the ability to generate coastwide indices for stocks us
 
 ## Yellowtail rockfish example
 
-As a case study, we'll focus on yellowtail rockfish
+As a case study, we'll focus on yellowtail rockfish. The package includes `yellowtail`, which is the yellowtail data from the WCGBTS 2003 -- 2023.
 
-```{r, eval=FALSE, echo=TRUE}
+```{r, eval=TRUE, echo=TRUE}
 library(dplyr)
 library(indexwc)
 library(purrr)
@@ -33,9 +33,9 @@ library(sdmTMB)
 library(tibble)
 ```
 
-First we'll load in the configuration file. This is bringing in specific settings by survey and species that are used to subset the data and define the parameterization of the index estimation.  This file is included as both an `rda` file that is loaded with the package but is also available for users who download the source code in the `data-raw` folder (download the package to see this). 
+First we'll load in the configuration file. This step is not needed -- and the formulas, etc. may be specified from scratch, but this file is used to keep models reproducible across assessment cycles. The configuration file brings in specific settings by survey and species that are used to subset the data and define the parameterization of the index estimation.  This file is included as both an `rda` file that is loaded with the package but is also available for users who download the source code in the `data-raw` folder (download the package to see this). 
 
-```{r, eval=FALSE, echo=TRUE}
+```{r, eval=TRUE, echo=TRUE}
 # Load from the rda file
 configuration_ytk <- configuration |>
   dplyr::filter(species == "yellowtail rockfish")
@@ -45,9 +45,9 @@ The configuration file contains settings you may wish to change, including attri
 
 The configuration includes multiple entries for a single species for separate surveys and error distributions (e.g., delta-lognormal, delta-gamma, etc.).
 
-In this example, we are going to only run a single-index for the Northwest Fisheries Science Center (NWFSC) West Coast Groundfish Bottom Trawl (WCGBT) survey (i.e., also referred to as the NWFSC.Combo survey in the data NWFSC data warehouse).
+In this example, we are going to only run a single-index for the Northwest Fisheries Science Center (NWFSC) West Coast Groundfish Bottom Trawl (WCGBT) survey (i.e., also referred to as the "NWFSC.Combo" survey in the data NWFSC data warehouse, or R package nwfscSurvey).
 
-```{r, eval=FALSE, echo=TRUE}
+```{r, eval=TRUE, echo=TRUE}
 configuration_ytk_wcgbt <- configuration_ytk |>
   dplyr::filter(source == "NWFSC.Combo" & family == "sdmTMB::delta_gamma()")
 ```
@@ -58,13 +58,13 @@ For most indices developed on the west coast of the USA, the main formula is usu
 
 There are two unique index formula's available for yellowtail rockfish:
 
-```{r, eval=FALSE, echo=TRUE}
+```{r, eval=TRUE, echo=TRUE}
 configuration_ytk_wcgbt[, "formula"]
 ```
 
 we are going to use the default configuration.  Please see the vignette on multiple area indices for an example run with the other formulation available for yellowtail rockfish. 
 
-```{r, eval=FALSE, echo=TRUE}
+```{r, eval=TRUE, echo=TRUE}
 configuration_to_run <- configuration_ytk_wcgbt |>
   dplyr::filter(
     formula == "catch_weight ~ 0 + fyear + pass_scaled"
@@ -75,82 +75,166 @@ configuration_to_run <- configuration_ytk_wcgbt |>
 
 This block pulls trawl survey from the NWFSC data warehouse and applies filters (based on latitude, depth, and year) to each observation.
 
-```{r, eval=FALSE, echo=TRUE}
-data <- configuration_to_run |>
-  dplyr::rowwise() |>
-  dplyr::mutate(
-    data_raw = list(format_data(eval(parse(text = fxn)))),
-    data_filtered = list(data_raw |>
-      dplyr::filter(
-        depth <= min_depth, depth >= max_depth,
-        latitude >= min_latitude, latitude <= max_latitude,
-        year >= min_year, year <= max_year
-      ))
-  ) |>
-  dplyr::ungroup()
+```{r, eval=TRUE, echo=TRUE}
+data("yellowtail")
+
+data <- yellowtail |>
+  dplyr::filter(
+        depth <= configuration_to_run$min_depth, 
+        depth >= configuration_to_run$max_depth,
+        latitude >= configuration_to_run$min_latitude, 
+        latitude <= configuration_to_run$max_latitude,
+        year >= configuration_to_run$min_year, 
+        year <= configuration_to_run$max_year
+      )
 ```
 
-The filtered data that will be used in the model can be viewed by examining `data$data_filtered[1]`.
+The filtered data has several thousand less rows than the raw data. 
 
 ### Fitting the model with indexwc and sdmTMB
 
 Now we can use the `indexwc` package to fit the model. The `indexwc` package acts as a wrapper for `sdmTMB` here, combining the estimation process (`sdmTMB()`) with the index generation (`get_index()`).
 
-This code is optimized to fit multiple models (across stocks / species, or model configurations). In our case, the configurations dataframe has 1 row -- but this could include multiple rows. A key point to highlight is that in this code, we use `sdmTMBcontrol()` to pass in a list that contains the variables above we use to map off and initialize the parameters. For datasets without missing values, you may not want to include this `sdmTMBcontrol()` line, but it may be useful to adjust the `newton_loops`, etc.
-
-Note: this code will fit a single model for each row 
+A key point to highlight is that in this code, we use `sdmTMBcontrol()` to pass in a list that contains the variables above we use to map off and initialize the parameters. For datasets without missing values, you may not want to include this `sdmTMBcontrol()` line, but it may be useful to adjust the `newton_loops`, etc.
 
 ```{r, eval=FALSE, echo=TRUE}
-best <- data |>
-  dplyr::mutate(
-    # Evaluate the call in family
-    family = purrr::map(family, .f = ~ eval(parse(text = .x))),
-    # Run the model on each row in data
-    results = purrr::pmap(
-      .l = list(
-        data = data_filtered,
-        formula = formula,
-        family = family,
-        anisotropy = anisotropy,
-        n_knots = knots,
-        share_range = share_range,
-        spatiotemporal = purrr::map2(spatiotemporal1, spatiotemporal2, list)
-      ),
-      .f = indexwc::run_sdmtmb
-    )
-  )
+# the character string needs to be parsed before used as input
+family_obj <- eval(rlang::parse_expr(configuration_to_run$family))
+
+fit <- run_sdmtmb(dir_main = NULL,
+                       data,
+                       family = family_obj,
+                       formula = configuration_to_run$formula,
+                       n_knots = configuration_to_run$knots,
+                       share_range = configuration_to_run$share_range,
+                  sdmtmb_control = sdmTMB::sdmTMBcontrol(newton_loops = 3))
+```
+In the above example, `dir` is specified to be NULL, so the fitted object will be returned. But if this is a directory name, it will be created and used to save data and the model fit.
+
+### Examining diagnostics
+
+All diagnostics and plots are generated by the `diagnose()` function. This function takes a fitted object and prediction grid as input, and optionally a directory name (`dir`) for saving results to.
+
+For simplicity and speed, we can change simplify our previous yellowtail model to be spatial only.
+
+```{r fit-simple}
+family_obj <- eval(rlang::parse_expr(configuration_to_run$family))
+
+fit_simple <- run_sdmtmb(dir_main = NULL,
+                       data,
+                       family = family_obj,
+                       formula = configuration_to_run$formula,
+                       n_knots = configuration_to_run$knots,
+                       share_range = configuration_to_run$share_range,
+                       spatial = "off",
+                       spatiotemporal = "off",
+                  sdmtmb_control = sdmTMB::sdmTMBcontrol(newton_loops = 3))
 ```
 
-The above script saves the model run in the working directory. If you would like to save the output to a different location, the `dir_main` argument should be specified in the list passed to the function. 
+Next, we can run the diagnostics with the California Current prediction grid
 
-### Examining the index and diagnostics
+```{r}
+pred_grid <- sdmTMB::replicate_df(california_current_grid, 
+                                  time_name = "year", 
+                                  time_values = unique(data$year))
+pred_grid$fyear <- as.factor(pred_grid$year)
+diagnostics <- diagnose(dir = NULL,
+                        fit = fit_simple,
+                        prediction_grid = pred_grid)
+```
 
-Output and diagnostics for all models and predictions are stored in a folder that `indexwc` creates; it's location is "yellowtail_rockfish/wcgbts/delta_gamma..". The "data" folder contains the raw data used for estimation (`data.rdata`) and a plot of the SPDE mesh is in `mesh.png`. The "index" folder contains diagnostics and predictions for 10 sets of indices. These 10 indices represent (1) N/S of Cape Mendocino, (2) N/S of Monterrey, (3) N/S of Pt Conception, a coastwide index, and state-specific indices. Plots include:
+If `dir` is specified, output and diagnostics for all models and predictions are stored in a folder that `indexwc` creates. Stepping through what elements are output:
 
-* density plots (`density01.png`, `density02.png`, ...) which represent predictions for pairs of years
+The `sdmTMB::sanity()` checks can be accessed with 
+```{r}
+diagnostics$sanity
+```
 
-* a coastwide index (`index_coastwide.png`)
+The model is returned with 
+```{r}
+diagnostics$model
+```
 
-* fixed effect parameters (`parameters_fixed_effects.png`)
+The formula is returned with 
+```{r}
+diagnostics$formula
+```
 
-* QQ plot (`qq.png`)
+The log-likelihood and AIC are returned with 
+```{r}
+diagnostics$loglike
+diagnostics$aic
+```
 
-* anisotropy plot of the presence/absence and catch rate models for the spatial and spatiotemporal fields (`anisotropy.png`)
+A tibble with fixed and random effects (with standard error and confidence intervals) is returned with
 
-* residual plots (`residuals_1_01.png`, `residuals_1_02.png`, ..., `residuals_2_01.png`, `residuals_2_02.png`,...) where pairs of years are shown, and separate residual plots are made for the presence-absence and positive model components
+```{r}
+diagnostics$effects
+```
 
-Additional output includes:
+The SPDE mesh plot can be accessed with
+```{r}
+diagnostics$mesh_plot
+```
 
-* indices generated by area (`est_by_area.csv`), the `year`, `est`, and `se` columns are the needed inputs for SS3 filtered down to the appropriate area
+The QQ plot (appearing as a single plot when a non-delta family is used, or 2 plots when a delta family is used) is accessed with 
 
-* the dataframe of `sdmTMB::sanity()` checks (in `sanity_data_frame.csv`) 
+```{r}
+diagnostics$qq_plot
+```
 
-* text file with the AIC and NLL (`aic_nll.txt`)
+When anisotropy is not included (as in our model) no plot is available, but when included it can be seen by accessing 
 
-* text file with TRUE/FALSE for the hessian (`hess_logical.txt`)
+```{r}
+diagnostics$anisotropy_plot
+```
 
-* Rdata file with model fits, all data objects, and parameter estimates (`sdmTMB_save.Rdata`)
+A plot of the fixed effects parameters can be accessed with 
 
-* Rdata file with model predictions (`predictions.Rdata`)
+```{r}
+diagnostics$fixed_effects_plot
+```
 
-If all the diagnostic plots are not created, this often means that parameter warnings were generated during the model fitting. To see what those warnings, the `ignore_fit.rds` file can be loaded into R and calling `sdmTMB::sanity(fit)` will output the parameter warnings. 
+Density plots are made separately for each year, and stored 2 per page in a list of lists. They can be accessed with
+
+```{r}
+diagnostics$density_plots[[10]]
+```
+
+Maps are also made of the residuals. Accessing these can be a little funny, but is done with pagination
+
+```{r}
+plot1 <- diagnostics$residual_maps_by_year[[1]]
+
+ggforce::n_pages(plot1) # check number of pages
+# View page 2
+print(plot1 + ggforce::facet_wrap_paginate("year", nrow = 1, ncol = 2, page = 2))
+```
+
+For reproducibility, the diagnostics list also includes a time stamp 
+
+```{r}
+diagnostics$date
+```
+
+and the session info with 
+
+```{r eval=FALSE}
+diagnostics$session_info
+```
+
+The original data is returned (with residual values added) as 
+
+```{r eval=FALSE}
+diagnostics$data_with_residuals
+```
+
+Finally, predictions on the survey grid (or other data passed in) are stored in a dataframe 
+
+```{r eval=FALSE}
+diagnostics$predictions
+```
+
+### Calculating indices
+
+

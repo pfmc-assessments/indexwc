@@ -35,6 +35,7 @@ Imports:
     gridExtra,
     gt,
     here,
+    inlabru,
     lifecycle,
     methods,
     nwfscSurvey,
