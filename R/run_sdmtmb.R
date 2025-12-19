@@ -137,9 +137,6 @@ run_sdmtmb <- function(dir_main = getwd(),
     xy_cols = c("x", "y"),
     n_knots = n_knots
   )
-  filename <- NULL
-  if(!is.null(dir_main)) file_name = fs::path(dir_data, "mesh.png")
-  plot_mesh(mesh, file_name = filename)
 
   # Fit model
   fit <- sdmTMB::sdmTMB(

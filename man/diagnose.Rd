@@ -16,7 +16,7 @@ results are only returned as a list (not saved to disk).}
 use to make model predictions to. Should not be NULL}
 }
 \value{
-A list containing:
+A list containing
 \itemize{
 \item \code{sanity} - Sanity check results as list
 \item \code{model} - The model family name
