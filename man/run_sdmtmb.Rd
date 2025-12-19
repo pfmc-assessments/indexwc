@@ -25,6 +25,7 @@ and effort. Additional columns can be present such as depth.}
 
 \item{family}{The family and link. Supports \code{\link[=gaussian]{gaussian()}}, \code{\link[=Gamma]{Gamma()}},
 \code{\link[=binomial]{binomial()}}, \code{\link[=poisson]{poisson()}}, \code{\link[sdmTMB:families]{Beta()}},
+\code{\link[sdmTMB:families]{betabinomial()}},
 \code{\link[sdmTMB:families]{nbinom2()}},
 \code{\link[sdmTMB:families]{truncated_nbinom2()}},
 \code{\link[sdmTMB:families]{nbinom1()}},
@@ -35,14 +36,15 @@ and effort. Additional columns can be present such as depth.}
 \code{\link[sdmTMB:families]{student()}},
 \code{\link[sdmTMB:families]{tweedie()}}, and
 \code{\link[sdmTMB:families]{gengamma()}}.
-Supports the delta/hurdle models:
+Delta/hurdle models (for zero-inflated data) include:
 \code{\link[sdmTMB:families]{delta_beta()}},
 \code{\link[sdmTMB:families]{delta_gamma()}},
 \code{\link[sdmTMB:families]{delta_gamma_mix()}},
 \code{\link[sdmTMB:families]{delta_lognormal_mix()}},
 \code{\link[sdmTMB:families]{delta_lognormal()}}, and
-\code{\link[sdmTMB:families]{delta_truncated_nbinom2()}},
-For binomial family options, see 'Binomial families' in the Details
+\code{\link[sdmTMB:families]{delta_truncated_nbinom2()}}.
+See the \href{https://sdmTMB.github.io/sdmTMB/articles/delta-models.html}{delta-model vignette} for
+details. For binomial family options, see 'Binomial families' in the Details
 section below.}
 
 \item{formula}{Model formula. IID random intercepts and slopes are possible using
