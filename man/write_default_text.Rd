@@ -2,7 +2,7 @@
 % Please edit documentation in R/write_default_text.R
 \name{write_default_text}
 \alias{write_default_text}
-\title{Write default text describing the index standardizations run from the {indexwc} package}
+\title{Write default text describing the index standardizations run from the \pkg{indexwc} package}
 \usage{
 write_default_text(species_list = NULL)
 }

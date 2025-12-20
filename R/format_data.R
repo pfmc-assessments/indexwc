@@ -20,7 +20,7 @@
 #' * `effort` ($km^2$)
 #' * `pass_scaled` after subtracting the mean
 #' * `vessel_year` pasted together, made numeric, and subtract 1
-#' * `fyear` the factor version of `year` to match notation used in {sdmTMB}
+#' * `fyear` the factor version of `year` to match notation used in \pkg{sdmTMB}
 #' * `longitude` (decimal degrees)
 #' * `latitude` (decimal degrees)
 #' * `x` and `y` are in Universal Transverse Mercator (UTM)

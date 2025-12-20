@@ -2,7 +2,7 @@
 #'
 #' Format `clean_name` which is an item in the list returned from a call to a
 #' distribution, e.g., `sdmTMB::delta_gamma()[["clean_name"]]`.
-#' @param family A distribution from {sdmTMB} such as [sdmTMB::delta_gamma()].
+#' @param family A distribution from \pkg{sdmTMB} such as [sdmTMB::delta_gamma()].
 #' @param pretty A logical specifying if you want the returned value to be
 #'   formatted for pretty printing, which is helpful when the text is going to
 #'   be placed in a report on a figure.

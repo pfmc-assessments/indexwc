@@ -20,7 +20,7 @@ run(data, family, formula, dir_main = getwd(), n_knots = 500, ...)
 \item{...}{Extra arguments}
 }
 \value{
-A \code{list} of {sdmTMB} \code{list}s, where each element in the list is the returned
+A \code{list} of \pkg{sdmTMB} \code{list}s, where each element in the list is the returned
 object from \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}} when fitting data to a model and of the class
 \code{sdmTMB}. The list of lists is because \code{\link[purrr:map2]{purrr::map2()}} is used to split the
 input data by species and survey/source in case your data contain

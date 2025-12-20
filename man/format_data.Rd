@@ -24,7 +24,7 @@ A data frame with all lower case column names.
 \item \code{effort} ($km^2$)
 \item \code{pass_scaled} after subtracting the mean
 \item \code{vessel_year} pasted together, made numeric, and subtract 1
-\item \code{fyear} the factor version of \code{year} to match notation used in {sdmTMB}
+\item \code{fyear} the factor version of \code{year} to match notation used in \pkg{sdmTMB}
 \item \code{longitude} (decimal degrees)
 \item \code{latitude} (decimal degrees)
 \item \code{x} and \code{y} are in Universal Transverse Mercator (UTM)

@@ -21,7 +21,7 @@
 #' @author Chantel R. Wetzel
 #' @export
 #' @return
-#' A {ggplot2}/{ggforce} object is returned.
+#' A \pkg{ggplot2} \pkg{ggforce} object is returned.
 #' @seealso
 #' * [ggplot2::geom_tile()] for how the raster is created
 #' * [ggforce::facet_wrap_paginate()] for how the pages are created

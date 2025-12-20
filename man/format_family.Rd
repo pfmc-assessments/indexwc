@@ -7,7 +7,7 @@
 format_family(family, pretty = FALSE)
 }
 \arguments{
-\item{family}{A distribution from {sdmTMB} such as \code{\link[sdmTMB:families]{sdmTMB::delta_gamma()}}.}
+\item{family}{A distribution from \pkg{sdmTMB} such as \code{\link[sdmTMB:families]{sdmTMB::delta_gamma()}}.}
 
 \item{pretty}{A logical specifying if you want the returned value to be
 formatted for pretty printing, which is helpful when the text is going to
