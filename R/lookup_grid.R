@@ -10,6 +10,7 @@
 #' @param sd_depth The sd of depth to use
 #' @param max_depth Maximum depth, defaults to Inf
 #' @param data the name of the grid, defaults to california_current_grid (WCGBTS)
+#' @importFrom rlang .data
 #' @export
 lookup_grid <- function(x,
                         years,
@@ -47,23 +48,21 @@ lookup_grid <- function(x,
     .default = as.character(x)
   ) |>
     dplyr::sym()
-
   out <- dplyr::mutate(
     .data = data,
     area_km2 = {{ column }},
     vessel_year = "0",
-    depth_scaled = scale(depth, center = mean_depth, scale = sd_depth),
-    depth_scaled_squared = depth_scaled^2
+    depth_scaled = scale(.data$depth, center = mean_depth, scale = sd_depth),
+    depth_scaled_squared = .data$depth_scaled^2
   ) |>
     dplyr::filter(
-      area_km2 > 0
+      .data$area_km2 > 0
     )
-
   out_truncated <- out |>
     dplyr::filter(
-      latitude > min_latitude & latitude < max_latitude,
-      longitude > min_longitude & longitude < max_longitude,
-      depth < max_depth
+      .data$latitude > min_latitude & .data$latitude < max_latitude,
+      .data$longitude > min_longitude & .data$longitude < max_longitude,
+      .data$depth < max_depth
     )
   stopifnot(NROW(out_truncated) > 0)
   # Transform the coordinates to UTM
@@ -73,22 +72,21 @@ lookup_grid <- function(x,
     utm_crs = utm_zone_10
   )) |>
     dplyr::select(
-      x,
-      y,
-      area_km2,
-      pass_scaled,
-      vessel_year,
-      longitude,
-      latitude,
-      depth,
-      depth_scaled,
-      depth_scaled_squared,
-      split_mendocino,
-      split_conception,
-      split_monterey,
-      split_state
+      .data$x,
+      .data$y,
+      .data$area_km2,
+      .data$pass_scaled,
+      .data$vessel_year,
+      .data$longitude,
+      .data$latitude,
+      .data$depth,
+      .data$depth_scaled,
+      .data$depth_scaled_squared,
+      .data$split_mendocino,
+      .data$split_conception,
+      .data$split_monterey,
+      .data$split_state
     )
-
   year_grid <- purrr::map_dfr(
     .x = years,
     .f = function(year_i, data) {
@@ -98,8 +96,7 @@ lookup_grid <- function(x,
     data = out_utm
   ) |>
     dplyr::mutate(
-      fyear = as.factor(year)
+      fyear = as.factor(.data$year)
     )
-
   return(year_grid)
 }

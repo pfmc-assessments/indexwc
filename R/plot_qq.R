@@ -44,11 +44,11 @@ plot_qq <- function(fit, file_name = "qq.png") {
     .id = "model",
     plot.it = FALSE
   ) |>
-    dplyr::filter(!is.na(x))
+    dplyr::filter(!is.na(.data$x))
 
   slopes_intercepts <- data |>
-    dplyr::select(-x) |>
-    dplyr::group_split(model, .keep = FALSE) |>
+    dplyr::select(-.data$x) |>
+    dplyr::group_split(.data$model, .keep = FALSE) |>
     purrr::map_df(
       .f = ~ qqline_parameters(.x[["y"]]),
       .id = "model"
@@ -60,9 +60,9 @@ plot_qq <- function(fit, file_name = "qq.png") {
   gg <- ggplot2::ggplot(
     data = data,
     mapping = ggplot2::aes(
-      x = x,
-      y = y,
-      col = model
+      x = .data$x,
+      y = .data$y,
+      col = .data$model
     )
   ) +
     ggplot2::geom_point() +
@@ -85,9 +85,9 @@ plot_qq <- function(fit, file_name = "qq.png") {
     ) +
     ggplot2::geom_abline(
       mapping = ggplot2::aes(
-        slope = slope,
-        intercept = intercept,
-        color = model
+        slope = .data$slope,
+        intercept = .data$intercept,
+        color = .data$model
       ),
       data = slopes_intercepts
     )
@@ -102,7 +102,6 @@ plot_qq <- function(fit, file_name = "qq.png") {
   }
   return(invisible(gg))
 }
-
 #' Estimate the slope and intercept for a Q-Q plot
 #'
 #' The parameters are not returned from [stats::qqline()] and the line is often

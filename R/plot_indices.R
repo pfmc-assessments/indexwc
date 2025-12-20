@@ -25,6 +25,7 @@
 #' Creates and saves a plot of the abundance indices in the directory location
 #' specified by the save_loc function input.
 #'
+#' @importFrom rlang .data
 plot_indices <- function(data,
                          save_loc = getwd(),
                          file_name = "index.png",
@@ -32,21 +33,20 @@ plot_indices <- function(data,
   if (!"area" %in% colnames(data)) {
     data[["area"]] <- ""
   }
-
   gg <- ggplot2::ggplot(
     data = data,
     ggplot2::aes(
-      x = year,
-      y = est,
-      group = area,
-      colour = area,
-      fill = area
+      x = .data$year,
+      y = .data$est,
+      group = .data$area,
+      colour = .data$area,
+      fill = .data$area
     )
   ) +
     ggplot2::geom_point() +
     ggplot2::geom_line(lty = 2) +
     ggplot2::geom_errorbar(
-      ggplot2::aes(ymin = lwr, ymax = upr)
+      ggplot2::aes(ymin = .data$lwr, ymax = .data$upr)
     ) +
     ggplot2::theme_bw() +
     ggplot2::theme(
@@ -59,17 +59,14 @@ plot_indices <- function(data,
     ggplot2::xlab("Year") +
     ggplot2::ylab("Index (mt)") +
     ggplot2::expand_limits(y = 0)
-
   if(!is.null(file_name)) {
     suppressMessages(ggplot2::ggsave(
-    plot = gg,
-    filename = fs::path(save_loc, file_name),
-    width = 10,
-    height = 7,
-    dpi = 300,
-    pointsize = 12
-  ))
+      plot = gg,
+      filename = fs::path(save_loc, file_name),
+      width = 10,
+      height = 7,
+      dpi = 300
+    ))
   }
-
   return(gg)
 }

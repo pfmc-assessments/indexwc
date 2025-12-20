@@ -73,9 +73,12 @@
 #' diag$session_info            # Full session info
 #'
 #' }
+#' @importFrom rlang .data
+#' @importFrom utils write.table sessionInfo
+#' @importFrom stats AIC logLik formula predict
 diagnose <- function(dir,
-                           fit,
-                           prediction_grid = NULL) {
+                     fit,
+                     prediction_grid = NULL) {
   # Handle both indexwc_fit objects and raw sdmTMB objects
   if (inherits(fit, "indexwc_fit")) {
     sdmtmb_fit <- fit$fit
@@ -159,7 +162,7 @@ diagnose <- function(dir,
     .id = "model"
   ) |>
     dplyr::mutate(
-      model = unlist(all_combos[model, "x"])
+      model = unlist(all_combos[.data$model, "x"])
     )
   if(!is.null(dir)) {
     save(
@@ -219,7 +222,7 @@ diagnose <- function(dir,
   filename <- NULL
   if(!is.null(dir)) filename <- fs::path(dir, "anisotropy.png")
   gg_aniso <- try(sdmTMB::plot_anisotropy(object = sdmtmb_fit) +
-    ggplot2::theme_bw(), silent=TRUE)
+                    ggplot2::theme_bw(), silent=TRUE)
   if(!is.null(filename)) {
     suppressMessages(ggplot2::ggsave(
       filename = filename,

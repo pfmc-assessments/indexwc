@@ -56,6 +56,7 @@
 #' * [sdmTMB::sdmTMB()], the underlying fitting function
 #' * [lookup_grid()], creates the prediction grid
 #'
+#' @importFrom rlang .data
 run_sdmtmb <- function(dir_main = getwd(),
                        data,
                        family,
@@ -73,54 +74,48 @@ run_sdmtmb <- function(dir_main = getwd(),
     ) %in%
       colnames(data)
   ))
-
   # Create directory structure
   if(!is.null(dir_main)) {
     dir_new <- data |>
-      dplyr::group_by(survey_name, common_name) |>
+      dplyr::group_by(.data$survey_name, .data$common_name) |>
       dplyr::count() |>
       dplyr::mutate(
-        common_without = format_common_name(common_name),
-        survey_without = format_common_name(survey_name),
+        common_without = format_common_name(.data$common_name),
+        survey_without = format_common_name(.data$survey_name),
         directory = fs::path(
           dir_main,
-          common_without,
-          survey_without,
+          .data$common_without,
+          .data$survey_without,
           format_family(family)
         )
       ) |>
-      dplyr::pull(directory)
+      dplyr::pull(.data$directory)
     stopifnot(length(dir_new) == 1)
-
     dir_data <- fs::path(dir_new, "data")
     fs::dir_create(dir_data)
     save(data, file = file.path(dir_data, "data.rdata"))
   }
-
   formula <- format_formula(formula)
   cli::cli_inform(c(
     "*" = "Running sdmTMB for {data[1, 'common_name']}"
   ))
-
   # Create prediction grid
   ranges <- data |>
-    dplyr::filter(catch_weight > 0) |>
+    dplyr::filter(.data$catch_weight > 0) |>
     dplyr::summarize(
       dplyr::across(
         dplyr::matches("tude"),
         .fns = list("max" = ~ max(.) + 0.1, "min" = ~ min(.) - 0.1)
       ),
-      depth_max = min(depth, na.rm = TRUE)
+      depth_max = min(.data$depth, na.rm = TRUE)
     )
-
   data_truncated <- data |>
     dplyr::filter(
-      latitude > ranges[["latitude_min"]] & latitude < ranges[["latitude_max"]],
-      longitude > ranges[["longitude_min"]] & longitude < ranges[["longitude_max"]],
-      depth > ranges[["depth_max"]]
+      .data$latitude > ranges[["latitude_min"]] & .data$latitude < ranges[["latitude_max"]],
+      .data$longitude > ranges[["longitude_min"]] & .data$longitude < ranges[["longitude_max"]],
+      .data$depth > ranges[["depth_max"]]
     ) |>
     droplevels()
-
   grid <- lookup_grid(
     x = data[["survey_name"]][1],
     max_latitude = ranges[["latitude_max"]],
@@ -130,14 +125,12 @@ run_sdmtmb <- function(dir_main = getwd(),
     max_depth = abs(ranges[["depth_max"]]),
     years = sort(unique(data_truncated$year))
   )
-
   # Create and save mesh
   mesh <- sdmTMB::make_mesh(
     data = data_truncated,
     xy_cols = c("x", "y"),
     n_knots = n_knots
   )
-
   # Fit model
   fit <- sdmTMB::sdmTMB(
     formula = formula,
@@ -150,17 +143,14 @@ run_sdmtmb <- function(dir_main = getwd(),
     share_range = share_range,
     ...
   )
-
   # Refit if hessian not positive definite
   if (!fit[["pos_def_hessian"]]) {
     fit <- sdmTMB::run_extra_optimization(fit)
   }
-
   # Save model output
   if(!is.null(dir_main)) {
     saveRDS(fit, file = fs::path(dir_data, "fit.rds"))
   }
-
   # Attach mesh for downstream use
   fit$mesh <- mesh
   return(fit)

@@ -14,12 +14,12 @@
 #'   \item{WA}{Washington state}
 #'   \item{OR}{Oregon state}
 #'   \item{CA}{California state}
-#'   \item{}{North of Point Conception}
-#'   \item{}{South of Point Conception}
-#'   \item{}{North of Cape Mendocino}
-#'   \item{}{South of Cape Mendocino}
-#'   \item{}{North of Monterey Bay}
-#'   \item{}{South of Monterey Bay}
+#'   \item{North of Point Conception}{North of Point Conception}
+#'   \item{South of Point Conception}{South of Point Conception}
+#'   \item{North of Cape Mendocino}{North of Cape Mendocino}
+#'   \item{South of Cape Mendocino}{South of Cape Mendocino}
+#'   \item{North of Monterey Bay}{North of Monterey Bay}
+#'   \item{South of Monterey Bay}{South of Monterey Bay}
 #' }
 #' A list of named areas with a numeric vector of northern and southern
 #' boundaries for each area. Current areas include

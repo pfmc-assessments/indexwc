@@ -27,6 +27,7 @@
 #' * [ggforce::facet_wrap_paginate()] for how the pages are created
 #' * [ggforce::n_pages()] for how many pages the object has
 #'
+#' @importFrom rlang .data
 map_density <- function(predictions,
                         save_prefix = file.path(getwd(), "density"),
                         n_row = 1,
@@ -41,17 +42,16 @@ map_density <- function(predictions,
     suppressWarnings(sdmTMB::add_utm_columns(
       ll_crs = utm_zone_10
     ))
-
   data_extent <- raster::extent(
     range(predictions$X),
     range(predictions$Y)
   )
   data_raster <- raster::raster(data_extent,
-    ncol = floor((methods::slot(data_extent, "xmax") - methods::slot(data_extent, "xmin")) / 2),
-    nrow = floor((methods::slot(data_extent, "ymax") - methods::slot(data_extent, "ymin")) / 2)
+                                ncol = floor((methods::slot(data_extent, "xmax") - methods::slot(data_extent, "xmin")) / 2),
+                                nrow = floor((methods::slot(data_extent, "ymax") - methods::slot(data_extent, "ymin")) / 2)
   )
   data_grouped <- predictions |>
-    dplyr::group_by(year)
+    dplyr::group_by(.data$year)
   split_names <- unlist(dplyr::group_keys(data_grouped))
   x <- purrr::map(
     data_grouped |>
@@ -66,11 +66,10 @@ map_density <- function(predictions,
       as.data.frame()
   )
   names(x) <- split_names
-
   gg <- map_base() +
     ggplot2::geom_tile(
       data = purrr::list_rbind(x, names_to = "year"),
-      mapping = ggplot2::aes(x * 1000, y * 1000, fill = layer)
+      mapping = ggplot2::aes(.data$x * 1000, .data$y * 1000, fill = .data$layer)
     ) +
     ggplot2::scale_fill_viridis_c() +
     ggplot2::scale_colour_viridis_c() +
@@ -79,9 +78,7 @@ map_density <- function(predictions,
       axis.text.x = ggplot2::element_text(angle = 90, vjust = 0.5, hjust = 1)
     ) +
     ggforce::facet_wrap_paginate("year", nrow = n_row, ncol = n_col)
-
   n_pages <- ggforce::n_pages(gg)
-
   plots_by_page <- purrr::map(
     seq_len(n_pages),
     ~ gg + ggforce::facet_wrap_paginate(
@@ -91,7 +88,6 @@ map_density <- function(predictions,
       page = .x
     )
   )
-
   if (!is.null(save_prefix)) {
     purrr::walk2(
       plots_by_page,
@@ -103,12 +99,10 @@ map_density <- function(predictions,
         )
       )
     )
-
     return(gg)
   } else {
     return(plots_by_page)
   }
-
 }
 
 ggsave_year <- function(x, y, prefix = "density_", n_row = 1, n_col = 2) {

@@ -4,13 +4,7 @@
 \alias{calc_index_areas}
 \title{Calculate area-specific indices between each set of boundaries}
 \usage{
-calc_index_areas(
-  data,
-  fit,
-  prediction_grid,
-  dir,
-  boundaries = boundaries_data["Coastwide"]
-)
+calc_index_areas(data, fit, prediction_grid, dir, boundaries = "Coastwide")
 }
 \arguments{
 \item{data}{The data used for fitting the model}

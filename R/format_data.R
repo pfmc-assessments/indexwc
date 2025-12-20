@@ -80,75 +80,68 @@ format_data.odfw <- function(data, ...) {
   stop("Methods to format ODFW data do not exist yet")
 }
 
+#' @importFrom rlang .data
 #' @export
 format_data.nwfscSurvey <- function(data, ...) {
-  if (!"Datetime_utc_iso" %in% colnames(data)) {
-    stop(
-      "Please use nwfscSurvey::pull_catch() not nwfscSurvey::PullCatch.fn() ",
-      "to pull your data."
-    )
-  }
-  data <- data |>
-    dplyr::rename_with(tolower) |>
-    dplyr::rename_with(gsub, pattern = "_dd", replace = "") |>
-    dplyr::rename(
-      catch_numbers = total_catch_numbers,
-      survey_name = project,
-    ) |>
-    dplyr::mutate(
-      # TODO: complete the case_when statement for all known survey names
-      #       make them match the sa4ss glossary
-      survey_name = dplyr::case_when(
-        survey_name == "Groundfish Slope and Shelf Combination Survey" ~ "WCGBTS",
-        survey_name == "Groundfish Triennial Shelf Survey" ~ "Triennial",
-        survey_name == "AFSC/RACE Slope Survey" ~ "AFSC_Slope",
-        survey_name == "Groundfish Slope Survey" ~ "NWFSC_Slope",
-        TRUE ~ "unknown survey"
-      ),
-      # Catches are needed in mt for stock synthesis
-      catch_weight = total_catch_wt_kg * 0.001,
-      effort = area_swept_ha * 0.01,
-      depth = depth_m * -1,
-      vessel_year = as.factor(as.numeric(
-        as.factor(paste(vessel, year, sep = "_")),
-        as.is = FALSE
-      ) - 1),
-      fyear = as.factor(year),
-      depth_scaled = scale(depth),
-      depth_scaled_squared = depth_scaled^2,
-      pass_scaled = pass - mean(range(pass))
-    ) |>
-    dplyr::select(
-      year,
-      fyear,
-      survey_name,
-      common_name,
-      catch_numbers,
-      catch_weight,
-      effort,
-      pass_scaled,
-      vessel_year,
-      longitude,
-      latitude,
-      depth,
-      depth_scaled,
-      depth_scaled_squared
-    ) |>
-    dplyr::filter(
-      # TODO: fix the survey  names
-      # 1997, 1999, 2000, and 2001 are the only years that fully sampled the coast
-      !(survey_name == "AFSC.Slope" & year <= 1996),
-      # 1997 was a smaller survey
-      !(grepl("Triennial", survey_name) & year == 1977),
-      # Truncate Triennial by depth and latitude to spatial extent present in
-      # every year to allow for a continuous time series
-      !(common_name %in% c("petrale sole", "canary rockfish") &
-        depth > 366 & grepl("Triennial", survey_name)
-      ),
-      !(common_name %in% c("petrale sole", "canary rockfish") &
-        latitude < 36.8 & grepl("Triennial", survey_name)
-      ),
-    )
+    if (!"Datetime_utc_iso" %in% colnames(data)) {
+      stop(
+        "Please use nwfscSurvey::pull_catch() not nwfscSurvey::PullCatch.fn() ",
+        "to pull your data."
+      )
+    }
+    data <- data |>
+      dplyr::rename_with(tolower) |>
+      dplyr::rename_with(gsub, pattern = "_dd", replace = "") |>
+      dplyr::rename(
+        catch_numbers = .data$total_catch_numbers,
+        survey_name = .data$project,
+      ) |>
+      dplyr::mutate(
+        survey_name = dplyr::case_when(
+          .data$survey_name == "Groundfish Slope and Shelf Combination Survey" ~ "WCGBTS",
+          .data$survey_name == "Groundfish Triennial Shelf Survey" ~ "Triennial",
+          .data$survey_name == "AFSC/RACE Slope Survey" ~ "AFSC_Slope",
+          .data$survey_name == "Groundfish Slope Survey" ~ "NWFSC_Slope",
+          TRUE ~ "unknown survey"
+        ),
+        catch_weight = .data$total_catch_wt_kg * 0.001,
+        effort = .data$area_swept_ha * 0.01,
+        depth = .data$depth_m * -1,
+        vessel_year = as.factor(as.numeric(
+          as.factor(paste(.data$vessel, .data$year, sep = "_")),
+          as.is = FALSE
+        ) - 1),
+        fyear = as.factor(.data$year),
+        depth_scaled = scale(.data$depth),
+        depth_scaled_squared = .data$depth_scaled^2,
+        pass_scaled = .data$pass - mean(range(.data$pass))
+      ) |>
+      dplyr::select(
+        .data$year,
+        .data$fyear,
+        .data$survey_name,
+        .data$common_name,
+        .data$catch_numbers,
+        .data$catch_weight,
+        .data$effort,
+        .data$pass_scaled,
+        .data$vessel_year,
+        .data$longitude,
+        .data$latitude,
+        .data$depth,
+        .data$depth_scaled,
+        .data$depth_scaled_squared
+      ) |>
+      dplyr::filter(
+        !(.data$survey_name == "AFSC.Slope" & .data$year <= 1996),
+        !(grepl("Triennial", .data$survey_name) & .data$year == 1977),
+        !(.data$common_name %in% c("petrale sole", "canary rockfish") &
+            .data$depth > 366 & grepl("Triennial", .data$survey_name)
+        ),
+        !(.data$common_name %in% c("petrale sole", "canary rockfish") &
+            .data$latitude < 36.8 & grepl("Triennial", .data$survey_name)
+        ),
+      )
   data_utm <- suppressWarnings(sdmTMB::add_utm_columns(
     data,
     utm_crs = utm_zone_10,

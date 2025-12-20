@@ -12,32 +12,30 @@ plot_pars_fixed <- function(fit, dir, file_name = "parameters_fixed_effects.png"
     out <- tidy(fit, model = model_number, silent = TRUE) |>
       dplyr::mutate(
         model = as.factor(model_number),
-        term = gsub("fyear", "", term),
-        lower_ci = estimate - 2 * std.error,
-        upper_ci = estimate + 2 * std.error,
+        term = gsub("fyear", "", .data$term),
+        lower_ci = .data$estimate - 2 * .data$std.error,
+        upper_ci = .data$estimate + 2 * .data$std.error,
       ) |>
-      dplyr::filter(grepl("^[0-9]+$", term)) |>
+      dplyr::filter(grepl("^[0-9]+$", .data$term)) |>
       dplyr::mutate(
-        term = as.numeric(term)
+        term = as.numeric(.data$term)
       ) |>
-      dplyr::arrange(term)
+      dplyr::arrange(.data$term)
     return(out)
   }
-
   n_plot <- ifelse(isTRUE(fit$family$delta), 2, 1)
-
   gg_out <- ggplot2::ggplot(
     data = purrr::map_df(
       seq(n_plot),
       .f = ~ plot_fixed_helper(fit = fit, model_number = .x)
     ),
-    mapping = ggplot2::aes(x = term, y = estimate, color = model)
+    mapping = ggplot2::aes(x = .data$term, y = .data$estimate, color = .data$model)
   ) +
     ggplot2::geom_point() +
     ggplot2::geom_errorbar(
       mapping = ggplot2::aes(
-        ymin = lower_ci,
-        ymax = upper_ci
+        ymin = .data$lower_ci,
+        ymax = .data$upper_ci
       ),
       width = 0.1
     ) +
@@ -46,12 +44,12 @@ plot_pars_fixed <- function(fit, dir, file_name = "parameters_fixed_effects.png"
     ggplot2::theme_bw()
   if(!is.null(dir) && !is.null(file_name)) {
     suppressMessages(ggplot2::ggsave(
-    filename = file.path(dir, "parameters_fixed_effects.png"),
-    plot = gg_out,
-    height = 10,
-    width = 10,
-    units = "in"
-  ))
+      filename = file.path(dir, file_name),
+      plot = gg_out,
+      height = 10,
+      width = 10,
+      units = "in"
+    ))
   }
   return(gg_out)
 }

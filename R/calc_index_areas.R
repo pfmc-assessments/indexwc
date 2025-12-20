@@ -22,6 +22,7 @@
 #'   indices for. These should be names from [boundaries_data]. The default is
 #'   `"Coastwide"`, which calculates only the Coastwide index
 #' @export
+#' @importFrom utils write.csv
 #' @author Kelli F. Johnson
 #' @seealso
 #' * [boundaries_data], a data object
@@ -55,7 +56,7 @@ calc_index_areas <- function(data,
                              fit,
                              prediction_grid,
                              dir,
-                             boundaries = boundaries_data["Coastwide"]) {
+                             boundaries = "Coastwide") {
 
   # Make sure all boundaries are character vector
   if (!is.character(boundaries)) {
@@ -88,8 +89,8 @@ calc_index_areas <- function(data,
   }
 
   latitudes_of_catches <- data |>
-    dplyr::filter(catch_weight > 0) |>
-    dplyr::pull(latitude)
+    dplyr::filter(.data$catch_weight > 0) |>
+    dplyr::pull(.data$latitude)
   boundaries_fixed <- filter_boundaries(
     y = latitudes_of_catches,
     boundaries = boundaries
@@ -102,6 +103,7 @@ calc_index_areas <- function(data,
              to {.val {min(latitudes_of_catches)}}."
     ))
   }
+  prediction_grid <- as.data.frame(prediction_grid)
   boundaries_grids <- purrr::map2(
     .x = boundaries_fixed[, "upper"],
     .y = boundaries_fixed[, "lower"],
@@ -115,7 +117,7 @@ calc_index_areas <- function(data,
     index <- sdmTMB::get_index(
       obj = prediction,
       bias_correct = TRUE,
-      area = grid[["area_km2"]]
+      area = grid[["area_km2_WCGBTS"]]
     )
     prediction[["index"]] <- index
     return(prediction)
@@ -138,8 +140,7 @@ calc_index_areas <- function(data,
   ) |>
     purrr::list_rbind(names_to = "area") |>
     dplyr::mutate(
-      # Ensure the factor is in the same order the values appear in the data
-      area = forcats::fct_inorder(area)
+      area = forcats::fct_inorder(.data$area)
     )
 
   out <- list(
@@ -169,6 +170,7 @@ calc_index_areas <- function(data,
     }
   }
 
+  out$plot_indices <- plot_indices(index_areas, file_name = NULL)
   return(out)
 }
 

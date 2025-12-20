@@ -128,7 +128,7 @@ fit_simple <- run_sdmtmb(dir_main = NULL,
                        share_range = configuration_to_run$share_range,
                        spatial = "off",
                        spatiotemporal = "off",
-                  sdmtmb_control = sdmTMB::sdmTMBcontrol(newton_loops = 3))
+                  sdmtmb_control = sdmTMB::sdmTMBcontrol(newton_loops = 1))
 ```
 
 Next, we can run the diagnostics with the California Current prediction grid
@@ -237,4 +237,33 @@ diagnostics$predictions
 
 ### Calculating indices
 
+Last, we can use the `calc_index_areas` function to calculate indices, with associated uncertainty. We can calculate areas for any region in the following list:
+
+```{r}
+available_areas()
+```
+
+By default, the Coastwide index and 3 state indices are generated, but these indices may be calculated simultaneously (note: there is not really a speed up of doing several at the same time, because they are done sequentially). Again we'll leave the 'dir' argument set to NULL and return everything
+
+```{r}
+index <- calc_index_areas(
+  data=fit_simple$data, 
+  fit = fit_simple, 
+  prediction_grid=pred_grid,
+  boundaries = c("Coastwide"),
+  dir = NULL)
+
+```
+
+The indices may be visualized by extracting the time series plot
+
+```{r}
+index$plot_indices
+```
+
+or more custom code could be used to make a plot based off of 
+
+```{r}
+index$indices
+```
 
