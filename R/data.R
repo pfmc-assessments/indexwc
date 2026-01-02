@@ -34,3 +34,28 @@
 #' * North of Monterey Bay
 #' * South of Monterey Bay
 "boundaries_data"
+
+#' California Current prediction grid
+#'
+#' A 4km prediction grid for the West Coast Groundfish Bottom Trawl Survey,
+#' used to generate biomass indices from predictions.
+#'
+#' @format A data frame
+#' @source Keller et al. 2017
+"california_current_grid"
+
+#' Configuration data for west coast index standardization models
+#'
+#' Configuration settings for different species and model specifications.
+#'
+#' @format A data frame
+"configuration"
+
+#' Yellowtail rockfish survey data
+#'
+#' West Coast Groundfish Bottom Trawl Survey data for yellowtail rockfish, 2003 - 2023. Data
+#' represents a subset of all hauls in each year, within the 55m - 425m depth range. The
+#' latitudinal extent is 33.5 - 48.5 degrees N.
+#'
+#' @format A data frame
+"yellowtail"

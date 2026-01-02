@@ -35,6 +35,7 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' catch_wcgbts_canary <- nwfscSurvey::pull_catch(
 #'   common_name = "canary rockfish",
 #'   years = 2021:2022,
@@ -43,6 +44,7 @@
 #' # Must assign the data a class so {indexwc} knows how to format it
 #' class(catch_wcgbts_canary) <- c("nwfscSurvey", class(catch_wcgbts_canary))
 #' formatted_data <- format_data(data = catch_wcgbts_canary)
+#' }
 format_data <- function(data, ...) {
   if (all(
     c("Latitude_dd", "cpue_kg_per_ha_der", "Datetime_utc_iso") %in%

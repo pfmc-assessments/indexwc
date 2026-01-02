@@ -18,13 +18,14 @@ Description: A system to run and summarize models that estimate indices of
     U.S. West Coast. Models can range in complexity from simple linear
     models to complex spatio-temporal models with lots of random effects
     and non-linear relationships.
-License: MIT
+License: MIT + file LICENSE
 URL: https://github.com/pfmc-assessments/indexwc,
     https://pfmc-assessments.github.io/indexwc/
 BugReports: https://github.com/pfmc-assessments/indexwc/issues
 Depends:
     R (>= 4.2)
 Imports:
+    broom,
     cli,
     dplyr,
     forcats,
@@ -49,6 +50,7 @@ Imports:
     viridis
 Suggests:
     curl,
+    gt,
     knitr,
     testthat (>= 3.0.0)
 VignetteBuilder: 

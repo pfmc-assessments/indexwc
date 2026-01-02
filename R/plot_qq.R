@@ -13,6 +13,7 @@
 #'   `qq.png`. No file will be created if `file_name = NULL`.
 #'
 #' @author Chantel R. Wetzel
+#' @importFrom stats qnorm
 #' @export
 #' @seealso
 #' * [sdmTMB::sdmTMB()]
