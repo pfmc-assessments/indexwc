@@ -138,12 +138,13 @@ pred_grid <- sdmTMB::replicate_df(california_current_grid,
                                   time_name = "year", 
                                   time_values = unique(data$year))
 pred_grid$fyear <- as.factor(pred_grid$year)
+
 diagnostics <- diagnose(dir = NULL,
                         fit = fit_simple,
                         prediction_grid = pred_grid)
 ```
 
-If `dir` is specified, output and diagnostics for all models and predictions are stored in a folder that `indexwc` creates. Stepping through what elements are output:
+If `dir` is specified, output and diagnostics for all models and predictions are stored in a folder that `indexwc` creates. If no directory is specified `diagnose(dir = NULL,...)` then named list is returned. Stepping through what elements are output:
 
 The `sdmTMB::sanity()` checks can be accessed with 
 ```{r}
