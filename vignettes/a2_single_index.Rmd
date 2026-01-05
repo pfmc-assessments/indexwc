@@ -15,6 +15,7 @@ knitr::opts_chunk$set(
   message = FALSE,
   comment = "#>"
 )
+install.packages("rnaturalearthdata")
 ```
 
 ## Overview
@@ -31,6 +32,7 @@ library(indexwc)
 library(purrr)
 library(sdmTMB)
 library(tibble)
+library(rnaturalearth)
 ```
 
 First we'll load in the configuration file. This step is not needed -- and the formulas, etc. may be specified from scratch, but this file is used to keep models reproducible across assessment cycles. The configuration file brings in specific settings by survey and species that are used to subset the data and define the parameterization of the index estimation.  This file is included as both an `rda` file that is loaded with the package but is also available for users who download the source code in the `data-raw` folder (download the package to see this). 
