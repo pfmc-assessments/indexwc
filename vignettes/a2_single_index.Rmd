@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
   message = FALSE,
   comment = "#>"
 )
-install.packages("rnaturalearthdata")
+options(repos = c(CRAN = "https://cloud.r-project.org"))
 ```
 
 ## Overview
