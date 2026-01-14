@@ -96,6 +96,7 @@ and effort. Additional columns can be present such as depth.</p></dd>
 <dt id="arg-family">family<a class="anchor" aria-label="anchor" href="#arg-family"></a></dt>
 <dd><p>The family and link. Supports <code><a href="https://rdrr.io/r/stats/family.html" class="external-link">gaussian()</a></code>, <code><a href="https://rdrr.io/r/stats/family.html" class="external-link">Gamma()</a></code>,
 <code><a href="https://rdrr.io/r/stats/family.html" class="external-link">binomial()</a></code>, <code><a href="https://rdrr.io/r/stats/family.html" class="external-link">poisson()</a></code>, <code>Beta()</code>,
+<code>betabinomial()</code>,
 <code>nbinom2()</code>,
 <code>truncated_nbinom2()</code>,
 <code>nbinom1()</code>,
@@ -106,14 +107,15 @@ and effort. Additional columns can be present such as depth.</p></dd>
 <code>student()</code>,
 <code>tweedie()</code>, and
 <code>gengamma()</code>.
-Supports the delta/hurdle models:
+Delta/hurdle models (for zero-inflated data) include:
 <code>delta_beta()</code>,
 <code>delta_gamma()</code>,
 <code>delta_gamma_mix()</code>,
 <code>delta_lognormal_mix()</code>,
 <code>delta_lognormal()</code>, and
-<code>delta_truncated_nbinom2()</code>,
-For binomial family options, see 'Binomial families' in the Details
+<code>delta_truncated_nbinom2()</code>.
+See the <a href="https://sdmTMB.github.io/sdmTMB/articles/delta-models.html" class="external-link">delta-model vignette</a> for
+details. For binomial family options, see 'Binomial families' in the Details
 section below.</p></dd>
 
 
