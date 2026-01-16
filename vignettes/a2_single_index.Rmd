@@ -270,3 +270,16 @@ or more custom code could be used to make a plot based off of
 index$indices
 ```
 
+## Saving output
+
+As demonstrated above, there are a lot of plots and diagnostics that can be inspected, and in many cases we might want to save everything. The `save_index_outputs` function in `indexwc` will write everything locally (for the directory structure, see `?save_index_outputs`)
+
+```{r echo=TRUE, eval=FALSE}
+save_index_outputs(
+  fit = fit_simple,
+  diagnostics = diagnostics,
+  indices = index,
+  dir_main = paste0(getwd(), "/yellowtail_example")
+)
+```
+
