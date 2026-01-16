@@ -222,7 +222,7 @@ diagnose <- function(dir,
   filename <- NULL
   if(!is.null(dir)) filename <- fs::path(dir, "anisotropy.png")
   gg_aniso <- try(sdmTMB::plot_anisotropy(object = sdmtmb_fit) +
-                    ggplot2::theme_bw(), silent=TRUE)
+                    ggplot2::theme_bw(), silent = TRUE)
   if(!is.null(filename)) {
     suppressMessages(ggplot2::ggsave(
       filename = filename,
