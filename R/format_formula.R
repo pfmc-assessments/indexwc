@@ -1,3 +1,4 @@
+#' @importFrom stats formula
 format_formula <- function(x) {
   # For delta models, users can input a list.
   # So, call this function on each list member.

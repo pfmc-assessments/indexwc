@@ -37,7 +37,7 @@ tile width and height that will be passed to
 \code{ggplot2::geom_tile(width, height)}.`}
 }
 \value{
-A {ggplot2}/{ggforce} object is returned.
+A \pkg{ggplot2} \pkg{ggforce} object is returned.
 }
 \description{
 Plot the predicted biomass density by year.

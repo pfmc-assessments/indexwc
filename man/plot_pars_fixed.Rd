@@ -4,12 +4,15 @@
 \alias{plot_pars_fixed}
 \title{Plot the annual parameter estimates from the fit model}
 \usage{
-plot_pars_fixed(fit, dir)
+plot_pars_fixed(fit, dir, file_name = "parameters_fixed_effects.png")
 }
 \arguments{
 \item{fit}{List created by \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}}.}
 
 \item{dir}{A directory location where results and figures will be saved.}
+
+\item{file_name}{A string giving the file name. The default is
+\code{"parameters_fixed_effects.png"}. If NULL, the file is not written but the ggplot object is returned}
 }
 \description{
 Plot the annual parameter estimates from the fit model

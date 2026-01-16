@@ -11,7 +11,7 @@
 #'
 #' @author Chantel R. Wetzel
 #' @export
-#'
+#' @importFrom stats quantile
 #' @examples
 #' \dontrun{
 #' predictions <- predict(

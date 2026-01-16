@@ -4,13 +4,13 @@
 \alias{filter_grid}
 \title{Filter a grid created with \code{\link[=lookup_grid]{lookup_grid()}}}
 \usage{
-filter_grid(grid, boundary_north, boundary_south)
+filter_grid(boundary_north, boundary_south, grid)
 }
 \arguments{
-\item{grid}{A grid returned from \code{\link[=lookup_grid]{lookup_grid()}}.}
-
 \item{boundary_north, boundary_south}{Real numbers providing the northern and
 southern latitudinal boundaries for your desired grid.}
+
+\item{grid}{A grid returned from \code{\link[=lookup_grid]{lookup_grid()}}.}
 }
 \value{
 A data frame with the same structure as \code{grid}.

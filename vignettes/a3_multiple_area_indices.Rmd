@@ -15,6 +15,7 @@ knitr::opts_chunk$set(
   message = FALSE,
   comment = "#>"
 )
+options(repos = c(CRAN = "https://cloud.r-project.org"))
 ```
 
 ## Overview
@@ -25,7 +26,7 @@ For some stocks, a goal might be to create multiple coastwide indices, where the
 
 As a multi-area index example, we'll focus on yellowtail rockfish
 
-```{r, eval=FALSE, echo=TRUE}
+```{r, eval=TRUE, echo=TRUE}
 library(indexwc)
 library(dplyr)
 library(purrr)
@@ -35,7 +36,7 @@ library(tibble)
 
 First we'll load in the configuration file. This is bringing in specific settings by survey and species that are used to subset the data and define the parameterization of the index estimation.  This file is included as both an `rda` file that is loaded with the package but is also available for users who download the source code in the `data-raw` folder (download the package to see this). 
 
-```{r, eval=FALSE, echo=TRUE}
+```{r, eval=TRUE, echo=TRUE}
 # Load from the rda file
 configuration_ytk <- configuration |>
   dplyr::filter(species == "yellowtail rockfish")
@@ -47,7 +48,7 @@ The configuration includes multiple entries for a single species for separate su
 
 In this example, we are going to only run a single-index for the Northwest Fisheries Science Center (NWFSC) West Coast Groundfish Bottom Trawl (WCGBT) survey (i.e., also referred to as the NWFSC.Combo survey in the data NWFSC data warehouse).
 
-```{r, eval=FALSE, echo=TRUE}
+```{r, eval=TRUE, echo=TRUE}
 configuration_ytk_wcgbt <- configuration_ytk |>
   dplyr::filter(source == "NWFSC.Combo" & family == "sdmTMB::delta_gamma()" & min_latitude == 33.5)
 ```
@@ -57,7 +58,7 @@ configuration_ytk_wcgbt <- configuration_ytk |>
 For most indices developed on the west coast of the USA, the main formula is usually something similar to the following, where `fyear` represents a fixed year effect, and `pass_scaled` is factor describing whether the haul is part of pass 1 (early season) or pass 2 (late season).
 There are two unique index formula's available for yellowtail rockfish:
 
-```{r, eval=FALSE, echo=TRUE}
+```{r, eval=TRUE, echo=TRUE}
 configuration_ytk_wcgbt[, "formula"]
 ```
 
@@ -65,7 +66,7 @@ we are going to use the formula with an area based term.  Please see the vignett
 
 There are many ways to build on this general framework to allow for multi-area indices. For yellowtail rockfish, we're going to generate 2 indices, north and south of Cape Mendocino. Including the interaction `fyear*split_mendocino` allows each region to have a separate trend, and because no interaction is included with `pass_scaled`, a global effect is assumed. 
 
-```{r, eval=FALSE, echo=TRUE}
+```{r, eval=TRUE, echo=TRUE}
 configuration_to_run <- configuration_ytk_wcgbt |>
   dplyr::filter(
     formula == "catch_weight ~ 0 + fyear*split_mendocino + pass_scaled"
@@ -84,28 +85,26 @@ Generating new variables representing new splits will allow you to fit models wi
 
 This block applies filters (based on latitude, depth, and year) to each observation, and creates the new variable `split_mendocino` that already exists in the prediction dataframe.
 
-```{r, eval=FALSE, echo=TRUE}
-data <- configuration_to_run |>
-  # Row by row ... do stuff then ungroup
-  dplyr::rowwise() |>
-  # Pull the data based on the function found in fxn column
-  dplyr::mutate(
-    data_raw = list(format_data(eval(parse(text = fxn)))),
-    data_filtered = list(data_raw |>
-      dplyr::filter(
-        depth <= min_depth, depth >= max_depth,
-        latitude >= min_latitude, latitude <= max_latitude,
-        year >= min_year, year <= max_year
+```{r, eval=TRUE, echo=TRUE}
+data("yellowtail")
+
+data <- yellowtail |>
+  dplyr::filter(
+        depth <= configuration_to_run$min_depth, 
+        depth >= configuration_to_run$max_depth,
+        latitude >= configuration_to_run$min_latitude, 
+        latitude <= configuration_to_run$max_latitude,
+        year >= configuration_to_run$min_year, 
+        year <= configuration_to_run$max_year
       ) |>
-      dplyr::mutate(split_mendocino = ifelse(latitude > 40.1666667, "N", "S")))
-  ) |>
+      dplyr::mutate(split_mendocino = ifelse(latitude > 40.1666667, "N", "S")) |>
   dplyr::ungroup()
 ```
 
 Yellowtail rockfish occur more north of Cape Mendocino, and as a check we can see if there's any years with no positive catches. This filtering shows that no positive catches exist for 2007.
 
-```{r, eval=FALSE, echo=TRUE}
-dplyr::filter(data$data_filtered[[1]]) |>
+```{r, eval=TRUE, echo=TRUE}
+dplyr::filter(data) |>
   dplyr::group_by(split_mendocino, year) |>
   dplyr::summarise(sum_catch_weight = sum(catch_weight)) |>
   dplyr::filter(sum_catch_weight == 0)
@@ -115,10 +114,10 @@ This is a problem because if we try to estimate the `fyear:split_mendocino` inte
 
 As a first step, we'll summarize the names of all main effect coefficients in our model. We use `lm()` to do this for simplicity, but other approaches could also be used.
 
-```{r, eval=FALSE, echo=TRUE}
+```{r, eval=TRUE, echo=TRUE}
 lm <- lm(
   formula = as.formula(configuration_to_run$formula),
-  data = data$data_filtered[[1]]
+  data = data
 )
 
 coef_names <- names(coef(lm))
@@ -128,17 +127,17 @@ print(coef_names)
 
 All of the coefficients from the presence - absence model look to be identifiable
 
-```{r, eval=FALSE, echo=TRUE}
+```{r, eval=TRUE, echo=TRUE}
 pres_not_identifiable <- names(which(is.na(coef(lm))))
 print(pres_not_identifiable)
 ```
 
 To identify the labels of the coefficients from the positive model that are not estimable, we can re-fit the regression, using only positive observations. 
 
-```{r, eval=FALSE, echo=TRUE}
+```{r, eval=TRUE, echo=TRUE}
 lm_pos <- lm(
   formula = as.formula(configuration_to_run$formula),
-  data = dplyr::filter(data$data_filtered[[1]], catch_weight > 0)
+  data = dplyr::filter(data, catch_weight > 0)
 )
 
 pos_not_identifiable <- names(which(is.na(coef(lm_pos))))
@@ -147,7 +146,7 @@ print(pos_not_identifiable)
 
 Finally, we can create some mapping variables to be passed to `sdmTMB`. We'll do this separately for the presence-absence and positive models.
 
-```{r, eval=FALSE, echo=TRUE}
+```{r, eval=TRUE, echo=TRUE}
 map_pres <- coef_names
 map_pres[coef_names %in% pres_not_identifiable] <- NA
 map_pres <- factor(map_pres)
@@ -159,7 +158,7 @@ map_pos <- factor(map_pos)
 
 Along with these mapping vectors, we'll create vectors of starting values (arbitrarily assigning -20 to values that are not estimable)
 
-```{r, eval=FALSE, echo=TRUE}
+```{r, eval=TRUE, echo=TRUE}
 start_pres <- rep(0, length(coef_names))
 start_pres[coef_names %in% pres_not_identifiable] <- -20
 
@@ -173,41 +172,21 @@ Now we can use the `indexwc` package to fit the model. The `indexwc` package act
 
 This code is optimized to fit multiple models (across stocks / species, or model configurations). In our case, the configurations dataframe has 1 row -- but this could include multiple rows. A key point to highlight is that in this code, we use `sdmTMBcontrol()` to pass in a list that contains the variables above we use to map off and initialize the parameters. For datasets without missing values, you may not want to include this `sdmTMBcontrol()` line, but it may be useful to adjust the `newton_loops`, etc.
 
-Note: this code will fit a single model for each row. 
+```{r, eval=TRUE, echo=TRUE}
+family_obj <- eval(rlang::parse_expr(configuration_to_run$family))
 
-```{r, eval=FALSE, echo=TRUE}
-best <- data |>
-  dplyr::mutate(
-    # Evaluate the call in family
-    family = purrr::map(family, .f = ~ eval(parse(text = .x))),
-    # Run the model on each row in data
-    results = purrr::pmap(
-      .l = list(
-        data = data_filtered,
-        formula = formula,
-        family = family,
-        anisotropy = anisotropy,
-        n_knots = knots,
-        share_range = share_range,
-        spatiotemporal = purrr::map2(spatiotemporal1, spatiotemporal2, list),
-        sdmtmb_control = list(
-          sdmTMB::sdmTMBcontrol(
-            map = list(b_j = map_pos, b_j2 = map_pos),
-            start = list(b_j = start_pos, b_j2 = start_pos),
-            newton_loops = 1 # increase for real models
-          )
-        )
-      ),
-      .f = indexwc::run_sdmtmb
-    )
+fit <- run_sdmtmb(
+  dir_main = NULL,
+  data,
+  family = family_obj,
+  formula = configuration_to_run$formula,
+  n_knots = configuration_to_run$knots,
+  share_range = configuration_to_run$share_range,
+  sdmtmb_control = sdmTMB::sdmTMBcontrol(
+    map = list(b_j = map_pres,
+               b_j2 = map_pos),
+    start = list(b_j = start_pres, b_j2 = start_pos),
+    newton_loops = 1
   )
+)
 ```
-
-### Examining the index and diagnostics
-
-Output and diagnostics for all models and predictions are stored in a folder that `indexwc` creates; it's location is "yellowtail_rockfish/wcgbts/delta_gamma..". The "index" folder contains  diagnostics and predictions for 10 sets of indices. These 10 indices represent (1) N/S of Cape Mendocino, (2) N/S of Monterrey, (3) N/S of Pt Conception, a coastwide index, and state-specific indices. For multi-region models, like the yellowtail rockfish used here, it wouldn't make sense to interpret indices other than the split used in the model (here, N/S of Cape Mendocino) and the coastwide index. 
-
-```{r, eval=FALSE, echo = FALSE}
-knitr::include_graphics(system.file("all_yellowtail_indices.png", package = "indexwc"))
-```
-

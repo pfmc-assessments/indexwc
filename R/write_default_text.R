@@ -1,4 +1,4 @@
-#' Write default text describing the index standardizations run from the {indexwc} package
+#' Write default text describing the index standardizations run from the \pkg{indexwc} package
 #'
 #' Writes both a markdown (.md) file which can be copied into an Quarto assessment report as
 #' well as the PDF showing the formatted text. Relies on `inst/default_text.Rmd` and

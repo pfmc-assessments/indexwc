@@ -1,0 +1,287 @@
+---
+title: "Coastwide indices"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Coastwide indices}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  comment = "#>"
+)
+options(repos = c(CRAN = "https://cloud.r-project.org"))
+```
+
+## Overview
+
+This vignette highlights the ability to generate coastwide indices for stocks using the `indexwc` package.
+
+## Yellowtail rockfish example
+
+As a case study, we'll focus on yellowtail rockfish. The package includes `yellowtail`, which is the yellowtail data from the WCGBTS 2003 -- 2023.
+
+```{r, eval=TRUE, echo=TRUE}
+library(dplyr)
+library(indexwc)
+library(purrr)
+library(sdmTMB)
+library(tibble)
+options(repos = c(CRAN = "https://cloud.r-project.org"))
+```
+
+First we'll load in the configuration file. This step is not needed -- and the formulas, etc. may be specified from scratch, but this file is used to keep models reproducible across assessment cycles. The configuration file brings in specific settings by survey and species that are used to subset the data and define the parameterization of the index estimation.  This file is included as both an `rda` file that is loaded with the package but is also available for users who download the source code in the `data-raw` folder (download the package to see this). 
+
+```{r, eval=TRUE, echo=TRUE}
+# Load from the rda file
+configuration_ytk <- configuration |>
+  dplyr::filter(species == "yellowtail rockfish")
+```
+
+The configuration file contains settings you may wish to change, including attributes of filters (years, latitudes, depths), and model components (anisotropy, knots, spatiotemporal effects, etc).
+
+The configuration includes multiple entries for a single species for separate surveys and error distributions (e.g., delta-lognormal, delta-gamma, etc.).
+
+In this example, we are going to only run a single-index for the Northwest Fisheries Science Center (NWFSC) West Coast Groundfish Bottom Trawl (WCGBT) survey (i.e., also referred to as the "NWFSC.Combo" survey in the data NWFSC data warehouse, or R package nwfscSurvey).
+
+```{r showmodels, eval=TRUE, echo=TRUE}
+configuration_ytk_wcgbt <- configuration_ytk |>
+  dplyr::filter(source == "NWFSC.Combo" & family == "sdmTMB::delta_gamma()")
+```
+
+### Statistical model
+
+For most indices developed on the west coast of the USA, the main formula is usually something similar to the following, where `fyear` represents a fixed year effect, and `pass_scaled` is factor describing whether the haul is part of pass 1 (early season) or pass 2 (late season).
+
+There are two unique index formula's available for yellowtail rockfish:
+
+```{r printform, eval=TRUE, echo=TRUE}
+configuration_ytk_wcgbt[, "formula"]
+```
+
+we are going to use the default configuration.  Please see the vignette on multiple area indices for an example run with the other formulation available for yellowtail rockfish. 
+
+```{r filterform, eval=TRUE, echo=TRUE}
+configuration_to_run <- configuration_ytk_wcgbt |>
+  dplyr::filter(
+    formula == "catch_weight ~ 0 + fyear + pass_scaled"
+  )
+```
+
+### Preparing the data
+
+This block pulls trawl survey from the NWFSC data warehouse and applies filters (based on latitude, depth, and year) to each observation.
+
+```{r filterdata, eval=TRUE, echo=TRUE}
+data("yellowtail")
+
+data <- yellowtail |>
+  dplyr::filter(
+        depth <= configuration_to_run$min_depth, 
+        depth >= configuration_to_run$max_depth,
+        latitude >= configuration_to_run$min_latitude, 
+        latitude <= configuration_to_run$max_latitude,
+        year >= configuration_to_run$min_year, 
+        year <= configuration_to_run$max_year
+      )
+```
+
+The filtered data has several thousand less rows than the raw data. 
+
+### Fitting the model with indexwc and sdmTMB
+
+Now we can use the `indexwc` package to fit the model. The `indexwc` package acts as a wrapper for `sdmTMB` here, combining the estimation process (`sdmTMB()`) with the index generation (`get_index()`).
+
+A key point to highlight is that in this code, we use `sdmTMBcontrol()` to pass in a list that contains the variables above we use to map off and initialize the parameters. For datasets without missing values, you may not want to include this `sdmTMBcontrol()` line, but it may be useful to adjust the `newton_loops`, etc.
+
+```{r fitmodel, eval=FALSE, echo=TRUE}
+# the character string needs to be parsed before used as input
+family_obj <- eval(rlang::parse_expr(configuration_to_run$family))
+
+fit <- run_sdmtmb(dir_main = NULL,
+                       data,
+                       family = family_obj,
+                       formula = configuration_to_run$formula,
+                       n_knots = configuration_to_run$knots,
+                       share_range = configuration_to_run$share_range,
+                  sdmtmb_control = sdmTMB::sdmTMBcontrol(newton_loops = 3))
+```
+In the above example, `dir` is specified to be NULL, so the fitted object will be returned. But if this is a directory name, it will be created and used to save data and the model fit.
+
+### Examining diagnostics
+
+All diagnostics and plots are generated by the `diagnose()` function. This function takes a fitted object and prediction grid as input, and optionally a directory name (`dir`) for saving results to.
+
+For simplicity and speed, we can change simplify our previous yellowtail model to be spatial only.
+
+```{r fit-simple, eval=TRUE, echo=TRUE}
+family_obj <- eval(rlang::parse_expr(configuration_to_run$family))
+
+fit_simple <- run_sdmtmb(
+  dir_main = NULL,
+  data,
+  family = family_obj,
+  formula = configuration_to_run$formula,
+  n_knots = configuration_to_run$knots,
+  share_range = configuration_to_run$share_range,
+  spatial = "off",
+  spatiotemporal = "off",
+  sdmtmb_control = sdmTMB::sdmTMBcontrol(newton_loops = 1)
+)
+```
+
+Next, we can run the diagnostics with the California Current prediction grid
+
+```{r diagnose, eval=TRUE, echo=TRUE}
+pred_grid <- sdmTMB::replicate_df(california_current_grid, 
+                                  time_name = "year", 
+                                  time_values = unique(data$year))
+pred_grid$fyear <- as.factor(pred_grid$year)
+
+diagnostics <- diagnose(dir = NULL,
+                        fit = fit_simple,
+                        prediction_grid = pred_grid)
+```
+
+If `dir` is specified, output and diagnostics for all models and predictions are stored in a folder that `indexwc` creates. If no directory is specified `diagnose(dir = NULL,...)` then named list is returned. Stepping through what elements are output:
+
+The `sdmTMB::sanity()` checks can be accessed with 
+```{r sanity, eval=TRUE, echo=TRUE}
+diagnostics$sanity
+```
+
+The model is returned with 
+```{r diagmodel, eval=TRUE, echo=TRUE}
+diagnostics$model
+```
+
+The formula is returned with 
+```{r diagformula, eval=TRUE, echo=TRUE}
+diagnostics$formula
+```
+
+The log-likelihood and AIC are returned with 
+```{r diagaic, eval=TRUE, echo=TRUE}
+diagnostics$loglike
+diagnostics$aic
+```
+
+A tibble with fixed and random effects (with standard error and confidence intervals) is returned with
+
+```{r diageffects, eval=TRUE, echo=TRUE}
+diagnostics$effects
+```
+
+The SPDE mesh plot can be accessed with
+```{r diagmesh, eval=TRUE, echo=TRUE}
+diagnostics$mesh_plot
+```
+
+The QQ plot (appearing as a single plot when a non-delta family is used, or 2 plots when a delta family is used) is accessed with 
+
+```{r diagqq, eval=TRUE, echo=TRUE}
+diagnostics$qq_plot
+```
+
+When anisotropy is not included (as in our model) no plot is available, but when included it can be seen by accessing 
+
+```{r diaganiso, eval=TRUE, echo=TRUE}
+diagnostics$anisotropy_plot
+```
+
+A plot of the fixed effects parameters can be accessed with 
+
+```{r diagfixed, eval=TRUE, echo=TRUE}
+diagnostics$fixed_effects_plot
+```
+
+Density plots are made separately for each year, and stored 2 per page in a list of lists. They can be accessed with
+
+```{r diagdensity, eval=TRUE, echo=TRUE}
+diagnostics$density_plots[[10]]
+```
+
+Maps are also made of the residuals. Accessing these can be a little funny, but is done with pagination
+
+```{r diagresidmaps, eval=TRUE, echo=TRUE}
+plot1 <- diagnostics$residual_maps_by_year[[1]]
+
+ggforce::n_pages(plot1) # check number of pages
+# View page 2
+print(plot1 + ggforce::facet_wrap_paginate("year", nrow = 1, ncol = 2, page = 2))
+```
+
+For reproducibility, the diagnostics list also includes a time stamp 
+
+```{r diagdate, eval=TRUE, echo=TRUE}
+diagnostics$date
+```
+
+and the session info with 
+
+```{r diagsession, eval=TRUE}
+diagnostics$session_info
+```
+
+The original data is returned (with residual values added) as 
+
+```{r eval=TRUE}
+diagnostics$data_with_residuals
+```
+
+Finally, predictions on the survey grid (or other data passed in) are stored in a dataframe 
+
+```{r diagpred, eval=TRUE}
+diagnostics$predictions
+```
+
+### Calculating indices
+
+Last, we can use the `calc_index_areas` function to calculate indices, with associated uncertainty. We can calculate areas for any region in the following list:
+
+```{r diagareas, eval=TRUE, echo=TRUE}
+available_areas()
+```
+
+By default, the Coastwide index and 3 state indices are generated, but these indices may be calculated simultaneously (note: there is not really a speed up of doing several at the same time, because they are done sequentially). Again we'll leave the 'dir' argument set to NULL and return everything
+
+```{r diagindex, eval=TRUE, echo=TRUE}
+index <- calc_index_areas(
+  data=fit_simple$data, 
+  fit = fit_simple, 
+  prediction_grid=pred_grid,
+  boundaries = c("Coastwide"),
+  dir = NULL)
+
+```
+
+The indices may be visualized by extracting the time series plot
+
+```{r diagindexplot, eval=TRUE, echo=TRUE}
+index$plot_indices
+```
+
+or more custom code could be used to make a plot based off of 
+
+```{r diagprintindices, eval=TRUE, echo=TRUE}
+index$indices
+```
+
+## Saving output
+
+As demonstrated above, there are a lot of plots and diagnostics that can be inspected, and in many cases we might want to save everything. The `save_index_outputs` function in `indexwc` will write everything locally (for the directory structure, see `?save_index_outputs`)
+
+```{r echo=TRUE, eval=FALSE}
+save_index_outputs(
+  fit = fit_simple,
+  diagnostics = diagnostics,
+  indices = index,
+  dir_main = paste0(getwd(), "/yellowtail_example")
+)
+```
+

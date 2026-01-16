@@ -24,7 +24,7 @@ A data frame with all lower case column names.
 \item \code{effort} ($km^2$)
 \item \code{pass_scaled} after subtracting the mean
 \item \code{vessel_year} pasted together, made numeric, and subtract 1
-\item \code{fyear} the factor version of \code{year} to match notation used in {sdmTMB}
+\item \code{fyear} the factor version of \code{year} to match notation used in \pkg{sdmTMB}
 \item \code{longitude} (decimal degrees)
 \item \code{latitude} (decimal degrees)
 \item \code{x} and \code{y} are in Universal Transverse Mercator (UTM)
@@ -44,6 +44,7 @@ work detect what kind of data you have and then format it appropriately to
 work with all downstream functions within this package.
 }
 \examples{
+\dontrun{
 catch_wcgbts_canary <- nwfscSurvey::pull_catch(
   common_name = "canary rockfish",
   years = 2021:2022,
@@ -52,6 +53,7 @@ catch_wcgbts_canary <- nwfscSurvey::pull_catch(
 # Must assign the data a class so {indexwc} knows how to format it
 class(catch_wcgbts_canary) <- c("nwfscSurvey", class(catch_wcgbts_canary))
 formatted_data <- format_data(data = catch_wcgbts_canary)
+}
 }
 \author{
 Chantel R. Wetzel and Kelli F. Johnson

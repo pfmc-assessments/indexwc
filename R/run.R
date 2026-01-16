@@ -10,7 +10,7 @@
 #' @param n_knots The number of knots to specify for the SPDE mesh
 #' @param ... Extra arguments
 #' @return
-#' A `list` of {sdmTMB} `list`s, where each element in the list is the returned
+#' A `list` of \pkg{sdmTMB} `list`s, where each element in the list is the returned
 #' object from [sdmTMB::sdmTMB()] when fitting data to a model and of the class
 #' `sdmTMB`. The list of lists is because [purrr::map2()] is used to split the
 #' input data by species and survey/source in case your data contain

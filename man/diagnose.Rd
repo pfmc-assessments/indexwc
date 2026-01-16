@@ -2,32 +2,88 @@
 % Please edit documentation in R/diagnose.R
 \name{diagnose}
 \alias{diagnose}
-\title{Retrieve model estimates and plot diagnostics}
+\title{Summarize model estimates and plot diagnostics}
 \usage{
-diagnose(dir, fit, prediction_grid)
+diagnose(dir, fit, prediction_grid = NULL)
 }
 \arguments{
-\item{dir}{A directory location where results and figures will be saved.}
+\item{dir}{Directory path where results will be saved. If \code{NULL},
+results are only returned as a list (not saved to disk).}
 
-\item{fit}{List created by the sdmTMB:: fit function.}
+\item{fit}{An object of class \code{sdmTMB} returned by \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}}.}
 
 \item{prediction_grid}{The prediction grid for the survey that sdmTMB will
-use to make model predictions to.}
+use to make model predictions to. Should not be NULL}
+}
+\value{
+A list containing
+\itemize{
+\item \code{sanity} - Sanity check results as list
+\item \code{model} - The model family name
+\item \code{formula} - The model formula
+\item \code{loglike} - The log-likelihood value
+\item \code{aic} - The AIC value
+\item \code{effects} - A data frame of fixed and random effects, with confidence intervals
+\item \code{qq_plot} - QQ plot ggplot object
+\item \code{residual_maps} - List of residual map ggplot objects (one per model component for delta models)
+\item \code{anisotropy_plot} - Anisotropy plot ggplot object
+\item \code{fixed_effects_plot} - Fixed effects plot ggplot object
+\item \code{density_plot} - Density plots ggplot object
+\item \code{predictions} - Prediction data from the grid (as data frame)
+\item \code{data_with_residuals} - Original data with residuals added (data frame)
+\item \code{date} - Date diagnostics were run (Date)
+\item \code{session_info} - R session information for reproducibility
+}
 }
 \description{
-Retrieve model estimates and plot diagnostics
+Summarize model estimates and plot diagnostics
 }
-\details{
-Parameter definitions:
+\examples{
+\dontrun{
+# Fit a model
+fit <- run_sdmtmb(
+  data = data_formatted,
+  family = sdmTMB::delta_gamma(),
+  formula = catch_weight ~ 0 + fyear + depth_scaled + depth_scaled_squared
+)
+
+# Run diagnostics without saving
+diag <- diagnose_model(
+  fit = fit,
+  prediction_grid = my_grid,
+  dir = NULL
+)
+
+# Access diagnostic values
+diag$aic                    # AIC value
+diag$loglike                # Log-likelihood
+diag$sanity                 # Sanity check data frame
+head(diag$effects)          # Effects table
+
+# View plots
+print(diag$qq_plot)         # QQ plot
+print(diag$anisotropy_plot) # Anisotropy
+print(diag$residual_maps[[1]])  # Residuals model 1
+if (length(diag$residual_maps) > 1) {
+  print(diag$residual_maps[[2]])  # Residuals model 2 (delta)
+}
+print(diag$fixed_effects_plot)  # Fixed effects over time
+print(diag$density_plot)        # Density maps
+
+# Access data
+head(diag$predictions)       # Predictions on grid
+head(diag$data_with_residuals)  # Data with residuals
+
+# Session information
+diag$date                    # When diagnostics were run
+diag$session_info            # Full session info
+
+}
+}
+\seealso{
 \itemize{
-\item Range: A derived parameter that defines the distance at which two
-points are effectively independent (actually about 13\% correlated).
-If the share_range argument is changed to FALSE then the spatial
-and spatiotemporal ranges will be unique, otherwise the default is
-for both to share the same range.
-\item Phi: Observation error scale parameter (e.g., SD in Gaussian).
-\item sigma_O: Standard deviation of the spatial process ("Omega").
-\item sigma_E: Standard deviation of the spatiotemporal process ("Epsilon").
+\item \code{\link[=run_sdmtmb]{run_sdmtmb()}}, fit the model first
+\item \code{\link[=calc_index_areas]{calc_index_areas()}}, calculate indices after diagnosing
 }
 }
 \author{
