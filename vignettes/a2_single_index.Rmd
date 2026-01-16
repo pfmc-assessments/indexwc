@@ -82,13 +82,13 @@ data("yellowtail")
 
 data <- yellowtail |>
   dplyr::filter(
-        depth <= configuration_to_run$min_depth, 
-        depth >= configuration_to_run$max_depth,
-        latitude >= configuration_to_run$min_latitude, 
-        latitude <= configuration_to_run$max_latitude,
-        year >= configuration_to_run$min_year, 
-        year <= configuration_to_run$max_year
-      )
+    depth <= configuration_to_run$min_depth,
+    depth >= configuration_to_run$max_depth,
+    latitude >= configuration_to_run$min_latitude,
+    latitude <= configuration_to_run$max_latitude,
+    year >= configuration_to_run$min_year,
+    year <= configuration_to_run$max_year
+  )
 ```
 
 The filtered data has several thousand less rows than the raw data. 
@@ -103,13 +103,15 @@ A key point to highlight is that in this code, we use `sdmTMBcontrol()` to pass 
 # the character string needs to be parsed before used as input
 family_obj <- eval(rlang::parse_expr(configuration_to_run$family))
 
-fit <- run_sdmtmb(dir_main = NULL,
-                       data,
-                       family = family_obj,
-                       formula = configuration_to_run$formula,
-                       n_knots = configuration_to_run$knots,
-                       share_range = configuration_to_run$share_range,
-                  sdmtmb_control = sdmTMB::sdmTMBcontrol(newton_loops = 3))
+fit <- run_sdmtmb(
+  dir_main = NULL,
+  data,
+  family = family_obj,
+  formula = configuration_to_run$formula,
+  n_knots = configuration_to_run$knots,
+  share_range = configuration_to_run$share_range,
+  sdmtmb_control = sdmTMB::sdmTMBcontrol(newton_loops = 3)
+)
 ```
 In the above example, `dir` is specified to be NULL, so the fitted object will be returned. But if this is a directory name, it will be created and used to save data and the model fit.
 
@@ -138,14 +140,17 @@ fit_simple <- run_sdmtmb(
 Next, we can run the diagnostics with the California Current prediction grid
 
 ```{r diagnose, eval=TRUE, echo=TRUE}
-pred_grid <- sdmTMB::replicate_df(california_current_grid, 
-                                  time_name = "year", 
-                                  time_values = unique(data$year))
+pred_grid <- sdmTMB::replicate_df(california_current_grid,
+  time_name = "year",
+  time_values = unique(data$year)
+)
 pred_grid$fyear <- as.factor(pred_grid$year)
 
-diagnostics <- diagnose(dir = NULL,
-                        fit = fit_simple,
-                        prediction_grid = pred_grid)
+diagnostics <- diagnose(
+  dir = NULL,
+  fit = fit_simple,
+  prediction_grid = pred_grid
+)
 ```
 
 If `dir` is specified, output and diagnostics for all models and predictions are stored in a folder that `indexwc` creates. If no directory is specified `diagnose(dir = NULL,...)` then named list is returned. Stepping through what elements are output:
@@ -252,12 +257,12 @@ By default, the Coastwide index and 3 state indices are generated, but these ind
 
 ```{r diagindex, eval=TRUE, echo=TRUE}
 index <- calc_index_areas(
-  data=fit_simple$data, 
-  fit = fit_simple, 
-  prediction_grid=pred_grid,
+  data = fit_simple$data,
+  fit = fit_simple,
+  prediction_grid = pred_grid,
   boundaries = c("Coastwide"),
-  dir = NULL)
-
+  dir = NULL
+)
 ```
 
 The indices may be visualized by extracting the time series plot

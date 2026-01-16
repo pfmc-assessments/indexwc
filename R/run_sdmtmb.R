@@ -75,7 +75,7 @@ run_sdmtmb <- function(dir_main = getwd(),
       colnames(data)
   ))
   # Create directory structure
-  if(!is.null(dir_main)) {
+  if (!is.null(dir_main)) {
     dir_new <- data |>
       dplyr::group_by(.data$survey_name, .data$common_name) |>
       dplyr::count() |>
@@ -148,7 +148,7 @@ run_sdmtmb <- function(dir_main = getwd(),
     fit <- sdmTMB::run_extra_optimization(fit)
   }
   # Save model output
-  if(!is.null(dir_main)) {
+  if (!is.null(dir_main)) {
     saveRDS(fit, file = fs::path(dir_data, "fit.rds"))
   }
   # Attach mesh for downstream use

@@ -55,29 +55,28 @@ diag <- diagnose_model(
 )
 
 # Access diagnostic values
-diag$aic                    # AIC value
-diag$loglike                # Log-likelihood
-diag$sanity                 # Sanity check data frame
-head(diag$effects)          # Effects table
+diag$aic # AIC value
+diag$loglike # Log-likelihood
+diag$sanity # Sanity check data frame
+head(diag$effects) # Effects table
 
 # View plots
-print(diag$qq_plot)         # QQ plot
+print(diag$qq_plot) # QQ plot
 print(diag$anisotropy_plot) # Anisotropy
-print(diag$residual_maps[[1]])  # Residuals model 1
+print(diag$residual_maps[[1]]) # Residuals model 1
 if (length(diag$residual_maps) > 1) {
-  print(diag$residual_maps[[2]])  # Residuals model 2 (delta)
+  print(diag$residual_maps[[2]]) # Residuals model 2 (delta)
 }
-print(diag$fixed_effects_plot)  # Fixed effects over time
-print(diag$density_plot)        # Density maps
+print(diag$fixed_effects_plot) # Fixed effects over time
+print(diag$density_plot) # Density maps
 
 # Access data
-head(diag$predictions)       # Predictions on grid
-head(diag$data_with_residuals)  # Data with residuals
+head(diag$predictions) # Predictions on grid
+head(diag$data_with_residuals) # Data with residuals
 
 # Session information
-diag$date                    # When diagnostics were run
-diag$session_info            # Full session info
-
+diag$date # When diagnostics were run
+diag$session_info # Full session info
 }
 }
 \seealso{
