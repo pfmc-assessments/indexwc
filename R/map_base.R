@@ -19,16 +19,17 @@ map_base <- function(x_min = -155,
                      x_max = -115,
                      y_min = 20,
                      y_max = 48) {
-  map_data <- rnaturalearth::ne_countries(
-    scale = "medium",
-    returnclass = "sf",
-    country = "united states of america"
-  )
+  # map_data <- rnaturalearth::ne_countries(
+  #   scale = "medium",
+  #   returnclass = "sf",
+  #   country = "united states of america"
+  # )
+
   # Crop the polygon for plotting and efficiency:
   # sf::st_bbox(map_data) to find the rough coordinates
   coast <- suppressWarnings(suppressMessages(
     sf::st_crop(
-      map_data,
+      mapdata,
       c(xmin = x_min, ymin = y_min, xmax = x_max, ymax = y_max)
     )
   ))

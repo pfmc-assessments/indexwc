@@ -42,7 +42,6 @@ Imports:
     raster,
     rlang,
     rmarkdown,
-    rnaturalearth,
     sdmTMB (>= 0.6.0),
     sf,
     tibble,

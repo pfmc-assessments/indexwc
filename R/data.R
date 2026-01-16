@@ -59,3 +59,13 @@
 #'
 #' @format A data frame
 "yellowtail"
+
+#' Mapping data from rnaturalearth
+#'
+#' This data object represents the output of a call to rnaturalearth using
+#' mapdata <- rnaturalearth::ne_countries(scale = "medium",
+#' returnclass = "sf", country = "united states of america") and is included
+#' here to avoid dependencies on rnaturalearth
+#'
+#' @format Class is sf and data.frame
+"mapdata"
