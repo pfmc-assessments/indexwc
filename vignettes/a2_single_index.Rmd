@@ -122,15 +122,17 @@ For simplicity and speed, we can change simplify our previous yellowtail model t
 ```{r fit-simple, eval=TRUE, echo=TRUE}
 family_obj <- eval(rlang::parse_expr(configuration_to_run$family))
 
-fit_simple <- run_sdmtmb(dir_main = NULL,
-                       data,
-                       family = family_obj,
-                       formula = configuration_to_run$formula,
-                       n_knots = configuration_to_run$knots,
-                       share_range = configuration_to_run$share_range,
-                       spatial = "off",
-                       spatiotemporal = "off",
-                  sdmtmb_control = sdmTMB::sdmTMBcontrol(newton_loops = 1))
+fit_simple <- run_sdmtmb(
+  dir_main = NULL,
+  data,
+  family = family_obj,
+  formula = configuration_to_run$formula,
+  n_knots = configuration_to_run$knots,
+  share_range = configuration_to_run$share_range,
+  spatial = "off",
+  spatiotemporal = "off",
+  sdmtmb_control = sdmTMB::sdmTMBcontrol(newton_loops = 1)
+)
 ```
 
 Next, we can run the diagnostics with the California Current prediction grid
