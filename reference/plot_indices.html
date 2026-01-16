@@ -32,13 +32,13 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
-      <a href="../articles/a1_single_index.html">Coastwide indices</a>
+      <a href="../articles/a1_configuration.html">Configuration File</a>
     </li>
     <li>
-      <a href="../articles/a2_multiple_area_indices.html">Index example with multiple areas</a>
+      <a href="../articles/a2_single_index.html">Coastwide indices</a>
     </li>
     <li>
-      <a href="../articles/configuration.html">Configuration File</a>
+      <a href="../articles/a3_multiple_area_indices.html">Index example with multiple areas</a>
     </li>
   </ul></li>
       </ul><ul class="nav navbar-nav navbar-right"><li>
@@ -88,12 +88,13 @@ are plotted in the order that you desire.</p></dd>
 
 <dt id="arg-save-loc">save_loc<a class="anchor" aria-label="anchor" href="#arg-save-loc"></a></dt>
 <dd><p>A string providing the location of the directory you wish to
-save the png file to. The default is your current working directory.</p></dd>
+save the png file to. The default is your current working directory, and if
+<code>NULL</code> no directory will be created</p></dd>
 
 
 <dt id="arg-file-name">file_name<a class="anchor" aria-label="anchor" href="#arg-file-name"></a></dt>
 <dd><p>A string giving the file name. The default is
-<code>"index.png"</code>.</p></dd>
+<code>"index.png"</code>. If NULL, the file is not written but the ggplot object is returned</p></dd>
 
 
 <dt id="arg-legend-loc">legend_loc<a class="anchor" aria-label="anchor" href="#arg-legend-loc"></a></dt>

@@ -49,13 +49,13 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/a1_single_index.html">Coastwide indices</a>
+      <a href="../articles/a1_configuration.html">Configuration File</a>
     </li>
     <li>
-      <a href="../articles/a2_multiple_area_indices.html">Index example with multiple areas</a>
+      <a href="../articles/a2_single_index.html">Coastwide indices</a>
     </li>
     <li>
-      <a href="../articles/configuration.html">Configuration File</a>
+      <a href="../articles/a3_multiple_area_indices.html">Index example with multiple areas</a>
     </li>
   </ul>
 </li>
@@ -82,10 +82,10 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Index example with multiple areas</h1>
             
-            <h4 data-toc-skip class="date">2026-01-14</h4>
+            <h4 data-toc-skip class="date">2026-01-16</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/pfmc-assessments/indexwc/blob/main/vignettes/a2_multiple_area_indices.Rmd" class="external-link"><code>vignettes/a2_multiple_area_indices.Rmd</code></a></small>
-      <div class="hidden name"><code>a2_multiple_area_indices.Rmd</code></div>
+      <small class="dont-index">Source: <a href="https://github.com/pfmc-assessments/indexwc/blob/main/vignettes/a3_multiple_area_indices.Rmd" class="external-link"><code>vignettes/a3_multiple_area_indices.Rmd</code></a></small>
+      <div class="hidden name"><code>a3_multiple_area_indices.Rmd</code></div>
 
     </div>
 
@@ -143,7 +143,8 @@ formula is usually something similar to the following, where
 of pass 1 (early season) or pass 2 (late season). There are two unique
 index formula’s available for yellowtail rockfish:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">configuration_ytk_wcgbt</span><span class="op">[</span>, <span class="st">"formula"</span><span class="op">]</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">configuration_ytk_wcgbt</span><span class="op">[</span>, <span class="st">"formula"</span><span class="op">]</span></span>
+<span><span class="co">#&gt; [1] "catch_weight ~ 0 + fyear*split_mendocino + pass_scaled"</span></span></code></pre></div>
 <p>we are going to use the formula with an area based term. Please see
 the vignette on single area indices for an example run with the other
 formulation available for yellowtail rockfish.</p>
@@ -180,29 +181,32 @@ each observation, and creates the new variable
 <code>split_mendocino</code> that already exists in the prediction
 dataframe.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="va">configuration_to_run</span> <span class="op">|&gt;</span></span>
-<span>  <span class="co"># Row by row ... do stuff then ungroup</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rowwise.html" class="external-link">rowwise</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="co"># Pull the data based on the function found in fxn column</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
-<span>    data_raw <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="../reference/format_data.html">format_data</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/eval.html" class="external-link">eval</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/parse.html" class="external-link">parse</a></span><span class="op">(</span>text <span class="op">=</span> <span class="va">fxn</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>    data_filtered <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">data_raw</span> <span class="op">|&gt;</span></span>
-<span>      <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span></span>
-<span>        <span class="va">depth</span> <span class="op">&lt;=</span> <span class="va">min_depth</span>, <span class="va">depth</span> <span class="op">&gt;=</span> <span class="va">max_depth</span>,</span>
-<span>        <span class="va">latitude</span> <span class="op">&gt;=</span> <span class="va">min_latitude</span>, <span class="va">latitude</span> <span class="op">&lt;=</span> <span class="va">max_latitude</span>,</span>
-<span>        <span class="va">year</span> <span class="op">&gt;=</span> <span class="va">min_year</span>, <span class="va">year</span> <span class="op">&lt;=</span> <span class="va">max_year</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"yellowtail"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">data</span> <span class="op">&lt;-</span> <span class="va">yellowtail</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span></span>
+<span>        <span class="va">depth</span> <span class="op">&lt;=</span> <span class="va">configuration_to_run</span><span class="op">$</span><span class="va">min_depth</span>, </span>
+<span>        <span class="va">depth</span> <span class="op">&gt;=</span> <span class="va">configuration_to_run</span><span class="op">$</span><span class="va">max_depth</span>,</span>
+<span>        <span class="va">latitude</span> <span class="op">&gt;=</span> <span class="va">configuration_to_run</span><span class="op">$</span><span class="va">min_latitude</span>, </span>
+<span>        <span class="va">latitude</span> <span class="op">&lt;=</span> <span class="va">configuration_to_run</span><span class="op">$</span><span class="va">max_latitude</span>,</span>
+<span>        <span class="va">year</span> <span class="op">&gt;=</span> <span class="va">configuration_to_run</span><span class="op">$</span><span class="va">min_year</span>, </span>
+<span>        <span class="va">year</span> <span class="op">&lt;=</span> <span class="va">configuration_to_run</span><span class="op">$</span><span class="va">max_year</span></span>
 <span>      <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>      <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>split_mendocino <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">latitude</span> <span class="op">&gt;</span> <span class="fl">40.1666667</span>, <span class="st">"N"</span>, <span class="st">"S"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>      <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>split_mendocino <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">latitude</span> <span class="op">&gt;</span> <span class="fl">40.1666667</span>, <span class="st">"N"</span>, <span class="st">"S"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">ungroup</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>Yellowtail rockfish occur more north of Cape Mendocino, and as a
 check we can see if there’s any years with no positive catches. This
 filtering shows that no positive catches exist for 2007.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">data_filtered</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<code class="sourceCode R"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">split_mendocino</span>, <span class="va">year</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>sum_catch_weight <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">catch_weight</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">sum_catch_weight</span> <span class="op">==</span> <span class="fl">0</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">sum_catch_weight</span> <span class="op">==</span> <span class="fl">0</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 3</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># Groups:   split_mendocino [1]</span></span></span>
+<span><span class="co">#&gt;   split_mendocino  year sum_catch_weight</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> S                <span style="text-decoration: underline;">2</span>007                0</span></span></code></pre></div>
 <p>This is a problem because if we try to estimate the
 <code>fyear:split_mendocino</code> interaction, the coefficient will not
 be identifiable for 2007. This is not a unique problem for
@@ -216,28 +220,51 @@ simplicity, but other approaches could also be used.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">lm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span></span>
 <span>  formula <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/formula.html" class="external-link">as.formula</a></span><span class="op">(</span><span class="va">configuration_to_run</span><span class="op">$</span><span class="va">formula</span><span class="op">)</span>,</span>
-<span>  data <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">data_filtered</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
+<span>  data <span class="op">=</span> <span class="va">data</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">coef_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">lm</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">coef_names</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">coef_names</span><span class="op">)</span></span>
+<span><span class="co">#&gt;  [1] "fyear2003"                  "fyear2004"                 </span></span>
+<span><span class="co">#&gt;  [3] "fyear2005"                  "fyear2006"                 </span></span>
+<span><span class="co">#&gt;  [5] "fyear2007"                  "fyear2008"                 </span></span>
+<span><span class="co">#&gt;  [7] "fyear2009"                  "fyear2010"                 </span></span>
+<span><span class="co">#&gt;  [9] "fyear2011"                  "fyear2012"                 </span></span>
+<span><span class="co">#&gt; [11] "fyear2013"                  "fyear2014"                 </span></span>
+<span><span class="co">#&gt; [13] "fyear2015"                  "fyear2016"                 </span></span>
+<span><span class="co">#&gt; [15] "fyear2017"                  "fyear2018"                 </span></span>
+<span><span class="co">#&gt; [17] "fyear2019"                  "fyear2021"                 </span></span>
+<span><span class="co">#&gt; [19] "fyear2022"                  "fyear2023"                 </span></span>
+<span><span class="co">#&gt; [21] "split_mendocinoS"           "pass_scaled"               </span></span>
+<span><span class="co">#&gt; [23] "fyear2004:split_mendocinoS" "fyear2005:split_mendocinoS"</span></span>
+<span><span class="co">#&gt; [25] "fyear2006:split_mendocinoS" "fyear2007:split_mendocinoS"</span></span>
+<span><span class="co">#&gt; [27] "fyear2008:split_mendocinoS" "fyear2009:split_mendocinoS"</span></span>
+<span><span class="co">#&gt; [29] "fyear2010:split_mendocinoS" "fyear2011:split_mendocinoS"</span></span>
+<span><span class="co">#&gt; [31] "fyear2012:split_mendocinoS" "fyear2013:split_mendocinoS"</span></span>
+<span><span class="co">#&gt; [33] "fyear2014:split_mendocinoS" "fyear2015:split_mendocinoS"</span></span>
+<span><span class="co">#&gt; [35] "fyear2016:split_mendocinoS" "fyear2017:split_mendocinoS"</span></span>
+<span><span class="co">#&gt; [37] "fyear2018:split_mendocinoS" "fyear2019:split_mendocinoS"</span></span>
+<span><span class="co">#&gt; [39] "fyear2021:split_mendocinoS" "fyear2022:split_mendocinoS"</span></span>
+<span><span class="co">#&gt; [41] "fyear2023:split_mendocinoS"</span></span></code></pre></div>
 <p>All of the coefficients from the presence - absence model look to be
 identifiable</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pres_not_identifiable</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">lm</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">pres_not_identifiable</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">pres_not_identifiable</span><span class="op">)</span></span>
+<span><span class="co">#&gt; character(0)</span></span></code></pre></div>
 <p>To identify the labels of the coefficients from the positive model
 that are not estimable, we can re-fit the regression, using only
 positive observations.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">lm_pos</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span></span>
 <span>  formula <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/formula.html" class="external-link">as.formula</a></span><span class="op">(</span><span class="va">configuration_to_run</span><span class="op">$</span><span class="va">formula</span><span class="op">)</span>,</span>
-<span>  data <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">data_filtered</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="va">catch_weight</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span></span>
+<span>  data <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">catch_weight</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">pos_not_identifiable</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">lm_pos</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">pos_not_identifiable</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">pos_not_identifiable</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "fyear2007:split_mendocinoS"</span></span></code></pre></div>
 <p>Finally, we can create some mapping variables to be passed to
 <code>sdmTMB</code>. We’ll do this separately for the presence-absence
 and positive models.</p>
@@ -273,46 +300,23 @@ to pass in a list that contains the variables above we use to map off
 and initialize the parameters. For datasets without missing values, you
 may not want to include this <code><a href="https://sdmTMB.github.io/sdmTMB/reference/sdmTMBcontrol.html" class="external-link">sdmTMBcontrol()</a></code> line, but it
 may be useful to adjust the <code>newton_loops</code>, etc.</p>
-<p>Note: this code will fit a single model for each row.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">best</span> <span class="op">&lt;-</span> <span class="va">data</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
-<span>    <span class="co"># Evaluate the call in family</span></span>
-<span>    family <span class="op">=</span> <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="va">family</span>, .f <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/eval.html" class="external-link">eval</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/parse.html" class="external-link">parse</a></span><span class="op">(</span>text <span class="op">=</span> <span class="va">.x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>    <span class="co"># Run the model on each row in data</span></span>
-<span>    results <span class="op">=</span> <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/pmap.html" class="external-link">pmap</a></span><span class="op">(</span></span>
-<span>      .l <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>        data <span class="op">=</span> <span class="va">data_filtered</span>,</span>
-<span>        formula <span class="op">=</span> <span class="va">formula</span>,</span>
-<span>        family <span class="op">=</span> <span class="va">family</span>,</span>
-<span>        anisotropy <span class="op">=</span> <span class="va">anisotropy</span>,</span>
-<span>        n_knots <span class="op">=</span> <span class="va">knots</span>,</span>
-<span>        share_range <span class="op">=</span> <span class="va">share_range</span>,</span>
-<span>        spatiotemporal <span class="op">=</span> <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map2.html" class="external-link">map2</a></span><span class="op">(</span><span class="va">spatiotemporal1</span>, <span class="va">spatiotemporal2</span>, <span class="va">list</span><span class="op">)</span>,</span>
-<span>        sdmtmb_control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>          <span class="fu">sdmTMB</span><span class="fu">::</span><span class="fu"><a href="https://sdmTMB.github.io/sdmTMB/reference/sdmTMBcontrol.html" class="external-link">sdmTMBcontrol</a></span><span class="op">(</span></span>
-<span>            map <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>b_j <span class="op">=</span> <span class="va">map_pos</span>, b_j2 <span class="op">=</span> <span class="va">map_pos</span><span class="op">)</span>,</span>
-<span>            start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>b_j <span class="op">=</span> <span class="va">start_pos</span>, b_j2 <span class="op">=</span> <span class="va">start_pos</span><span class="op">)</span>,</span>
-<span>            newton_loops <span class="op">=</span> <span class="fl">1</span> <span class="co"># increase for real models</span></span>
-<span>          <span class="op">)</span></span>
-<span>        <span class="op">)</span></span>
-<span>      <span class="op">)</span>,</span>
-<span>      .f <span class="op">=</span> <span class="fu">indexwc</span><span class="fu">::</span><span class="va"><a href="../reference/run_sdmtmb.html">run_sdmtmb</a></span></span>
-<span>    <span class="op">)</span></span>
-<span>  <span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="examining-the-index-and-diagnostics">Examining the index and diagnostics<a class="anchor" aria-label="anchor" href="#examining-the-index-and-diagnostics"></a>
-</h3>
-<p>Output and diagnostics for all models and predictions are stored in a
-folder that <code>indexwc</code> creates; it’s location is
-“yellowtail_rockfish/wcgbts/delta_gamma..”. The “index” folder contains
-diagnostics and predictions for 10 sets of indices. These 10 indices
-represent (1) N/S of Cape Mendocino, (2) N/S of Monterrey, (3) N/S of Pt
-Conception, a coastwide index, and state-specific indices. For
-multi-region models, like the yellowtail rockfish used here, it wouldn’t
-make sense to interpret indices other than the split used in the model
-(here, N/S of Cape Mendocino) and the coastwide index.</p>
+<code class="sourceCode R"><span><span class="va">family_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/eval.html" class="external-link">eval</a></span><span class="op">(</span><span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/parse_expr.html" class="external-link">parse_expr</a></span><span class="op">(</span><span class="va">configuration_to_run</span><span class="op">$</span><span class="va">family</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/run_sdmtmb.html">run_sdmtmb</a></span><span class="op">(</span></span>
+<span>  dir_main <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">data</span>,</span>
+<span>  family <span class="op">=</span> <span class="va">family_obj</span>,</span>
+<span>  formula <span class="op">=</span> <span class="va">configuration_to_run</span><span class="op">$</span><span class="va">formula</span>,</span>
+<span>  n_knots <span class="op">=</span> <span class="va">configuration_to_run</span><span class="op">$</span><span class="va">knots</span>,</span>
+<span>  share_range <span class="op">=</span> <span class="va">configuration_to_run</span><span class="op">$</span><span class="va">share_range</span>,</span>
+<span>  sdmtmb_control <span class="op">=</span> <span class="fu">sdmTMB</span><span class="fu">::</span><span class="fu"><a href="https://sdmTMB.github.io/sdmTMB/reference/sdmTMBcontrol.html" class="external-link">sdmTMBcontrol</a></span><span class="op">(</span></span>
+<span>    map <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>b_j <span class="op">=</span> <span class="va">map_pres</span>,</span>
+<span>               b_j2 <span class="op">=</span> <span class="va">map_pos</span><span class="op">)</span>,</span>
+<span>    start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>b_j <span class="op">=</span> <span class="va">start_pres</span>, b_j2 <span class="op">=</span> <span class="va">start_pos</span><span class="op">)</span>,</span>
+<span>    newton_loops <span class="op">=</span> <span class="fl">1</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
   </div>

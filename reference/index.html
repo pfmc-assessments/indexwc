@@ -32,13 +32,13 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
-      <a href="../articles/a1_single_index.html">Coastwide indices</a>
+      <a href="../articles/a1_configuration.html">Configuration File</a>
     </li>
     <li>
-      <a href="../articles/a2_multiple_area_indices.html">Index example with multiple areas</a>
+      <a href="../articles/a2_single_index.html">Coastwide indices</a>
     </li>
     <li>
-      <a href="../articles/configuration.html">Configuration File</a>
+      <a href="../articles/a3_multiple_area_indices.html">Index example with multiple areas</a>
     </li>
   </ul></li>
       </ul><ul class="nav navbar-nav navbar-right"><li>
@@ -64,6 +64,10 @@
           <p class="section-desc"></p>
         </th>
       </tr></tbody><tbody><tr><td>
+          <p><code><a href="available_areas.html">available_areas()</a></code> </p>
+        </td>
+        <td><p>Get available areas for index calculation</p></td>
+      </tr><tr><td>
           <p><code><a href="boundaries_data.html">boundaries_data</a></code> </p>
         </td>
         <td><p>A list of northern and southern borders for U.S. West Coast areas</p></td>
@@ -72,9 +76,17 @@
         </td>
         <td><p>Calculate area-specific indices between each set of boundaries</p></td>
       </tr><tr><td>
+          <p><code><a href="california_current_grid.html">california_current_grid</a></code> </p>
+        </td>
+        <td><p>California Current prediction grid</p></td>
+      </tr><tr><td>
+          <p><code><a href="configuration.html">configuration</a></code> </p>
+        </td>
+        <td><p>Configuration data for west coast index standardization models</p></td>
+      </tr><tr><td>
           <p><code><a href="diagnose.html">diagnose()</a></code> </p>
         </td>
-        <td><p>Retrieve model estimates and plot diagnostics</p></td>
+        <td><p>Summarize model estimates and plot diagnostics</p></td>
       </tr><tr><td>
           <p><code><a href="filter_boundaries.html">filter_boundaries()</a></code> </p>
         </td>
@@ -120,6 +132,10 @@
         </td>
         <td><p>Plot the annual random effects predictions by year for the fit model</p></td>
       </tr><tr><td>
+          <p><code><a href="mapdata.html">mapdata</a></code> </p>
+        </td>
+        <td><p>Mapping data from rnaturalearth</p></td>
+      </tr><tr><td>
           <p><code><a href="plot_indices.html">plot_indices()</a></code> </p>
         </td>
         <td><p>Plot the indices</p></td>
@@ -127,6 +143,10 @@
           <p><code><a href="plot_map.html">plot_map()</a></code> </p>
         </td>
         <td><p>Map using <code><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot2::ggplot()</a></code></p></td>
+      </tr><tr><td>
+          <p><code><a href="plot_mesh.html">plot_mesh()</a></code> </p>
+        </td>
+        <td><p>Plot a mesh object</p></td>
       </tr><tr><td>
           <p><code><a href="plot_pars_fixed.html">plot_pars_fixed()</a></code> </p>
         </td>
@@ -148,13 +168,21 @@
         </td>
         <td><p>Creates a data frame of information from <code><a href="https://sdmTMB.github.io/sdmTMB/reference/sanity.html" class="external-link">sdmTMB::sanity()</a></code></p></td>
       </tr><tr><td>
+          <p><code><a href="save_index_outputs.html">save_index_outputs()</a></code> </p>
+        </td>
+        <td><p>Save index model outputs to disk</p></td>
+      </tr><tr><td>
           <p><code><a href="write_default_text.html">write_default_text()</a></code> </p>
         </td>
-        <td><p>Write default text describing the index standardizations run from the indexwc package</p></td>
+        <td><p>Write default text describing the index standardizations run from the <span class="pkg">indexwc</span> package</p></td>
       </tr><tr><td>
           <p><code><a href="write_hessian.html">write_hessian()</a></code> </p>
         </td>
         <td><p>Write a file with a single logical regarding the hessian status</p></td>
+      </tr><tr><td>
+          <p><code><a href="yellowtail.html">yellowtail</a></code> </p>
+        </td>
+        <td><p>Yellowtail rockfish survey data</p></td>
       </tr></tbody></table></div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

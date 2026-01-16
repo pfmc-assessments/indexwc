@@ -1,13 +1,18 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>/404.html</loc></url>
-<url><loc>/articles/a1_single_index.html</loc></url>
-<url><loc>/articles/a2_multiple_area_indices.html</loc></url>
-<url><loc>/articles/configuration.html</loc></url>
+<url><loc>/LICENSE-text.html</loc></url>
+<url><loc>/LICENSE.html</loc></url>
+<url><loc>/articles/a1_configuration.html</loc></url>
+<url><loc>/articles/a2_single_index.html</loc></url>
+<url><loc>/articles/a3_multiple_area_indices.html</loc></url>
 <url><loc>/articles/index.html</loc></url>
 <url><loc>/authors.html</loc></url>
 <url><loc>/index.html</loc></url>
+<url><loc>/reference/available_areas.html</loc></url>
 <url><loc>/reference/boundaries_data.html</loc></url>
 <url><loc>/reference/calc_index_areas.html</loc></url>
+<url><loc>/reference/california_current_grid.html</loc></url>
+<url><loc>/reference/configuration.html</loc></url>
 <url><loc>/reference/diagnose.html</loc></url>
 <url><loc>/reference/filter_boundaries.html</loc></url>
 <url><loc>/reference/filter_grid.html</loc></url>
@@ -21,14 +26,18 @@
 <url><loc>/reference/map_effects.html</loc></url>
 <url><loc>/reference/map_residuals.html</loc></url>
 <url><loc>/reference/map_year_re.html</loc></url>
+<url><loc>/reference/mapdata.html</loc></url>
 <url><loc>/reference/plot_indices.html</loc></url>
 <url><loc>/reference/plot_map.html</loc></url>
+<url><loc>/reference/plot_mesh.html</loc></url>
 <url><loc>/reference/plot_pars_fixed.html</loc></url>
 <url><loc>/reference/plot_qq.html</loc></url>
 <url><loc>/reference/run.html</loc></url>
 <url><loc>/reference/run_sdmtmb.html</loc></url>
 <url><loc>/reference/sanity_data.html</loc></url>
+<url><loc>/reference/save_index_outputs.html</loc></url>
 <url><loc>/reference/write_default_text.html</loc></url>
 <url><loc>/reference/write_hessian.html</loc></url>
+<url><loc>/reference/yellowtail.html</loc></url>
 </urlset>
 

@@ -34,13 +34,13 @@ resulting list with .f = run_sdmtmb."><!-- mathjax --><script src="https://cdnjs
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
-      <a href="../articles/a1_single_index.html">Coastwide indices</a>
+      <a href="../articles/a1_configuration.html">Configuration File</a>
     </li>
     <li>
-      <a href="../articles/a2_multiple_area_indices.html">Index example with multiple areas</a>
+      <a href="../articles/a2_single_index.html">Coastwide indices</a>
     </li>
     <li>
-      <a href="../articles/configuration.html">Configuration File</a>
+      <a href="../articles/a3_multiple_area_indices.html">Index example with multiple areas</a>
     </li>
   </ul></li>
       </ul><ul class="nav navbar-nav navbar-right"><li>
@@ -103,7 +103,7 @@ resulting list with <code>.f = run_sdmtmb</code>.</p>
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A <code>list</code> of sdmTMB <code>list</code>s, where each element in the list is the returned
+    <p>A <code>list</code> of <span class="pkg">sdmTMB</span> <code>list</code>s, where each element in the list is the returned
 object from <code><a href="https://sdmTMB.github.io/sdmTMB/reference/sdmTMB.html" class="external-link">sdmTMB::sdmTMB()</a></code> when fitting data to a model and of the class
 <code>sdmTMB</code>. The list of lists is because <code><a href="https://purrr.tidyverse.org/reference/map2.html" class="external-link">purrr::map2()</a></code> is used to split the
 input data by species and survey/source in case your data contain

@@ -32,13 +32,13 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
-      <a href="../articles/a1_single_index.html">Coastwide indices</a>
+      <a href="../articles/a1_configuration.html">Configuration File</a>
     </li>
     <li>
-      <a href="../articles/a2_multiple_area_indices.html">Index example with multiple areas</a>
+      <a href="../articles/a2_single_index.html">Coastwide indices</a>
     </li>
     <li>
-      <a href="../articles/configuration.html">Configuration File</a>
+      <a href="../articles/a3_multiple_area_indices.html">Index example with multiple areas</a>
     </li>
   </ul></li>
       </ul><ul class="nav navbar-nav navbar-right"><li>
@@ -66,20 +66,20 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">filter_grid</span><span class="op">(</span><span class="va">grid</span>, <span class="va">boundary_north</span>, <span class="va">boundary_south</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">filter_grid</span><span class="op">(</span><span class="va">boundary_north</span>, <span class="va">boundary_south</span>, <span class="va">grid</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
 
 
-<dl><dt id="arg-grid">grid<a class="anchor" aria-label="anchor" href="#arg-grid"></a></dt>
-<dd><p>A grid returned from <code><a href="lookup_grid.html">lookup_grid()</a></code>.</p></dd>
-
-
-<dt id="arg-boundary-north-boundary-south">boundary_north, boundary_south<a class="anchor" aria-label="anchor" href="#arg-boundary-north-boundary-south"></a></dt>
+<dl><dt id="arg-boundary-north-boundary-south">boundary_north, boundary_south<a class="anchor" aria-label="anchor" href="#arg-boundary-north-boundary-south"></a></dt>
 <dd><p>Real numbers providing the northern and
 southern latitudinal boundaries for your desired grid.</p></dd>
+
+
+<dt id="arg-grid">grid<a class="anchor" aria-label="anchor" href="#arg-grid"></a></dt>
+<dd><p>A grid returned from <code><a href="lookup_grid.html">lookup_grid()</a></code>.</p></dd>
 
 </dl></div>
     <div id="value">
