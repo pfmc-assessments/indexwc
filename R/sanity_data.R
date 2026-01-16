@@ -13,7 +13,7 @@
 #' name of the test, a logical for the results of the test, and a text
 #' explanation of what the test really means.
 sanity_data <- function(fit) {
-  sanity_out <- sdmTMB::sanity(fit, silent=TRUE)
+  sanity_out <- sdmTMB::sanity(fit, silent = TRUE)
 
   # Extract names
   sanity_names <- names(sanity_out)
