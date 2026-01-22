@@ -24,10 +24,10 @@ greenspotted rockfish,"nwfscSurvey::pull_catch(common_name = species,survey=sour
 greenstriped rockfish,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear,-55,-675,31.9,49,2003,2050,TRUE,300,iid,iid,FALSE,FALSE
 lingcod,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear + pass_scaled,-55,-450,40.1667,49,2003,2050,TRUE,500,iid,iid,FALSE,FALSE
 longnose skate,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear + pass_scaled,-55,-1280,31.9,49,2003,2050,TRUE,500,iid,iid,FALSE,FALSE
-longspine thornyhead,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::tweedie(),catch_weight ~ 0 + fyear,-300,-1280,31.9,49,2003,2050,TRUE,500,iid,iid,FALSE,FALSE
+longspine thornyhead,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear,-300,-1280,31.9,49,2003,2050,FALSE,500,off,off,TRUE,FALSE
 Pacific cod,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear + pass_scaled,-55,-300,39,49,2003,2050,TRUE,200,iid,iid,FALSE,FALSE
 Pacific ocean perch,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear + pass_scaled,-55,-500,35,49,2003,2050,TRUE,500,iid,iid,FALSE,FALSE
-Pacific sanddab,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear + pass_scaled,-55,-500,31.9,49,2003,2050,TRUE,500,iid,iid,FALSE,FALSE
+Pacific sanddab,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear + pass_scaled,-55,-500,31.9,49,2003,2050,TRUE,500,iid,iid,TRUE,FALSE
 Pacific spiny dogfish,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_lognormal(),catch_weight ~ 0 + fyear + pass_scaled,-55,-700,31.9,49,2003,2050,TRUE,500,iid,iid,FALSE,FALSE
 petrale sole,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_lognormal(),catch_weight ~ 0 + fyear + pass_scaled,-55,-675,31.9,49,2003,2050,TRUE,500,iid,iid,FALSE,FALSE
 petrale sole,"nwfscSurvey::pull_catch(common_name = species,survey=source)",Triennial,sdmTMB::delta_lognormal(),catch_weight ~ 0 + fyear,-55,-366,37,49,1980,2050,TRUE,500,iid,iid,FALSE,FALSE
