@@ -57,7 +57,6 @@ calc_index_areas <- function(data,
                              prediction_grid,
                              dir,
                              boundaries = "Coastwide") {
-
   # Make sure all boundaries are character vector
   if (!is.character(boundaries)) {
     cli::cli_abort(c(
@@ -150,7 +149,7 @@ calc_index_areas <- function(data,
 
   # Make the directory to plot the index in and plot all areas on one figure
   # and then just the coastwide index on another figure by itself.
-  if(!is.null(dir)) {
+  if (!is.null(dir)) {
     fs::dir_create(dir, recurse = TRUE)
 
     write.csv(
