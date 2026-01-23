@@ -103,6 +103,68 @@ fit_delta_gamma <- run_sdmtmb(
 #delta_gamma model chosen
 
 ########################################################
+#lingcode south
+
+savedir <- here::here("additional_runs")
+
+#filter for sp and source
+sp <- "lingcod"
+
+#load configuration rda file!!
+configuration <- configuration |>
+  dplyr::filter(species == sp, source == "NWFSC.Combo")
+
+#changing to lingcod south
+configuration$min_latitude <- 31.9
+configuration$max_latitude <- 49
+
+pulled_data <- nwfscSurvey::pull_catch(
+  common_name = sp,
+  survey = "NWFSC.Combo")
+
+data_filtered <- format_data(pulled_data) |>
+  dplyr::filter(depth <= configuration$min_depth[1], depth >= configuration$max_depth[1],
+                latitude >= configuration$min_latitude[1], latitude <= configuration$max_latitude[1],
+                year >= configuration$min_year[1], year <= configuration$max_year[1])
 
 
+fit_delta_gamma <- run_sdmtmb(
+  dir_main = savedir,
+  data = data_filtered,
+  family = sdmTMB::delta_gamma(),
+  formula = configuration$formula[1],
+  n_knots = configuration$knots[1],
+  share_range = configuration$share_range[1],
+  anisotropy = configuration$anisotropy[1],
+  spatial = "on",
+  spatiotemporal = "iid"
+)
+#failed
+
+fit_delta_gamma <- run_sdmtmb(
+  dir_main = savedir,
+  data = data_filtered,
+  family = sdmTMB::delta_gamma(),
+  formula = configuration$formula[1],
+  n_knots = configuration$knots[1],
+  share_range = TRUE,
+  anisotropy = FALSE,
+  spatial = "on",
+  spatiotemporal = "off"
+)
+
+#check qq
+
+fit_delta_lognormal <- run_sdmtmb(
+  dir_main = savedir,
+  data = data_filtered,
+  family = sdmTMB::delta_lognormal(),
+  formula = configuration$formula[1],
+  n_knots = configuration$knots[1],
+  share_range = TRUE,
+  anisotropy = FALSE,
+  spatial = "on",
+  spatiotemporal = "off"
+)
+#going with lognormal
 
