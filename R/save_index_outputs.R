@@ -93,7 +93,6 @@ save_index_outputs <- function(fit,
                                indices,
                                dir_main,
                                overwrite = FALSE) {
-
   # Check structure of fit
   if (!inherits(fit, "sdmTMB")) {
     cli::cli_abort(c(
@@ -338,5 +337,4 @@ save_index_outputs <- function(fit,
       width = 10
     ))
   }
-
 }
