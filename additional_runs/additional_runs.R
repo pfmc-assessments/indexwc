@@ -196,6 +196,7 @@ pred_grid <- sdmTMB::replicate_df(california_current_grid,
                                   time_values = unique(data_filtered$year))
 pred_grid$fyear <- as.factor(pred_grid$year)
 
+#original configuration
 fit_1 <- run_sdmtmb(
   dir_main = savedir,
   data = data_filtered,
@@ -205,7 +206,7 @@ fit_1 <- run_sdmtmb(
   share_range = configuration_sp$share_range[1],
   anisotropy = configuration_sp$anisotropy[1],
   spatial = "on",
-  spatiotemporal = list("iid", "iid") #c("iid","iid") and #c(configuration_sp$spatiotemporal1, configuration_sp$spatiotemporal2) does not work for some reason
+  spatiotemporal = list("iid", "iid") #c(configuration_sp$spatiotemporal1, configuration_sp$spatiotemporal2) does not work for some reason
 )
 
 diagnostics_1 <- indexwc::diagnose(dir = NULL, fit = fit_1, prediction_grid = pred_grid)
@@ -232,7 +233,10 @@ fit_2 <- run_sdmtmb(
   spatial = "on",
   spatiotemporal = list("iid", "iid")
 )
-#the only thing I have changed here is share_range is now true
+#the only change is share_range is now true
+
+diagnostics_2 <- indexwc::diagnose(dir = NULL, fit = fit_2, prediction_grid = pred_grid)
+diagnostics_2$sanity
 
 
 
