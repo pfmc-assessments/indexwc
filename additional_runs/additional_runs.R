@@ -10,11 +10,6 @@ configuration <- configuration
 
 savedir <- here::here("additional_runs")
 
-pred_grid <- sdmTMB::replicate_df(california_current_grid,
-                                  time_name = "year",
-                                  time_values = unique(data$year))
-pred_grid$fyear <- as.factor(pred_grid$year)
-
 ####################################################################
 #longspine thornyhead
 
@@ -251,6 +246,23 @@ fit_4 <- run_sdmtmb(
 )
 #the only thing I have changed here is share_range is now true and spatiotemporal2 is off and spatiotemportal1 is off
 #ran, but gradients check failed will try with other families
+
+pred_grid <- sdmTMB::replicate_df(california_current_grid,
+                                  time_name = "year",
+                                  time_values = unique(data_filtered$year))
+pred_grid$fyear <- as.factor(pred_grid$year)
+
+output_4 <- indexwc::calc_index_areas(data = fit_4$data, fit = fit_4, prediction_grid = pred_grid, dir = here::here("additional_runs", "greenspotted rockfish", "wcgbts", "delta_lognormal", "index"))
+
+diagnostics <- indexwc::diagnose(dir = here::here("additional_runs", "greenspotted rockfish", "wcgbts", "delta_lognormal", "diagnostics"), fit = fit_4, prediction_grid = pred_grid)
+
+#if all dirs are NULL
+#save_index_outputs(
+#  fit = fit_simple,
+#  diagnostics = diagnostics,
+#  indices = index,
+#  dir_main = paste0(getwd(), "/yellowtail_example")
+#)
 
 fit_5 <- run_sdmtmb(
   dir_main = savedir,
