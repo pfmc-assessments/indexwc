@@ -4,10 +4,16 @@ library(indexwc)
 library(ggplot2)
 library(png)
 library(grid)
+library(here)
 
 configuration <- configuration
 
 savedir <- here::here("additional_runs")
+
+pred_grid <- sdmTMB::replicate_df(california_current_grid,
+                                  time_name = "year",
+                                  time_values = unique(data$year))
+pred_grid$fyear <- as.factor(pred_grid$year)
 
 ####################################################################
 #longspine thornyhead
@@ -292,7 +298,7 @@ data_filtered <- format_data(pulled_data) |>
                 latitude >= configuration$min_latitude[1], latitude <= configuration$max_latitude[1],
                 year >= configuration$min_year[1], year <= configuration$max_year[1])
 
-fit_1 <- run_sdmtmb(
+fit <- run_sdmtmb(
   dir_main = savedir,
   data = data_filtered,
   family = sdmTMB::delta_gamma(),
@@ -303,3 +309,11 @@ fit_1 <- run_sdmtmb(
   spatial = "on",
   spatiotemporal = "iid"
 )
+
+output <- indexwc::calc_index_areas(data = data, fit = fit, prediction_grid = pred_grid, dir = here::here("additional_runs", "arrowtooth_flounder", "wcgbts", "delta_gamma", "index"))
+
+#not working
+diagnostics <- indexwc::diagnose(dir = NULL, fit = fit, prediction_grid = NULL)
+
+#finally got it working, EXCEPT FOR DIAGNOSTICS
+####################################################
