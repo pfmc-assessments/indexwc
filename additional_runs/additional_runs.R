@@ -232,7 +232,6 @@ fit_3 <- run_sdmtmb(
 #the only thing I have changed here is share_rage is now true and spatiotemporal2 is off
 #also failed
 
-
 fit_4 <- run_sdmtmb(
   dir_main = savedir,
   data = data_filtered,
@@ -245,7 +244,7 @@ fit_4 <- run_sdmtmb(
   spatiotemporal = list("off", "off")
 )
 #the only thing I have changed here is share_rage is now true and spatiotemporal2 is off and spatiotemportal1 is off
-#ran, will try with other families
+#ran, but gradients check failed will try with other families
 
 fit_5 <- run_sdmtmb(
   dir_main = savedir,
@@ -259,4 +258,17 @@ fit_5 <- run_sdmtmb(
   spatiotemporal = list("off", "off")
 )
 #the only thing I changed was distribution family
-#
+#failed
+
+fit_6 <- run_sdmtmb(
+  dir_main = savedir,
+  data = data_filtered,
+  family = sdmTMB::delta_lognormal(),
+  formula = configuration_sp$formula[1],
+  n_knots = configuration_sp$knots[1],
+  share_range = TRUE,
+  anisotropy = FALSE,
+  spatial = "on",
+  spatiotemporal = list("off", "off")
+)
+#back to lognormal, now also turing off ansotropy, but my guess is that we will want to retain that model even if gradients are on bounds?
