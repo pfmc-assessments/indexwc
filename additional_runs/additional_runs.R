@@ -191,6 +191,10 @@ data_filtered <- format_data(pulled_data) |>
                 latitude >= configuration$min_latitude[1], latitude <= configuration$max_latitude[1],
                 year >= configuration$min_year[1], year <= configuration$max_year[1])
 
+pred_grid <- sdmTMB::replicate_df(california_current_grid,
+                                  time_name = "year",
+                                  time_values = unique(data_filtered$year))
+pred_grid$fyear <- as.factor(pred_grid$year)
 
 fit_1 <- run_sdmtmb(
   dir_main = savedir,
@@ -201,9 +205,21 @@ fit_1 <- run_sdmtmb(
   share_range = configuration_sp$share_range[1],
   anisotropy = configuration_sp$anisotropy[1],
   spatial = "on",
-  spatiotemporal = "iid" #c("iid","iid") and #c(configuration_sp$spatiotemporal1, configuration_sp$spatiotemporal2) does not work for some reason
+  spatiotemporal = list("iid", "iid") #c("iid","iid") and #c(configuration_sp$spatiotemporal1, configuration_sp$spatiotemporal2) does not work for some reason
 )
-#failed
+
+diagnostics_1 <- indexwc::diagnose(dir = NULL, fit = fit_1, prediction_grid = pred_grid)
+diagnostics_1$sanity
+
+index_1 <- indexwc::calc_index_areas(data = fit_1$data, fit = fit_1, prediction_grid = pred_grid, dir = NULL)
+
+save_index_outputs(
+  fit = fit_1,
+  diagnostics = diagnostics_1,
+  indices = index_1,
+  dir_main = here::here("additional_runs"), overwrite = TRUE
+)
+
 
 fit_2 <- run_sdmtmb(
   dir_main = savedir,
@@ -216,8 +232,9 @@ fit_2 <- run_sdmtmb(
   spatial = "on",
   spatiotemporal = list("iid", "iid")
 )
-#the only thing I have changed here is share_rage is now true
-#also failed
+#the only thing I have changed here is share_range is now true
+
+
 
 fit_3 <- run_sdmtmb(
   dir_main = savedir,
@@ -246,11 +263,6 @@ fit_4 <- run_sdmtmb(
 )
 #the only thing I have changed here is share_range is now true and spatiotemporal2 is off and spatiotemportal1 is off
 #ran, but gradients check failed will try with other families
-
-pred_grid <- sdmTMB::replicate_df(california_current_grid,
-                                  time_name = "year",
-                                  time_values = unique(data_filtered$year))
-pred_grid$fyear <- as.factor(pred_grid$year)
 
 output_4 <- indexwc::calc_index_areas(data = fit_4$data, fit = fit_4, prediction_grid = pred_grid, dir = here::here("additional_runs", "greenspotted rockfish", "wcgbts", "delta_lognormal", "index"))
 
@@ -291,41 +303,3 @@ fit_6 <- run_sdmtmb(
 )
 #back to lognormal, now also turing off ansotropy, but my guess is that we will want to retain that model even if gradients are on bounds?
 #failed
-
-
-###############################################
-#test
-
-sp <- "arrowtooth flounder"
-
-configuration_sp <- configuration |>
-  dplyr::filter(species == sp, source == "NWFSC.Combo")
-
-pulled_data <- nwfscSurvey::pull_catch(
-  common_name = sp,
-  survey = "NWFSC.Combo")
-
-data_filtered <- format_data(pulled_data) |>
-  dplyr::filter(depth <= configuration$min_depth[1], depth >= configuration$max_depth[1],
-                latitude >= configuration$min_latitude[1], latitude <= configuration$max_latitude[1],
-                year >= configuration$min_year[1], year <= configuration$max_year[1])
-
-fit <- run_sdmtmb(
-  dir_main = savedir,
-  data = data_filtered,
-  family = sdmTMB::delta_gamma(),
-  formula = configuration_sp$formula[1],
-  n_knots = configuration_sp$knots[1],
-  share_range = configuration_sp$share_range[1],
-  anisotropy = configuration_sp$anisotropy[1],
-  spatial = "on",
-  spatiotemporal = "iid"
-)
-
-output <- indexwc::calc_index_areas(data = data, fit = fit, prediction_grid = pred_grid, dir = here::here("additional_runs", "arrowtooth_flounder", "wcgbts", "delta_gamma", "index"))
-
-#not working
-diagnostics <- indexwc::diagnose(dir = NULL, fit = fit, prediction_grid = NULL)
-
-#finally got it working, EXCEPT FOR DIAGNOSTICS
-####################################################
