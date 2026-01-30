@@ -229,7 +229,7 @@ fit_3 <- run_sdmtmb(
   spatial = "on",
   spatiotemporal = list("iid", "off")
 )
-#the only thing I have changed here is share_rage is now true and spatiotemporal2 is off
+#the only thing I have changed here is share_range is now true and spatiotemporal2 is off
 #also failed
 
 fit_4 <- run_sdmtmb(
@@ -243,7 +243,7 @@ fit_4 <- run_sdmtmb(
   spatial = "on",
   spatiotemporal = list("off", "off")
 )
-#the only thing I have changed here is share_rage is now true and spatiotemporal2 is off and spatiotemportal1 is off
+#the only thing I have changed here is share_range is now true and spatiotemporal2 is off and spatiotemportal1 is off
 #ran, but gradients check failed will try with other families
 
 fit_5 <- run_sdmtmb(
@@ -272,3 +272,34 @@ fit_6 <- run_sdmtmb(
   spatiotemporal = list("off", "off")
 )
 #back to lognormal, now also turing off ansotropy, but my guess is that we will want to retain that model even if gradients are on bounds?
+#failed
+
+
+###############################################
+#test
+
+sp <- "arrowtooth flounder"
+
+configuration_sp <- configuration |>
+  dplyr::filter(species == sp, source == "NWFSC.Combo")
+
+pulled_data <- nwfscSurvey::pull_catch(
+  common_name = sp,
+  survey = "NWFSC.Combo")
+
+data_filtered <- format_data(pulled_data) |>
+  dplyr::filter(depth <= configuration$min_depth[1], depth >= configuration$max_depth[1],
+                latitude >= configuration$min_latitude[1], latitude <= configuration$max_latitude[1],
+                year >= configuration$min_year[1], year <= configuration$max_year[1])
+
+fit_1 <- run_sdmtmb(
+  dir_main = savedir,
+  data = data_filtered,
+  family = sdmTMB::delta_gamma(),
+  formula = configuration_sp$formula[1],
+  n_knots = configuration_sp$knots[1],
+  share_range = configuration_sp$share_range[1],
+  anisotropy = configuration_sp$anisotropy[1],
+  spatial = "on",
+  spatiotemporal = "iid"
+)
