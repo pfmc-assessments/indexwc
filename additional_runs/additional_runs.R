@@ -5,13 +5,17 @@ library(ggplot2)
 library(png)
 library(grid)
 
+configuration <- configuration
+
 savedir <- here::here("additional_runs")
+
+####################################################################
+#longspine thornyhead
 
 #filter for sp and source
 sp <- "longspine thornyhead"
 
-#load configuration rda file!!
-configuration <- configuration |>
+configuration_sp <- configuration |>
   dplyr::filter(species == sp, source == "NWFSC.Combo")
 
 pulled_data <- nwfscSurvey::pull_catch(
@@ -28,10 +32,10 @@ fit_tweedie <- run_sdmtmb(
   dir_main = savedir,
   data = data_filtered,
   family = sdmTMB::tweedie(),
-  formula = configuration$formula[1],
-  n_knots = configuration$knots[1],
-  share_range = configuration$share_range[1],
-  anisotropy = configuration$anisotropy[1],
+  formula = configuration_sp$formula[1],
+  n_knots = configuration_sp$knots[1],
+  share_range = configuration_sp$share_range[1],
+  anisotropy = configuration_sp$anisotropy[1],
   spatial = "on",
   spatiotemporal = "off"
 )
@@ -41,10 +45,10 @@ fit_delta_gamma <- run_sdmtmb(
   dir_main = savedir,
   data = data_filtered,
   family = sdmTMB::delta_gamma(),
-  formula = configuration$formula[1],
-  n_knots = configuration$knots[1],
-  share_range = configuration$share_range[1],
-  anisotropy = configuration$anisotropy[1],
+  formula = configuration_sp$formula[1],
+  n_knots = configuration_sp$knots[1],
+  share_range = configuration_sp$share_range[1],
+  anisotropy = configuration_sp$anisotropy[1],
   spatial = "on",
   spatiotemporal = "off"
 )
@@ -54,10 +58,10 @@ fit_delta_gamma <- run_sdmtmb(
   dir_main = savedir,
   data = data_filtered,
   family = sdmTMB::delta_gamma(),
-  formula = configuration$formula[1],
-  n_knots = configuration$knots[1],
+  formula = configuration_sp$formula[1],
+  n_knots = configuration_sp$knots[1],
   share_range = TRUE,
-  anisotropy = configuration$anisotropy[1],
+  anisotropy = configuration_sp$anisotropy[1],
   spatial = "on",
   spatiotemporal = "off"
 )
@@ -67,8 +71,8 @@ fit_delta_lognormal <- run_sdmtmb(
   dir_main = savedir,
   data = data_filtered,
   family = sdmTMB::delta_lognormal(),
-  formula = configuration$formula[1],
-  n_knots = configuration$knots[1],
+  formula = configuration_sp$formula[1],
+  n_knots = configuration_sp$knots[1],
   share_range = TRUE,
   anisotropy = FALSE,
   spatial = "on",
@@ -80,8 +84,8 @@ fit_tweedie <- run_sdmtmb(
   dir_main = savedir,
   data = data_filtered,
   family = sdmTMB::tweedie(),
-  formula = configuration$formula[1],
-  n_knots = configuration$knots[1],
+  formula = configuration_sp$formula[1],
+  n_knots = configuration_sp$knots[1],
   share_range = TRUE,
   anisotropy = FALSE,
   spatial = "on",
@@ -92,8 +96,8 @@ fit_delta_gamma <- run_sdmtmb(
   dir_main = savedir,
   data = data_filtered,
   family = sdmTMB::delta_gamma(),
-  formula = configuration$formula[1],
-  n_knots = configuration$knots[1],
+  formula = configuration_sp$formula[1],
+  n_knots = configuration_sp$knots[1],
   share_range = TRUE,
   anisotropy = FALSE,
   spatial = "on",
@@ -103,39 +107,38 @@ fit_delta_gamma <- run_sdmtmb(
 #delta_gamma model chosen
 
 ########################################################
-#lingcode south
+#lingcod south
 
 savedir <- here::here("additional_runs")
 
 #filter for sp and source
 sp <- "lingcod"
 
-#load configuration rda file!!
-configuration <- configuration |>
+configuration_sp <- configuration |>
   dplyr::filter(species == sp, source == "NWFSC.Combo")
 
 #changing to lingcod south
-configuration$min_latitude <- 31.9
-configuration$max_latitude <- 49
+configuration_sp$min_latitude <- 31.9
+configuration_sp$max_latitude <- 49
 
 pulled_data <- nwfscSurvey::pull_catch(
   common_name = sp,
   survey = "NWFSC.Combo")
 
 data_filtered <- format_data(pulled_data) |>
-  dplyr::filter(depth <= configuration$min_depth[1], depth >= configuration$max_depth[1],
-                latitude >= configuration$min_latitude[1], latitude <= configuration$max_latitude[1],
-                year >= configuration$min_year[1], year <= configuration$max_year[1])
+  dplyr::filter(depth <= configuration_sp$min_depth[1], depth >= configuration_sp$max_depth[1],
+                latitude >= configuration_sp$min_latitude[1], latitude <= configuration_sp$max_latitude[1],
+                year >= configuration_sp$min_year[1], year <= configuration_sp$max_year[1])
 
 
 fit_delta_gamma <- run_sdmtmb(
   dir_main = savedir,
   data = data_filtered,
   family = sdmTMB::delta_gamma(),
-  formula = configuration$formula[1],
-  n_knots = configuration$knots[1],
-  share_range = configuration$share_range[1],
-  anisotropy = configuration$anisotropy[1],
+  formula = configuration_sp$formula[1],
+  n_knots = configuration_sp$knots[1],
+  share_range = configuration_sp$share_range[1],
+  anisotropy = configuration_sp$anisotropy[1],
   spatial = "on",
   spatiotemporal = "iid"
 )
@@ -145,8 +148,8 @@ fit_delta_gamma <- run_sdmtmb(
   dir_main = savedir,
   data = data_filtered,
   family = sdmTMB::delta_gamma(),
-  formula = configuration$formula[1],
-  n_knots = configuration$knots[1],
+  formula = configuration_sp$formula[1],
+  n_knots = configuration_sp$knots[1],
   share_range = TRUE,
   anisotropy = FALSE,
   spatial = "on",
@@ -159,8 +162,8 @@ fit_delta_lognormal <- run_sdmtmb(
   dir_main = savedir,
   data = data_filtered,
   family = sdmTMB::delta_lognormal(),
-  formula = configuration$formula[1],
-  n_knots = configuration$knots[1],
+  formula = configuration_sp$formula[1],
+  n_knots = configuration_sp$knots[1],
   share_range = TRUE,
   anisotropy = FALSE,
   spatial = "on",
@@ -168,3 +171,92 @@ fit_delta_lognormal <- run_sdmtmb(
 )
 #going with lognormal
 
+###########################################################
+
+#greenspotted rockfish
+
+#filter for sp and source
+sp <- "greenspotted rockfish"
+
+configuration_sp <- configuration |>
+  dplyr::filter(species == sp, source == "NWFSC.Combo")
+
+pulled_data <- nwfscSurvey::pull_catch(
+  common_name = sp,
+  survey = "NWFSC.Combo")
+
+data_filtered <- format_data(pulled_data) |>
+  dplyr::filter(depth <= configuration$min_depth[1], depth >= configuration$max_depth[1],
+                latitude >= configuration$min_latitude[1], latitude <= configuration$max_latitude[1],
+                year >= configuration$min_year[1], year <= configuration$max_year[1])
+
+
+fit_1 <- run_sdmtmb(
+  dir_main = savedir,
+  data = data_filtered,
+  family = sdmTMB::delta_lognormal(), #configuration_sp$family[1] this doesn't work for some reason
+  formula = configuration_sp$formula[1],
+  n_knots = configuration_sp$knots[1],
+  share_range = configuration_sp$share_range[1],
+  anisotropy = configuration_sp$anisotropy[1],
+  spatial = "on",
+  spatiotemporal = "iid" #c("iid","iid") and #c(configuration_sp$spatiotemporal1, configuration_sp$spatiotemporal2) does not work for some reason
+)
+#failed
+
+fit_2 <- run_sdmtmb(
+  dir_main = savedir,
+  data = data_filtered,
+  family = sdmTMB::delta_lognormal(),
+  formula = configuration_sp$formula[1],
+  n_knots = configuration_sp$knots[1],
+  share_range = TRUE,
+  anisotropy = configuration_sp$anisotropy[1],
+  spatial = "on",
+  spatiotemporal = list("iid", "iid")
+)
+#the only thing I have changed here is share_rage is now true
+#also failed
+
+fit_3 <- run_sdmtmb(
+  dir_main = savedir,
+  data = data_filtered,
+  family = sdmTMB::delta_lognormal(),
+  formula = configuration_sp$formula[1],
+  n_knots = configuration_sp$knots[1],
+  share_range = TRUE,
+  anisotropy = configuration_sp$anisotropy[1],
+  spatial = "on",
+  spatiotemporal = list("iid", "off")
+)
+#the only thing I have changed here is share_rage is now true and spatiotemporal2 is off
+#also failed
+
+
+fit_4 <- run_sdmtmb(
+  dir_main = savedir,
+  data = data_filtered,
+  family = sdmTMB::delta_lognormal(),
+  formula = configuration_sp$formula[1],
+  n_knots = configuration_sp$knots[1],
+  share_range = TRUE,
+  anisotropy = configuration_sp$anisotropy[1],
+  spatial = "on",
+  spatiotemporal = list("off", "off")
+)
+#the only thing I have changed here is share_rage is now true and spatiotemporal2 is off and spatiotemportal1 is off
+#ran, will try with other families
+
+fit_5 <- run_sdmtmb(
+  dir_main = savedir,
+  data = data_filtered,
+  family = sdmTMB::delta_gamma(),
+  formula = configuration_sp$formula[1],
+  n_knots = configuration_sp$knots[1],
+  share_range = TRUE,
+  anisotropy = configuration_sp$anisotropy[1],
+  spatial = "on",
+  spatiotemporal = list("off", "off")
+)
+#the only thing I changed was distribution family
+#
