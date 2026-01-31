@@ -198,7 +198,7 @@ pred_grid$fyear <- as.factor(pred_grid$year)
 
 #original configuration
 fit_1 <- run_sdmtmb(
-  dir_main = savedir,
+  dir_main = NULL,
   data = data_filtered,
   family = sdmTMB::delta_lognormal(), #configuration_sp$family[1] this doesn't work for some reason
   formula = configuration_sp$formula[1],
@@ -209,21 +209,13 @@ fit_1 <- run_sdmtmb(
   spatiotemporal = list("iid", "iid") #c(configuration_sp$spatiotemporal1, configuration_sp$spatiotemporal2) does not work for some reason
 )
 
-diagnostics_1 <- indexwc::diagnose(dir = NULL, fit = fit_1, prediction_grid = pred_grid)
+diagnostics_1 <- indexwc::diagnose(dir = here::here("additional_runs", "greenspotted_rockfish", "wcgbts", "delta_lognormal", "fit_1", "diagnostics"), fit = fit_1, prediction_grid = pred_grid)
 diagnostics_1$sanity
 
-index_1 <- indexwc::calc_index_areas(data = fit_1$data, fit = fit_1, prediction_grid = pred_grid, dir = NULL)
-
-save_index_outputs(
-  fit = fit_1,
-  diagnostics = diagnostics_1,
-  indices = index_1,
-  dir_main = here::here("additional_runs"), overwrite = TRUE
-)
-
+index_1 <- indexwc::calc_index_areas(data = fit_1$data, fit = fit_1, prediction_grid = pred_grid, dir = here::here("additional_runs", "greenspotted_rockfish", "wcgbts", "delta_lognormal", "fit_1", "indices"))
 
 fit_2 <- run_sdmtmb(
-  dir_main = savedir,
+  dir_main = NULL,
   data = data_filtered,
   family = sdmTMB::delta_lognormal(),
   formula = configuration_sp$formula[1],
@@ -235,13 +227,13 @@ fit_2 <- run_sdmtmb(
 )
 #the only change is share_range is now true
 
-diagnostics_2 <- indexwc::diagnose(dir = NULL, fit = fit_2, prediction_grid = pred_grid)
+diagnostics_2 <- indexwc::diagnose(dir = here::here("additional_runs", "greenspotted_rockfish", "wcgbts", "delta_lognormal", "fit_2", "diagnostics"), fit = fit_2, prediction_grid = pred_grid)
 diagnostics_2$sanity
 
-
+index_2 <- indexwc::calc_index_areas(data = fit_2$data, fit = fit_2, prediction_grid = pred_grid, dir = here::here("additional_runs", "greenspotted_rockfish", "wcgbts", "delta_lognormal", "fit_2", "indices"))
 
 fit_3 <- run_sdmtmb(
-  dir_main = savedir,
+  dir_main = NULL,
   data = data_filtered,
   family = sdmTMB::delta_lognormal(),
   formula = configuration_sp$formula[1],
@@ -251,11 +243,15 @@ fit_3 <- run_sdmtmb(
   spatial = "on",
   spatiotemporal = list("iid", "off")
 )
-#the only thing I have changed here is share_range is now true and spatiotemporal2 is off
-#also failed
+#the only change is share_range is now true and spatiotemporal2 is off
+
+diagnostics_3 <- indexwc::diagnose(dir = here::here("additional_runs", "greenspotted_rockfish", "wcgbts", "delta_lognormal", "fit_3", "diagnostics"), fit = fit_3, prediction_grid = pred_grid)
+diagnostics_3$sanity
+
+index_3 <- indexwc::calc_index_areas(data = fit_3$data, fit = fit_3, prediction_grid = pred_grid, dir = here::here("additional_runs", "greenspotted_rockfish", "wcgbts", "delta_lognormal", "fit_3", "indices"))
 
 fit_4 <- run_sdmtmb(
-  dir_main = savedir,
+  dir_main = NULL,
   data = data_filtered,
   family = sdmTMB::delta_lognormal(),
   formula = configuration_sp$formula[1],
@@ -265,23 +261,16 @@ fit_4 <- run_sdmtmb(
   spatial = "on",
   spatiotemporal = list("off", "off")
 )
-#the only thing I have changed here is share_range is now true and spatiotemporal2 is off and spatiotemportal1 is off
+#the only change is share_range is now true and spatiotemporal2 is off and spatiotemportal1 is off
 #ran, but gradients check failed will try with other families
 
-output_4 <- indexwc::calc_index_areas(data = fit_4$data, fit = fit_4, prediction_grid = pred_grid, dir = here::here("additional_runs", "greenspotted rockfish", "wcgbts", "delta_lognormal", "index"))
+diagnostics_4 <- indexwc::diagnose(dir = here::here("additional_runs", "greenspotted_rockfish", "wcgbts", "delta_lognormal", "fit_4", "diagnostics"), fit = fit_4, prediction_grid = pred_grid)
+diagnostics_4$sanity
 
-diagnostics <- indexwc::diagnose(dir = here::here("additional_runs", "greenspotted rockfish", "wcgbts", "delta_lognormal", "diagnostics"), fit = fit_4, prediction_grid = pred_grid)
-
-#if all dirs are NULL
-#save_index_outputs(
-#  fit = fit_simple,
-#  diagnostics = diagnostics,
-#  indices = index,
-#  dir_main = paste0(getwd(), "/yellowtail_example")
-#)
+index_4 <- indexwc::calc_index_areas(data = fit_4$data, fit = fit_4, prediction_grid = pred_grid, dir = here::here("additional_runs", "greenspotted_rockfish", "wcgbts", "delta_lognormal", "fit_4", "indices"))
 
 fit_5 <- run_sdmtmb(
-  dir_main = savedir,
+  dir_main = NULL,
   data = data_filtered,
   family = sdmTMB::delta_gamma(),
   formula = configuration_sp$formula[1],
@@ -291,11 +280,15 @@ fit_5 <- run_sdmtmb(
   spatial = "on",
   spatiotemporal = list("off", "off")
 )
-#the only thing I changed was distribution family
-#failed
+#the only change was distribution family
+diagnostics_5 <- indexwc::diagnose(dir = here::here("additional_runs", "greenspotted_rockfish", "wcgbts", "delta_gamma", "fit_5", "diagnostics"), fit = fit_5, prediction_grid = pred_grid)
+diagnostics_5$sanity
+
+index_5 <- indexwc::calc_index_areas(data = fit_5$data, fit = fit_5, prediction_grid = pred_grid, dir = here::here("additional_runs", "greenspotted_rockfish", "wcgbts", "delta_gamma", "fit_5", "indices"))
+
 
 fit_6 <- run_sdmtmb(
-  dir_main = savedir,
+  dir_main = NULL,
   data = data_filtered,
   family = sdmTMB::delta_lognormal(),
   formula = configuration_sp$formula[1],
@@ -305,5 +298,10 @@ fit_6 <- run_sdmtmb(
   spatial = "on",
   spatiotemporal = list("off", "off")
 )
-#back to lognormal, now also turing off ansotropy, but my guess is that we will want to retain that model even if gradients are on bounds?
-#failed
+#back to lognormal, now also turning off anisotropy
+
+diagnostics_5 <- indexwc::diagnose(dir = here::here("additional_runs", "greenspotted_rockfish", "wcgbts", "delta_lognormal", "fit_6", "diagnostics"), fit = fit_6, prediction_grid = pred_grid)
+diagnostics_5$sanity
+
+index_5 <- indexwc::calc_index_areas(data = fit_6$data, fit = fit_6, prediction_grid = pred_grid, dir = here::here("additional_runs", "greenspotted_rockfish", "wcgbts", "delta_lognormal", "fit_6", "indices"))
+
