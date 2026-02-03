@@ -120,7 +120,7 @@ configuration_sp <- configuration |>
 
 #changing to lingcod south
 configuration_sp$min_latitude <- 31.9
-configuration_sp$max_latitude <- 49
+configuration_sp$max_latitude <- 40.1667
 
 pulled_data <- nwfscSurvey::pull_catch(
   common_name = sp,
@@ -131,9 +131,14 @@ data_filtered <- format_data(pulled_data) |>
                 latitude >= configuration_sp$min_latitude[1], latitude <= configuration_sp$max_latitude[1],
                 year >= configuration_sp$min_year[1], year <= configuration_sp$max_year[1])
 
-#configuration of lingcod north
+pred_grid <- sdmTMB::replicate_df(california_current_grid,
+                                  time_name = "year",
+                                  time_values = unique(data_filtered$year))
+pred_grid$fyear <- as.factor(pred_grid$year)
+
+#configuration of lingcod north used here
 fit_1 <- run_sdmtmb(
-  dir_main = savedir,
+  dir_main = NULL,
   data = data_filtered,
   family = sdmTMB::delta_gamma(),
   formula = configuration_sp$formula[1],
@@ -144,33 +149,27 @@ fit_1 <- run_sdmtmb(
   spatiotemporal = list("iid","iid")
 )
 
+diagnostics_1 <- indexwc::diagnose(dir = here::here("additional_runs", "lingcod", "wcgbts", "delta_gamma", "fit_1", "diagnostics"), fit = fit_1, prediction_grid = pred_grid)
+diagnostics_1$sanity
 
-fit_delta_gamma <- run_sdmtmb(
-  dir_main = savedir,
-  data = data_filtered,
-  family = sdmTMB::delta_gamma(),
-  formula = configuration_sp$formula[1],
-  n_knots = configuration_sp$knots[1],
-  share_range = TRUE,
-  anisotropy = FALSE,
-  spatial = "on",
-  spatiotemporal = "off"
-)
+index_1 <- indexwc::calc_index_areas(data = fit_1$data, fit = fit_1, prediction_grid = pred_grid, dir = here::here("additional_runs", "lingcod", "wcgbts", "delta_gamma", "fit_1", "indices"))
 
-#check qq
-
-fit_delta_lognormal <- run_sdmtmb(
-  dir_main = savedir,
+fit_2 <- run_sdmtmb(
+  dir_main = NULL,
   data = data_filtered,
   family = sdmTMB::delta_lognormal(),
   formula = configuration_sp$formula[1],
   n_knots = configuration_sp$knots[1],
-  share_range = TRUE,
-  anisotropy = FALSE,
+  share_range = configuration_sp$share_range[1],
+  anisotropy = configuration_sp$anisotropy[1],
   spatial = "on",
-  spatiotemporal = "off"
+  spatiotemporal = list("iid","iid")
 )
-#going with lognormal
+
+diagnostics_2 <- indexwc::diagnose(dir = here::here("additional_runs", "lingcod", "wcgbts", "delta_lognormal", "fit_2", "diagnostics"), fit = fit_2, prediction_grid = pred_grid)
+diagnostics_2$sanity
+
+index_2 <- indexwc::calc_index_areas(data = fit_2$data, fit = fit_2, prediction_grid = pred_grid, dir = here::here("additional_runs", "lingcod", "wcgbts", "delta_lognormal", "fit_2", "indices"))
 
 ###########################################################
 
@@ -351,13 +350,13 @@ pred_grid$fyear <- as.factor(pred_grid$year)
 fit_1 <- run_sdmtmb(
   dir_main = NULL,
   data = data_filtered,
-  family = sdmTMB::delta_lognormal(), #configuration_sp$family[1] using this instead does not work
+  family = sdmTMB::delta_lognormal(),
   formula = configuration_sp$formula[1],
   n_knots = configuration_sp$knots[1],
   share_range = configuration_sp$share_range[1],
   anisotropy = configuration_sp$anisotropy[1],
   spatial = "on",
-  spatiotemporal = list("iid", "iid") #c(configuration_sp$spatiotemporal1, configuration_sp$spatiotemporal2) using this instead does not work
+  spatiotemporal = list("iid", "iid")
 )
 
 diagnostics_1 <- indexwc::diagnose(dir = here::here("additional_runs", "greenstriped_rockfish", "wcgbts", "delta_lognormal", "fit_1", "diagnostics"), fit = fit_1, prediction_grid = pred_grid)
