@@ -480,10 +480,108 @@ fit_1 <- run_sdmtmb(
   spatiotemporal = list("iid", "iid")
 )
 
-diagnostics_1 <- indexwc::diagnose(dir = here::here("additional_runs", "greenstriped_rockfish", "wcgbts", "delta_gamma", "fit_1", "diagnostics"), fit = fit_1, prediction_grid = pred_grid)
+diagnostics_1 <- indexwc::diagnose(dir = here::here("additional_runs", "rex_sole", "wcgbts", "delta_gamma", "fit_1", "diagnostics"), fit = fit_1, prediction_grid = pred_grid)
+diagnostics_1$sanity
+#hessian_ok is FALSE
+
+#index_1 <- indexwc::calc_index_areas(data = fit_1$data, fit = fit_1, prediction_grid = pred_grid, dir = here::here("additional_runs", "rex_sole", "wcgbts", "delta_gamma", "fit_1", "indices"))
+
+fit_2 <- run_sdmtmb(
+  dir_main = NULL,
+  data = data_filtered,
+  family = sdmTMB::delta_lognormal(),
+  formula = configuration_sp$formula[1],
+  n_knots = configuration_sp$knots[1],
+  share_range = configuration_sp$share_range[1],
+  anisotropy = configuration_sp$anisotropy[1],
+  spatial = "on",
+  spatiotemporal = list("iid", "iid")
+)
+
+diagnostics_2 <- indexwc::diagnose(dir = here::here("additional_runs", "rex_sole", "wcgbts", "delta_lognormal", "fit_2", "diagnostics"), fit = fit_2, prediction_grid = pred_grid)
+diagnostics_2$sanity
+#hessian_ok is FALSE
+
+#index_2 <- indexwc::calc_index_areas(data = fit_2$data, fit = fit_2, prediction_grid = pred_grid, dir = here::here("additional_runs", "rex_sole", "wcgbts", "delta_lognormal", "fit_2", "indices"))
+
+fit_3 <- run_sdmtmb(
+  dir_main = NULL,
+  data = data_filtered,
+  family = sdmTMB::delta_gamma(),
+  formula = configuration_sp$formula[1],
+  n_knots = configuration_sp$knots[1],
+  share_range = TRUE,
+  anisotropy = configuration_sp$anisotropy[1],
+  spatial = "on",
+  spatiotemporal = list("iid", "iid")
+)
+#original configuration except share_range is TRUE
+
+diagnostics_3 <- indexwc::diagnose(dir = here::here("additional_runs", "rex_sole", "wcgbts", "delta_gamma", "fit_3", "diagnostics"), fit = fit_3, prediction_grid = pred_grid)
+diagnostics_3$sanity
+
+index_3 <- indexwc::calc_index_areas(data = fit_3$data, fit = fit_3, prediction_grid = pred_grid, dir = here::here("additional_runs", "rex_sole", "wcgbts", "delta_gamma", "fit_3", "indices"))
+#CHOSEN MODEL
+
+###########################################################################
+#splitnose rockfish
+
+#filter for sp and source
+sp <- "splitnose rockfish"
+
+configuration_sp <- configuration |>
+  dplyr::filter(species == sp, source == "NWFSC.Combo")
+
+pulled_data <- nwfscSurvey::pull_catch(
+  common_name = sp,
+  survey = "NWFSC.Combo")
+
+data_filtered <- format_data(pulled_data) |>
+  dplyr::filter(depth <= configuration$min_depth[1], depth >= configuration$max_depth[1],
+                latitude >= configuration$min_latitude[1], latitude <= configuration$max_latitude[1],
+                year >= configuration$min_year[1], year <= configuration$max_year[1])
+
+pred_grid <- sdmTMB::replicate_df(california_current_grid,
+                                  time_name = "year",
+                                  time_values = unique(data_filtered$year))
+
+pred_grid$fyear <- as.factor(pred_grid$year)
+
+#original configuration
+fit_1 <- run_sdmtmb(
+  dir_main = NULL,
+  data = data_filtered,
+  family = sdmTMB::delta_gamma(),
+  formula = configuration_sp$formula[1],
+  n_knots = configuration_sp$knots[1],
+  share_range = configuration_sp$share_range[1],
+  anisotropy = configuration_sp$anisotropy[1],
+  spatial = "on",
+  spatiotemporal = list("iid", "iid")
+)
+
+diagnostics_1 <- indexwc::diagnose(dir = here::here("additional_runs", "splitnose_rockfish", "wcgbts", "delta_gamma", "fit_1", "diagnostics"), fit = fit_1, prediction_grid = pred_grid)
 diagnostics_1$sanity
 
-index_1 <- indexwc::calc_index_areas(data = fit_1$data, fit = fit_1, prediction_grid = pred_grid, dir = here::here("additional_runs", "greenstriped_rockfish", "wcgbts", "delta_gamma", "fit_1", "indices"))
-#CHOSEN MODEL
+#index_1 <- indexwc::calc_index_areas(data = fit_1$data, fit = fit_1, prediction_grid = pred_grid, dir = here::here("additional_runs", "splitnose_rockfish", "wcgbts", "delta_gamma", "fit_1", "indices"))
+
+fit_2 <- run_sdmtmb(
+  dir_main = NULL,
+  data = data_filtered,
+  family = sdmTMB::delta_lognormal(),
+  formula = configuration_sp$formula[1],
+  n_knots = configuration_sp$knots[1],
+  share_range = configuration_sp$share_range[1],
+  anisotropy = configuration_sp$anisotropy[1],
+  spatial = "on",
+  spatiotemporal = list("iid", "iid")
+)
+
+diagnostics_2 <- indexwc::diagnose(dir = here::here("additional_runs", "splitnose_rockfish", "wcgbts", "delta_lognormal", "fit_2", "diagnostics"), fit = fit_2, prediction_grid = pred_grid)
+diagnostics_2$sanity
+
+#index_2 <- indexwc::calc_index_areas(data = fit_2$data, fit = fit_2, prediction_grid = pred_grid, dir = here::here("additional_runs", "splitnose_rockfish", "wcgbts", "delta_lognormal", "fit_2", "indices"))
+
+
 
 
