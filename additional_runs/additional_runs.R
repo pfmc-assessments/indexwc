@@ -557,15 +557,33 @@ fit_1 <- run_sdmtmb(
   share_range = configuration_sp$share_range[1],
   anisotropy = configuration_sp$anisotropy[1],
   spatial = "on",
-  spatiotemporal = list("iid", "iid")
+  spatiotemporal = list("iid", "off")
 )
 
 diagnostics_1 <- indexwc::diagnose(dir = here::here("additional_runs", "splitnose_rockfish", "wcgbts", "delta_gamma", "fit_1", "diagnostics"), fit = fit_1, prediction_grid = pred_grid)
 diagnostics_1$sanity
 
-#index_1 <- indexwc::calc_index_areas(data = fit_1$data, fit = fit_1, prediction_grid = pred_grid, dir = here::here("additional_runs", "splitnose_rockfish", "wcgbts", "delta_gamma", "fit_1", "indices"))
-
 fit_2 <- run_sdmtmb(
+  dir_main = NULL,
+  data = data_filtered,
+  family = sdmTMB::delta_gamma(),
+  formula = configuration_sp$formula[1],
+  n_knots = configuration_sp$knots[1],
+  share_range = configuration_sp$share_range[1],
+  anisotropy = configuration_sp$anisotropy[1],
+  spatial = "on",
+  spatiotemporal = list("iid", "iid")
+)
+#add iid for catch rate model
+
+diagnostics_2 <- indexwc::diagnose(dir = here::here("additional_runs", "splitnose_rockfish", "wcgbts", "delta_gamma", "fit_2", "diagnostics"), fit = fit_2, prediction_grid = pred_grid)
+diagnostics_2$sanity
+#qq looks better
+
+index_2 <- indexwc::calc_index_areas(data = fit_2$data, fit = fit_2, prediction_grid = pred_grid, dir = here::here("additional_runs", "splitnose_rockfish", "wcgbts", "delta_gamma", "fit_2", "indices"))
+
+
+fit_3 <- run_sdmtmb(
   dir_main = NULL,
   data = data_filtered,
   family = sdmTMB::delta_lognormal(),
@@ -577,10 +595,15 @@ fit_2 <- run_sdmtmb(
   spatiotemporal = list("iid", "iid")
 )
 
-diagnostics_2 <- indexwc::diagnose(dir = here::here("additional_runs", "splitnose_rockfish", "wcgbts", "delta_lognormal", "fit_2", "diagnostics"), fit = fit_2, prediction_grid = pred_grid)
-diagnostics_2$sanity
+diagnostics_3 <- indexwc::diagnose(dir = here::here("additional_runs", "splitnose_rockfish", "wcgbts", "delta_lognormal", "fit_3", "diagnostics"), fit = fit_3, prediction_grid = pred_grid)
+diagnostics_3$sanity
+#similar to delta_gamma fit, but qq and aic are improved
 
-#index_2 <- indexwc::calc_index_areas(data = fit_2$data, fit = fit_2, prediction_grid = pred_grid, dir = here::here("additional_runs", "splitnose_rockfish", "wcgbts", "delta_lognormal", "fit_2", "indices"))
+index_3 <- indexwc::calc_index_areas(data = fit_3$data, fit = fit_3, prediction_grid = pred_grid, dir = here::here("additional_runs", "splitnose_rockfish", "wcgbts", "delta_lognormal", "fit_3", "indices"))
+#chosen model
+
+
+###############################################################################
 
 
 
