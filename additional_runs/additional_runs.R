@@ -638,5 +638,21 @@ sd_neg_depth <- sd(pred_grid$neg_depth)
 pred_grid$depth_scaled <- - (pred_grid$neg_depth - mean_neg_depth) / sd_neg_depth
 pred_grid$depth_scaled_squared <- pred_grid$depth_scaled^2
 
+#original configuration
+fit_1 <- run_sdmtmb(
+  dir_main = NULL,
+  data = data_filtered,
+  family = sdmTMB::delta_lognormal(),
+  formula = "catch_weight ~ 0 + fyear + pass_scaled + depth_scaled + depth_scaled_squared",
+  n_knots = configuration_sp$knots[1],
+  share_range = configuration_sp$share_range[1],
+  anisotropy = configuration_sp$anisotropy[1],
+  spatial = "on",
+  spatiotemporal = list("iid","iid")
+)
 
+diagnostics_1 <- indexwc::diagnose(dir = here::here("additional_runs", "shortspine_thornyhead", "wcgbts", "delta_lognormal", "fit_1", "diagnostics"), fit = fit_1, prediction_grid = pred_grid)
+diagnostics_1$sanity
 
+index_1 <- indexwc::calc_index_areas(data = fit_1$data, fit = fit_1, prediction_grid = pred_grid, dir = here::here("additional_runs", "shortspine_thornyhead", "wcgbts", "delta_lognormal", "fit_1", "indices"))
+#chosen model
