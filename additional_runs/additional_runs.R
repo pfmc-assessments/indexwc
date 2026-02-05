@@ -34,6 +34,13 @@ pred_grid <- sdmTMB::replicate_df(california_current_grid,
 
 pred_grid$fyear <- as.factor(pred_grid$year)
 
+#add depth_scaled and depth_scaled_squared
+pred_grid$neg_depth <- -pred_grid$depth
+mean_neg_depth <- mean(pred_grid$neg_depth)
+sd_neg_depth <- sd(pred_grid$neg_depth)
+pred_grid$depth_scaled <- - (pred_grid$neg_depth - mean_neg_depth) / sd_neg_depth
+pred_grid$depth_scaled_squared <- pred_grid$depth_scaled^2
+
 #original configuration (before it was changed mid-January 2026)
 fit_1 <- run_sdmtmb(
   dir_main = NULL,
@@ -91,76 +98,73 @@ diagnostics_3$sanity
 
 #index_3 <- indexwc::calc_index_areas(data = fit_3$data, fit = fit_3, prediction_grid = pred_grid, dir = here::here("additional_runs", "longspine_thornyhead", "wcgbts", "delta_lognormal", "fit_3", "indices"))
 
-#have not run this yet
 ##################################################
+#original configuration as it was in the 2024 stock assessment priorization
 fit_4 <- run_sdmtmb(
   dir_main = NULL,
   data = data_filtered,
-  family = sdmTMB::tweedie(),
-  formula = configuration_sp$formula[1],
+  family = sdmTMB::delta_lognormal(),
+  formula = "catch_weight ~ 0 + fyear + pass_scaled + depth_scaled + depth_scaled_squared",
+  n_knots = configuration_sp$knots[1],
+  share_range = FALSE,
+  anisotropy = TRUE,
+  spatial = "on",
+  spatiotemporal = list("off","off")
+)
+
+diagnostics_4 <- indexwc::diagnose(dir = here::here("additional_runs", "longspine_thornyhead", "wcgbts", "delta_lognormal", "fit_4", "diagnostics"), fit = fit_4, prediction_grid = pred_grid)
+diagnostics_4$sanity
+
+index_4 <- indexwc::calc_index_areas(data = fit_4$data, fit = fit_4, prediction_grid = pred_grid, dir = here::here("additional_runs", "longspine_thornyhead", "wcgbts", "delta_lognormal", "fit_4", "indices"))
+#better qq plot, best model aic, CHOSEN MODEL
+
+fit_5 <- run_sdmtmb(
+  dir_main = NULL,
+  data = data_filtered,
+  family = sdmTMB::delta_lognormal(),
+  formula = "catch_weight ~ 0 + fyear + pass_scaled + depth_scaled + depth_scaled_squared",
   n_knots = configuration_sp$knots[1],
   share_range = TRUE,
   anisotropy = TRUE,
   spatial = "on",
-  spatiotemporal = list("iid","iid")
+  spatiotemporal = list("off","off")
 )
+#share_ranged changed to true
+diagnostics_5 <- indexwc::diagnose(dir = here::here("additional_runs", "longspine_thornyhead", "wcgbts", "delta_lognormal", "fit_5", "diagnostics"), fit = fit_5, prediction_grid = pred_grid)
+diagnostics_5$sanity
+#qq does not look great
 
-diagnostics_4 <- indexwc::diagnose(dir = here::here("additional_runs", "longspine_thornyhead", "wcgbts", "tweedie", "fit_4", "diagnostics"), fit = fit_4, prediction_grid = pred_grid)
-diagnostics_4$sanity
-
-index_4 <- indexwc::calc_index_areas(data = fit_4$data, fit = fit_4, prediction_grid = pred_grid, dir = here::here("additional_runs", "longspine_thornyhead", "wcgbts", "tweedie", "fit_4", "indices"))
-
-fit_delta_gamma <- run_sdmtmb(
-  dir_main = savedir,
-  data = data_filtered,
-  family = sdmTMB::delta_gamma(),
-  formula = configuration_sp$formula[1],
-  n_knots = configuration_sp$knots[1],
-  share_range = TRUE,
-  anisotropy = configuration_sp$anisotropy[1],
-  spatial = "on",
-  spatiotemporal = "off"
-)
-#failed
-
-fit_delta_lognormal <- run_sdmtmb(
-  dir_main = savedir,
+fit_6 <- run_sdmtmb(
+  dir_main = NULL,
   data = data_filtered,
   family = sdmTMB::delta_lognormal(),
-  formula = configuration_sp$formula[1],
+  formula = "catch_weight ~ 0 + fyear + pass_scaled",
   n_knots = configuration_sp$knots[1],
-  share_range = TRUE,
-  anisotropy = FALSE,
+  share_range = FALSE,
+  anisotropy = TRUE,
   spatial = "on",
-  spatiotemporal = "off"
+  spatiotemporal = list("off","off")
 )
+#share_ranged changed to false and took out depth
+diagnostics_6 <- indexwc::diagnose(dir = here::here("additional_runs", "longspine_thornyhead", "wcgbts", "delta_lognormal", "fit_6", "diagnostics"), fit = fit_6, prediction_grid = pred_grid)
+diagnostics_6$sanity
+#qq plot still not great, is it better?
 
-#worked, trying now with the other distribution families
-fit_tweedie <- run_sdmtmb(
-  dir_main = savedir,
+fit_7 <- run_sdmtmb(
+  dir_main = NULL,
   data = data_filtered,
-  family = sdmTMB::tweedie(),
-  formula = configuration_sp$formula[1],
+  family = sdmTMB::delta_lognormal(),
+  formula = "catch_weight ~ 0 + fyear + pass_scaled",
   n_knots = configuration_sp$knots[1],
   share_range = TRUE,
-  anisotropy = FALSE,
+  anisotropy = TRUE,
   spatial = "on",
-  spatiotemporal = "off"
+  spatiotemporal = list("off","off")
 )
+#share_ranged changed to true and took out depth
 
-fit_delta_gamma <- run_sdmtmb(
-  dir_main = savedir,
-  data = data_filtered,
-  family = sdmTMB::delta_gamma(),
-  formula = configuration_sp$formula[1],
-  n_knots = configuration_sp$knots[1],
-  share_range = TRUE,
-  anisotropy = FALSE,
-  spatial = "on",
-  spatiotemporal = "off"
-)
-
-#delta_gamma model chosen
+diagnostics_7 <- indexwc::diagnose(dir = here::here("additional_runs", "longspine_thornyhead", "wcgbts", "delta_lognormal", "fit_7", "diagnostics"), fit = fit_7, prediction_grid = pred_grid)
+diagnostics_7$sanity
 
 ########################################################
 #lingcod south
@@ -604,7 +608,35 @@ index_3 <- indexwc::calc_index_areas(data = fit_3$data, fit = fit_3, prediction_
 
 
 ###############################################################################
+#shortspine thornyhead
 
+#filter for sp and source
+sp <- "shortspine thornyhead"
+
+configuration_sp <- configuration |>
+  dplyr::filter(species == sp, source == "NWFSC.Combo")
+
+pulled_data <- nwfscSurvey::pull_catch(
+  common_name = sp,
+  survey = "NWFSC.Combo")
+
+data_filtered <- format_data(pulled_data) |>
+  dplyr::filter(depth <= configuration$min_depth[1], depth >= configuration$max_depth[1],
+                latitude >= configuration$min_latitude[1], latitude <= configuration$max_latitude[1],
+                year >= configuration$min_year[1], year <= configuration$max_year[1])
+
+pred_grid <- sdmTMB::replicate_df(california_current_grid,
+                                  time_name = "year",
+                                  time_values = unique(data_filtered$year))
+
+pred_grid$fyear <- as.factor(pred_grid$year)
+
+#add depth_scaled and depth_scaled_squared
+pred_grid$neg_depth <- -pred_grid$depth
+mean_neg_depth <- mean(pred_grid$neg_depth)
+sd_neg_depth <- sd(pred_grid$neg_depth)
+pred_grid$depth_scaled <- - (pred_grid$neg_depth - mean_neg_depth) / sd_neg_depth
+pred_grid$depth_scaled_squared <- pred_grid$depth_scaled^2
 
 
 
