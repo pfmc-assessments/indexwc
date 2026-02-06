@@ -24,9 +24,9 @@ pulled_data <- nwfscSurvey::pull_catch(
 survey = "NWFSC.Combo")
 
 data_filtered <- format_data(pulled_data) |>
-  dplyr::filter(depth <= configuration$min_depth[1], depth >= configuration$max_depth[1],
-                latitude >= configuration$min_latitude[1], latitude <= configuration$max_latitude[1],
-                year >= configuration$min_year[1], year <= configuration$max_year[1])
+  dplyr::filter(depth <= configuration_sp$min_depth[1], depth >= configuration_sp$max_depth[1],
+                latitude >= configuration_sp$min_latitude[1], latitude <= configuration_sp$max_latitude[1],
+                year >= configuration_sp$min_year[1], year <= configuration_sp$max_year[1])
 
 pred_grid <- sdmTMB::replicate_df(california_current_grid,
                                   time_name = "year",
@@ -247,9 +247,9 @@ pulled_data <- nwfscSurvey::pull_catch(
   survey = "NWFSC.Combo")
 
 data_filtered <- format_data(pulled_data) |>
-  dplyr::filter(depth <= configuration$min_depth[1], depth >= configuration$max_depth[1],
-                latitude >= configuration$min_latitude[1], latitude <= configuration$max_latitude[1],
-                year >= configuration$min_year[1], year <= configuration$max_year[1])
+  dplyr::filter(depth <= configuration_sp$min_depth[1], depth >= configuration_sp$max_depth[1],
+                latitude >= configuration_sp$min_latitude[1], latitude <= configuration_sp$max_latitude[1],
+                year >= configuration_sp$min_year[1], year <= configuration_sp$max_year[1])
 
 pred_grid <- sdmTMB::replicate_df(california_current_grid,
                                   time_name = "year",
@@ -400,9 +400,9 @@ pulled_data <- nwfscSurvey::pull_catch(
   survey = "NWFSC.Combo")
 
 data_filtered <- format_data(pulled_data) |>
-  dplyr::filter(depth <= configuration$min_depth[1], depth >= configuration$max_depth[1],
-                latitude >= configuration$min_latitude[1], latitude <= configuration$max_latitude[1],
-                year >= configuration$min_year[1], year <= configuration$max_year[1])
+  dplyr::filter(depth <= configuration_sp$min_depth[1], depth >= configuration_sp$max_depth[1],
+                latitude >= configuration_sp$min_latitude[1], latitude <= configuration_sp$max_latitude[1],
+                year >= configuration_sp$min_year[1], year <= configuration_sp$max_year[1])
 
 pred_grid <- sdmTMB::replicate_df(california_current_grid,
                                   time_name = "year",
@@ -461,9 +461,9 @@ pulled_data <- nwfscSurvey::pull_catch(
   survey = "NWFSC.Combo")
 
 data_filtered <- format_data(pulled_data) |>
-  dplyr::filter(depth <= configuration$min_depth[1], depth >= configuration$max_depth[1],
-                latitude >= configuration$min_latitude[1], latitude <= configuration$max_latitude[1],
-                year >= configuration$min_year[1], year <= configuration$max_year[1])
+  dplyr::filter(depth <= configuration_sp$min_depth[1], depth >= configuration_sp$max_depth[1],
+                latitude >= configuration_sp$min_latitude[1], latitude <= configuration_sp$max_latitude[1],
+                year >= configuration_sp$min_year[1], year <= configuration_sp$max_year[1])
 
 pred_grid <- sdmTMB::replicate_df(california_current_grid,
                                   time_name = "year",
@@ -541,9 +541,9 @@ pulled_data <- nwfscSurvey::pull_catch(
   survey = "NWFSC.Combo")
 
 data_filtered <- format_data(pulled_data) |>
-  dplyr::filter(depth <= configuration$min_depth[1], depth >= configuration$max_depth[1],
-                latitude >= configuration$min_latitude[1], latitude <= configuration$max_latitude[1],
-                year >= configuration$min_year[1], year <= configuration$max_year[1])
+  dplyr::filter(depth <= configuration_sp$min_depth[1], depth >= configuration_sp$max_depth[1],
+                latitude >= configuration_sp$min_latitude[1], latitude <= configuration_sp$max_latitude[1],
+                year >= configuration_sp$min_year[1], year <= configuration_sp$max_year[1])
 
 pred_grid <- sdmTMB::replicate_df(california_current_grid,
                                   time_name = "year",
@@ -621,9 +621,9 @@ pulled_data <- nwfscSurvey::pull_catch(
   survey = "NWFSC.Combo")
 
 data_filtered <- format_data(pulled_data) |>
-  dplyr::filter(depth <= configuration$min_depth[1], depth >= configuration$max_depth[1],
-                latitude >= configuration$min_latitude[1], latitude <= configuration$max_latitude[1],
-                year >= configuration$min_year[1], year <= configuration$max_year[1])
+  dplyr::filter(depth <= configuration_sp$min_depth[1], depth >= configuration_sp$max_depth[1],
+                latitude >= configuration_sp$min_latitude[1], latitude <= configuration_sp$max_latitude[1],
+                year >= configuration_sp$min_year[1], year <= configuration_sp$max_year[1])
 
 pred_grid <- sdmTMB::replicate_df(california_current_grid,
                                   time_name = "year",
@@ -656,3 +656,43 @@ diagnostics_1$sanity
 
 index_1 <- indexwc::calc_index_areas(data = fit_1$data, fit = fit_1, prediction_grid = pred_grid, dir = here::here("additional_runs", "shortspine_thornyhead", "wcgbts", "delta_lognormal", "fit_1", "indices"))
 #chosen model
+##################################################################
+####################################################################
+#longspine thornyhead
+
+#filter for sp and source
+sp <- "Dover sole"
+
+configuration_sp <- configuration |>
+  dplyr::filter(species == sp, source == "NWFSC.Combo")
+
+pulled_data <- nwfscSurvey::pull_catch(
+  common_name = sp,
+  survey = "NWFSC.Combo")
+
+data_filtered <- format_data(pulled_data) |>
+  dplyr::filter(depth <= configuration_sp$min_depth[1], depth >= configuration_sp$max_depth[1],
+                latitude >= configuration_sp$min_latitude[1], latitude <= configuration_sp$max_latitude[1],
+                year >= configuration_sp$min_year[1], year <= configuration_sp$max_year[1])
+
+pred_grid <- sdmTMB::replicate_df(california_current_grid,
+                                  time_name = "year",
+                                  time_values = unique(data_filtered$year))
+
+pred_grid$fyear <- as.factor(pred_grid$year)
+
+#original configuration
+fit_1 <- run_sdmtmb(
+  dir_main = NULL,
+  data = data_filtered,
+  family = sdmTMB::delta_gamma(),
+  formula = configuration_sp$formula[1],
+  n_knots = configuration_sp$knots[1],
+  share_range = configuration_sp$share_range[1],
+  anisotropy = configuration_sp$anisotropy[1],
+  spatial = "on",
+  spatiotemporal = list("iid", "iid")
+)
+
+diagnostics_1 <- indexwc::diagnose(dir = here::here("additional_runs", "splitnose_rockfish", "wcgbts", "delta_gamma", "fit_1", "diagnostics"), fit = fit_1, prediction_grid = pred_grid)
+diagnostics_1$sanity
