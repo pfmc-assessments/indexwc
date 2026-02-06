@@ -170,13 +170,13 @@ observation.</p>
 <span></span>
 <span><span class="va">data</span> <span class="op">&lt;-</span> <span class="va">yellowtail</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span></span>
-<span>        <span class="va">depth</span> <span class="op">&lt;=</span> <span class="va">configuration_to_run</span><span class="op">$</span><span class="va">min_depth</span>, </span>
-<span>        <span class="va">depth</span> <span class="op">&gt;=</span> <span class="va">configuration_to_run</span><span class="op">$</span><span class="va">max_depth</span>,</span>
-<span>        <span class="va">latitude</span> <span class="op">&gt;=</span> <span class="va">configuration_to_run</span><span class="op">$</span><span class="va">min_latitude</span>, </span>
-<span>        <span class="va">latitude</span> <span class="op">&lt;=</span> <span class="va">configuration_to_run</span><span class="op">$</span><span class="va">max_latitude</span>,</span>
-<span>        <span class="va">year</span> <span class="op">&gt;=</span> <span class="va">configuration_to_run</span><span class="op">$</span><span class="va">min_year</span>, </span>
-<span>        <span class="va">year</span> <span class="op">&lt;=</span> <span class="va">configuration_to_run</span><span class="op">$</span><span class="va">max_year</span></span>
-<span>      <span class="op">)</span></span></code></pre></div>
+<span>    <span class="va">depth</span> <span class="op">&lt;=</span> <span class="va">configuration_to_run</span><span class="op">$</span><span class="va">min_depth</span>,</span>
+<span>    <span class="va">depth</span> <span class="op">&gt;=</span> <span class="va">configuration_to_run</span><span class="op">$</span><span class="va">max_depth</span>,</span>
+<span>    <span class="va">latitude</span> <span class="op">&gt;=</span> <span class="va">configuration_to_run</span><span class="op">$</span><span class="va">min_latitude</span>,</span>
+<span>    <span class="va">latitude</span> <span class="op">&lt;=</span> <span class="va">configuration_to_run</span><span class="op">$</span><span class="va">max_latitude</span>,</span>
+<span>    <span class="va">year</span> <span class="op">&gt;=</span> <span class="va">configuration_to_run</span><span class="op">$</span><span class="va">min_year</span>,</span>
+<span>    <span class="va">year</span> <span class="op">&lt;=</span> <span class="va">configuration_to_run</span><span class="op">$</span><span class="va">max_year</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
 <p>The filtered data has several thousand less rows than the raw
 data.</p>
 </div>
@@ -197,13 +197,15 @@ datasets without missing values, you may not want to include this
 <code class="sourceCode R"><span><span class="co"># the character string needs to be parsed before used as input</span></span>
 <span><span class="va">family_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/eval.html" class="external-link">eval</a></span><span class="op">(</span><span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/parse_expr.html" class="external-link">parse_expr</a></span><span class="op">(</span><span class="va">configuration_to_run</span><span class="op">$</span><span class="va">family</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/run_sdmtmb.html">run_sdmtmb</a></span><span class="op">(</span>dir_main <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>                       <span class="va">data</span>,</span>
-<span>                       family <span class="op">=</span> <span class="va">family_obj</span>,</span>
-<span>                       formula <span class="op">=</span> <span class="va">configuration_to_run</span><span class="op">$</span><span class="va">formula</span>,</span>
-<span>                       n_knots <span class="op">=</span> <span class="va">configuration_to_run</span><span class="op">$</span><span class="va">knots</span>,</span>
-<span>                       share_range <span class="op">=</span> <span class="va">configuration_to_run</span><span class="op">$</span><span class="va">share_range</span>,</span>
-<span>                  sdmtmb_control <span class="op">=</span> <span class="fu">sdmTMB</span><span class="fu">::</span><span class="fu"><a href="https://sdmTMB.github.io/sdmTMB/reference/sdmTMBcontrol.html" class="external-link">sdmTMBcontrol</a></span><span class="op">(</span>newton_loops <span class="op">=</span> <span class="fl">3</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/run_sdmtmb.html">run_sdmtmb</a></span><span class="op">(</span></span>
+<span>  dir_main <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">data</span>,</span>
+<span>  family <span class="op">=</span> <span class="va">family_obj</span>,</span>
+<span>  formula <span class="op">=</span> <span class="va">configuration_to_run</span><span class="op">$</span><span class="va">formula</span>,</span>
+<span>  n_knots <span class="op">=</span> <span class="va">configuration_to_run</span><span class="op">$</span><span class="va">knots</span>,</span>
+<span>  share_range <span class="op">=</span> <span class="va">configuration_to_run</span><span class="op">$</span><span class="va">share_range</span>,</span>
+<span>  sdmtmb_control <span class="op">=</span> <span class="fu">sdmTMB</span><span class="fu">::</span><span class="fu"><a href="https://sdmTMB.github.io/sdmTMB/reference/sdmTMBcontrol.html" class="external-link">sdmTMBcontrol</a></span><span class="op">(</span>newton_loops <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p>In the above example, <code>dir</code> is specified to be NULL, so
 the fitted object will be returned. But if this is a directory name, it
 will be created and used to save data and the model fit.</p>
@@ -234,14 +236,17 @@ yellowtail model to be spatial only.</p>
 <p>Next, we can run the diagnostics with the California Current
 prediction grid</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">pred_grid</span> <span class="op">&lt;-</span> <span class="fu">sdmTMB</span><span class="fu">::</span><span class="fu"><a href="https://sdmTMB.github.io/sdmTMB/reference/replicate_df.html" class="external-link">replicate_df</a></span><span class="op">(</span><span class="va">california_current_grid</span>, </span>
-<span>                                  time_name <span class="op">=</span> <span class="st">"year"</span>, </span>
-<span>                                  time_values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">year</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">pred_grid</span> <span class="op">&lt;-</span> <span class="fu">sdmTMB</span><span class="fu">::</span><span class="fu"><a href="https://sdmTMB.github.io/sdmTMB/reference/replicate_df.html" class="external-link">replicate_df</a></span><span class="op">(</span><span class="va">california_current_grid</span>,</span>
+<span>  time_name <span class="op">=</span> <span class="st">"year"</span>,</span>
+<span>  time_values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">year</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
 <span><span class="va">pred_grid</span><span class="op">$</span><span class="va">fyear</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">pred_grid</span><span class="op">$</span><span class="va">year</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">diagnostics</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/diagnose.html">diagnose</a></span><span class="op">(</span>dir <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>                        fit <span class="op">=</span> <span class="va">fit_simple</span>,</span>
-<span>                        prediction_grid <span class="op">=</span> <span class="va">pred_grid</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">diagnostics</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/diagnose.html">diagnose</a></span><span class="op">(</span></span>
+<span>  dir <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  fit <span class="op">=</span> <span class="va">fit_simple</span>,</span>
+<span>  prediction_grid <span class="op">=</span> <span class="va">pred_grid</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p>If <code>dir</code> is specified, output and diagnostics for all
 models and predictions are stored in a folder that <code>indexwc</code>
 creates. If no directory is specified
@@ -268,7 +273,7 @@ Stepping through what elements are output:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">diagnostics</span><span class="op">$</span><span class="va">formula</span></span>
 <span><span class="co">#&gt; catch_weight ~ 0 + fyear + pass_scaled</span></span>
-<span><span class="co">#&gt; &lt;environment: 0x55f2f5451e78&gt;</span></span></code></pre></div>
+<span><span class="co">#&gt; &lt;environment: 0x564396582b68&gt;</span></span></code></pre></div>
 <p>The log-likelihood and AIC are returned with</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">diagnostics</span><span class="op">$</span><span class="va">loglike</span></span>
@@ -446,11 +451,12 @@ done sequentially). Again we’ll leave the ‘dir’ argument set to NULL and
 return everything</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">index</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_index_areas.html">calc_index_areas</a></span><span class="op">(</span></span>
-<span>  data<span class="op">=</span><span class="va">fit_simple</span><span class="op">$</span><span class="va">data</span>, </span>
-<span>  fit <span class="op">=</span> <span class="va">fit_simple</span>, </span>
-<span>  prediction_grid<span class="op">=</span><span class="va">pred_grid</span>,</span>
+<span>  data <span class="op">=</span> <span class="va">fit_simple</span><span class="op">$</span><span class="va">data</span>,</span>
+<span>  fit <span class="op">=</span> <span class="va">fit_simple</span>,</span>
+<span>  prediction_grid <span class="op">=</span> <span class="va">pred_grid</span>,</span>
 <span>  boundaries <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Coastwide"</span><span class="op">)</span>,</span>
-<span>  dir <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+<span>  dir <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p>The indices may be visualized by extracting the time series plot</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">index</span><span class="op">$</span><span class="va">plot_indices</span></span></code></pre></div>

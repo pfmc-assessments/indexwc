@@ -185,14 +185,14 @@ dataframe.</p>
 <span></span>
 <span><span class="va">data</span> <span class="op">&lt;-</span> <span class="va">yellowtail</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span></span>
-<span>        <span class="va">depth</span> <span class="op">&lt;=</span> <span class="va">configuration_to_run</span><span class="op">$</span><span class="va">min_depth</span>, </span>
-<span>        <span class="va">depth</span> <span class="op">&gt;=</span> <span class="va">configuration_to_run</span><span class="op">$</span><span class="va">max_depth</span>,</span>
-<span>        <span class="va">latitude</span> <span class="op">&gt;=</span> <span class="va">configuration_to_run</span><span class="op">$</span><span class="va">min_latitude</span>, </span>
-<span>        <span class="va">latitude</span> <span class="op">&lt;=</span> <span class="va">configuration_to_run</span><span class="op">$</span><span class="va">max_latitude</span>,</span>
-<span>        <span class="va">year</span> <span class="op">&gt;=</span> <span class="va">configuration_to_run</span><span class="op">$</span><span class="va">min_year</span>, </span>
-<span>        <span class="va">year</span> <span class="op">&lt;=</span> <span class="va">configuration_to_run</span><span class="op">$</span><span class="va">max_year</span></span>
-<span>      <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>      <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>split_mendocino <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">latitude</span> <span class="op">&gt;</span> <span class="fl">40.1666667</span>, <span class="st">"N"</span>, <span class="st">"S"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="va">depth</span> <span class="op">&lt;=</span> <span class="va">configuration_to_run</span><span class="op">$</span><span class="va">min_depth</span>,</span>
+<span>    <span class="va">depth</span> <span class="op">&gt;=</span> <span class="va">configuration_to_run</span><span class="op">$</span><span class="va">max_depth</span>,</span>
+<span>    <span class="va">latitude</span> <span class="op">&gt;=</span> <span class="va">configuration_to_run</span><span class="op">$</span><span class="va">min_latitude</span>,</span>
+<span>    <span class="va">latitude</span> <span class="op">&lt;=</span> <span class="va">configuration_to_run</span><span class="op">$</span><span class="va">max_latitude</span>,</span>
+<span>    <span class="va">year</span> <span class="op">&gt;=</span> <span class="va">configuration_to_run</span><span class="op">$</span><span class="va">min_year</span>,</span>
+<span>    <span class="va">year</span> <span class="op">&lt;=</span> <span class="va">configuration_to_run</span><span class="op">$</span><span class="va">max_year</span></span>
+<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>split_mendocino <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">latitude</span> <span class="op">&gt;</span> <span class="fl">40.1666667</span>, <span class="st">"N"</span>, <span class="st">"S"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">ungroup</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>Yellowtail rockfish occur more north of Cape Mendocino, and as a
 check we can see if there’s any years with no positive catches. This
@@ -311,8 +311,10 @@ may be useful to adjust the <code>newton_loops</code>, etc.</p>
 <span>  n_knots <span class="op">=</span> <span class="va">configuration_to_run</span><span class="op">$</span><span class="va">knots</span>,</span>
 <span>  share_range <span class="op">=</span> <span class="va">configuration_to_run</span><span class="op">$</span><span class="va">share_range</span>,</span>
 <span>  sdmtmb_control <span class="op">=</span> <span class="fu">sdmTMB</span><span class="fu">::</span><span class="fu"><a href="https://sdmTMB.github.io/sdmTMB/reference/sdmTMBcontrol.html" class="external-link">sdmTMBcontrol</a></span><span class="op">(</span></span>
-<span>    map <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>b_j <span class="op">=</span> <span class="va">map_pres</span>,</span>
-<span>               b_j2 <span class="op">=</span> <span class="va">map_pos</span><span class="op">)</span>,</span>
+<span>    map <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>      b_j <span class="op">=</span> <span class="va">map_pres</span>,</span>
+<span>      b_j2 <span class="op">=</span> <span class="va">map_pos</span></span>
+<span>    <span class="op">)</span>,</span>
 <span>    start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>b_j <span class="op">=</span> <span class="va">start_pres</span>, b_j2 <span class="op">=</span> <span class="va">start_pos</span><span class="op">)</span>,</span>
 <span>    newton_loops <span class="op">=</span> <span class="fl">1</span></span>
 <span>  <span class="op">)</span></span>
