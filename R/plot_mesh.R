@@ -21,7 +21,7 @@ plot_mesh <- function(mesh, file_name = NULL) {
     ggplot2::coord_fixed()
 
   # Save if file_name provided
-  if(!is.null(file_name)) {
+  if (!is.null(file_name)) {
     ggplot2::ggsave(
       plot = mesh_plot,
       filename = file_name,
