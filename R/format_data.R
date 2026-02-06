@@ -46,10 +46,12 @@
 #' formatted_data <- format_data(data = catch_wcgbts_canary)
 #' }
 format_data <- function(data, ...) {
-  if (all(
-    c("Latitude_dd", "cpue_kg_per_ha_der", "Datetime_utc_iso") %in%
-      colnames(data)
-  )) {
+  if (
+    all(
+      c("Latitude_dd", "cpue_kg_per_ha_der", "Datetime_utc_iso") %in%
+        colnames(data)
+    )
+  ) {
     class(data) <- c("nwfscSurvey", class(data))
   }
   UseMethod("format_data", data)
@@ -100,7 +102,8 @@ format_data.nwfscSurvey <- function(data, ...) {
     ) |>
     dplyr::mutate(
       survey_name = dplyr::case_when(
-        .data$survey_name == "Groundfish Slope and Shelf Combination Survey" ~ "WCGBTS",
+        .data$survey_name == "Groundfish Slope and Shelf Combination Survey" ~
+          "WCGBTS",
         .data$survey_name == "Groundfish Triennial Shelf Survey" ~ "Triennial",
         .data$survey_name == "AFSC/RACE Slope Survey" ~ "AFSC_Slope",
         .data$survey_name == "Groundfish Slope Survey" ~ "NWFSC_Slope",
@@ -109,16 +112,20 @@ format_data.nwfscSurvey <- function(data, ...) {
       catch_weight = .data$total_catch_wt_kg * 0.001,
       effort = .data$area_swept_ha * 0.01,
       depth = .data$depth_m * -1,
-      vessel_year = as.factor(as.numeric(
-        as.factor(paste(.data$vessel, .data$year, sep = "_")),
-        as.is = FALSE
-      ) - 1),
+      vessel_year = as.factor(
+        as.numeric(
+          as.factor(paste(.data$vessel, .data$year, sep = "_")),
+          as.is = FALSE
+        ) -
+          1
+      ),
       fyear = as.factor(.data$year),
       depth_scaled = scale(.data$depth),
       depth_scaled_squared = .data$depth_scaled^2,
       pass_scaled = .data$pass - mean(range(.data$pass))
     ) |>
     dplyr::select(
+      .data$trawl_id,
       .data$year,
       .data$fyear,
       .data$survey_name,
@@ -137,12 +144,14 @@ format_data.nwfscSurvey <- function(data, ...) {
     dplyr::filter(
       !(.data$survey_name == "AFSC.Slope" & .data$year <= 1996),
       !(grepl("Triennial", .data$survey_name) & .data$year == 1977),
-      !(.data$common_name %in% c("petrale sole", "canary rockfish") &
-        .data$depth > 366 & grepl("Triennial", .data$survey_name)
-      ),
-      !(.data$common_name %in% c("petrale sole", "canary rockfish") &
-        .data$latitude < 36.8 & grepl("Triennial", .data$survey_name)
-      ),
+      !(.data$common_name %in%
+        c("petrale sole", "canary rockfish") &
+        .data$depth > 366 &
+        grepl("Triennial", .data$survey_name)),
+      !(.data$common_name %in%
+        c("petrale sole", "canary rockfish") &
+        .data$latitude < 36.8 &
+        grepl("Triennial", .data$survey_name)),
     )
   data_utm <- suppressWarnings(sdmTMB::add_utm_columns(
     data,
