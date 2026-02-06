@@ -90,14 +90,14 @@ data("yellowtail")
 
 data <- yellowtail |>
   dplyr::filter(
-        depth <= configuration_to_run$min_depth, 
-        depth >= configuration_to_run$max_depth,
-        latitude >= configuration_to_run$min_latitude, 
-        latitude <= configuration_to_run$max_latitude,
-        year >= configuration_to_run$min_year, 
-        year <= configuration_to_run$max_year
-      ) |>
-      dplyr::mutate(split_mendocino = ifelse(latitude > 40.1666667, "N", "S")) |>
+    depth <= configuration_to_run$min_depth,
+    depth >= configuration_to_run$max_depth,
+    latitude >= configuration_to_run$min_latitude,
+    latitude <= configuration_to_run$max_latitude,
+    year >= configuration_to_run$min_year,
+    year <= configuration_to_run$max_year
+  ) |>
+  dplyr::mutate(split_mendocino = ifelse(latitude > 40.1666667, "N", "S")) |>
   dplyr::ungroup()
 ```
 
@@ -183,8 +183,10 @@ fit <- run_sdmtmb(
   n_knots = configuration_to_run$knots,
   share_range = configuration_to_run$share_range,
   sdmtmb_control = sdmTMB::sdmTMBcontrol(
-    map = list(b_j = map_pres,
-               b_j2 = map_pos),
+    map = list(
+      b_j = map_pres,
+      b_j2 = map_pos
+    ),
     start = list(b_j = start_pres, b_j2 = start_pos),
     newton_loops = 1
   )

@@ -49,29 +49,28 @@
 #' )
 #'
 #' # Access diagnostic values
-#' diag$aic                    # AIC value
-#' diag$loglike                # Log-likelihood
-#' diag$sanity                 # Sanity check data frame
-#' head(diag$effects)          # Effects table
+#' diag$aic # AIC value
+#' diag$loglike # Log-likelihood
+#' diag$sanity # Sanity check data frame
+#' head(diag$effects) # Effects table
 #'
 #' # View plots
-#' print(diag$qq_plot)         # QQ plot
+#' print(diag$qq_plot) # QQ plot
 #' print(diag$anisotropy_plot) # Anisotropy
-#' print(diag$residual_maps[[1]])  # Residuals model 1
+#' print(diag$residual_maps[[1]]) # Residuals model 1
 #' if (length(diag$residual_maps) > 1) {
-#'   print(diag$residual_maps[[2]])  # Residuals model 2 (delta)
+#'   print(diag$residual_maps[[2]]) # Residuals model 2 (delta)
 #' }
-#' print(diag$fixed_effects_plot)  # Fixed effects over time
-#' print(diag$density_plot)        # Density maps
+#' print(diag$fixed_effects_plot) # Fixed effects over time
+#' print(diag$density_plot) # Density maps
 #'
 #' # Access data
-#' head(diag$predictions)       # Predictions on grid
-#' head(diag$data_with_residuals)  # Data with residuals
+#' head(diag$predictions) # Predictions on grid
+#' head(diag$data_with_residuals) # Data with residuals
 #'
 #' # Session information
-#' diag$date                    # When diagnostics were run
-#' diag$session_info            # Full session info
-#'
+#' diag$date # When diagnostics were run
+#' diag$session_info # Full session info
 #' }
 #' @importFrom rlang .data
 #' @importFrom utils write.table sessionInfo
@@ -112,12 +111,12 @@ diagnose <- function(dir,
 
   # mesh plot
   filename <- NULL
-  if(!is.null(dir)) filename = fs::path(dir, "mesh.png")
+  if (!is.null(dir)) filename <- fs::path(dir, "mesh.png")
   mesh_plot <- plot_mesh(sdmtmb_fit$mesh, file_name = filename)
 
   # Get sanity diagnostics
   sanity_out <- sanity_data(sdmtmb_fit)
-  if(!is.null(dir)) {
+  if (!is.null(dir)) {
     utils::write.table(
       sanity_out,
       file = fs::path(dir, "sanity_data_frame.csv"),
@@ -133,7 +132,7 @@ diagnose <- function(dir,
   run_diagnostics$formula <- sdmtmb_fit$formula[[1]]
   run_diagnostics$loglike <- logLik(sdmtmb_fit)
   run_diagnostics$aic <- AIC(sdmtmb_fit)
-  if(!is.null(dir)) {
+  if (!is.null(dir)) {
     write.table(
       rbind(
         c("AIC", run_diagnostics$aic),
@@ -164,7 +163,7 @@ diagnose <- function(dir,
     dplyr::mutate(
       model = unlist(all_combos[.data$model, "x"])
     )
-  if(!is.null(dir)) {
+  if (!is.null(dir)) {
     save(
       run_diagnostics,
       file = file.path(dir, "run_diagnostics_and_estimates.rdata")
@@ -187,7 +186,7 @@ diagnose <- function(dir,
 
   # QQ plot
   filename <- NULL
-  if(!is.null(dir)) filename <- file.path(dir, "qq.png")
+  if (!is.null(dir)) filename <- file.path(dir, "qq.png")
   qqplot <- plot_qq(
     fit = sdmtmb_fit,
     file_name = filename
@@ -220,10 +219,10 @@ diagnose <- function(dir,
 
   # Anisotropy plot
   filename <- NULL
-  if(!is.null(dir)) filename <- fs::path(dir, "anisotropy.png")
+  if (!is.null(dir)) filename <- fs::path(dir, "anisotropy.png")
   gg_aniso <- try(sdmTMB::plot_anisotropy(object = sdmtmb_fit) +
-                    ggplot2::theme_bw(), silent = TRUE)
-  if(!is.null(filename)) {
+    ggplot2::theme_bw(), silent = TRUE)
+  if (!is.null(filename)) {
     suppressMessages(ggplot2::ggsave(
       filename = filename,
       plot = gg_aniso,
@@ -246,7 +245,7 @@ diagnose <- function(dir,
   predictions <- add_utm_columns(predictions)
   # Density plots
   save_prefix <- NULL
-  if(!is.null(dir)) save_prefix <- file.path(dir, "density")
+  if (!is.null(dir)) save_prefix <- file.path(dir, "density")
 
   density_plot <- map_density(
     predictions = predictions,
@@ -254,7 +253,7 @@ diagnose <- function(dir,
   )
 
   # Save data with residuals and predictions
-  if(!is.null(dir)) {
+  if (!is.null(dir)) {
     data_with_residuals <- sdmtmb_fit$data
     save(data_with_residuals, file = file.path(dir, "data_with_residuals.rdata"))
     save(predictions, file = file.path(dir, "predictions.rdata"))

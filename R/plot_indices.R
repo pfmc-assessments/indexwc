@@ -59,7 +59,7 @@ plot_indices <- function(data,
     ggplot2::xlab("Year") +
     ggplot2::ylab("Index (mt)") +
     ggplot2::expand_limits(y = 0)
-  if(!is.null(file_name)) {
+  if (!is.null(file_name)) {
     suppressMessages(ggplot2::ggsave(
       plot = gg,
       filename = fs::path(save_loc, file_name),

@@ -23,7 +23,7 @@ sanity_data <- function(fit) {
     if (length(x) == 1) {
       return(as.logical(x))
     } else {
-      return(all(as.logical(x)))  # Or use any()
+      return(all(as.logical(x))) # Or use any()
     }
   })
 
