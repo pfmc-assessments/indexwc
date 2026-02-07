@@ -694,5 +694,8 @@ fit_1 <- run_sdmtmb(
   spatiotemporal = list("iid", "iid")
 )
 
-diagnostics_1 <- indexwc::diagnose(dir = here::here("additional_runs", "splitnose_rockfish", "wcgbts", "delta_gamma", "fit_1", "diagnostics"), fit = fit_1, prediction_grid = pred_grid)
+diagnostics_1 <- indexwc::diagnose(dir = here::here("additional_runs", "Dover_sole", "wcgbts", "delta_gamma", "fit_1", "diagnostics"), fit = fit_1, prediction_grid = pred_grid)
 diagnostics_1$sanity
+
+index_1 <- indexwc::calc_index_areas(data = fit_1$data, fit = fit_1, prediction_grid = pred_grid, dir = here::here("additional_runs", "Dover_sole", "wcgbts", "delta_gamma", "fit_1", "indices"))
+#next do yellowtail
