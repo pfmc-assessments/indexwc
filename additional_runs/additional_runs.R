@@ -759,6 +759,7 @@ pred_grid <- sdmTMB::replicate_df(california_current_grid,
 
 pred_grid$fyear <- as.factor(pred_grid$year)
 
+#origional configuration
 fit_1 <- run_sdmtmb(
   dir_main = NULL,
   data = data_filtered,
@@ -773,5 +774,23 @@ fit_1 <- run_sdmtmb(
 
 diagnostics_1 <- indexwc::diagnose(dir = here::here("additional_runs", "rosethorn_rockfish", "wcgbts", "delta_gamma", "fit_1", "diagnostics"), fit = fit_1, prediction_grid = pred_grid)
 diagnostics_1$sanity
+#hessian_ok is FALSE
 
-index_1 <- indexwc::calc_index_areas(data = fit_1$data, fit = fit_1, prediction_grid = pred_grid, dir = here::here("additional_runs", "rosethorn_rockfish", "wcgbts", "delta_gamma", "fit_1", "indices"))
+#index_1 <- indexwc::calc_index_areas(data = fit_1$data, fit = fit_1, prediction_grid = pred_grid, dir = here::here("additional_runs", "rosethorn_rockfish", "wcgbts", "delta_gamma", "fit_1", "indices"))
+
+fit_2 <- run_sdmtmb(
+  dir_main = NULL,
+  data = data_filtered,
+  family = sdmTMB::delta_gamma(),
+  formula = configuration_sp$formula[1],
+  n_knots = configuration_sp$knots[1],
+  share_range = configuration_sp$share_range[1],
+  anisotropy = configuration_sp$anisotropy[1],
+  spatial = "on",
+  spatiotemporal = list("off", "off")
+)
+
+diagnostics_2 <- indexwc::diagnose(dir = here::here("additional_runs", "rosethorn_rockfish", "wcgbts", "delta_gamma", "fit_2", "diagnostics"), fit = fit_2, prediction_grid = pred_grid)
+diagnostics_2$sanity
+
+index_2 <- indexwc::calc_index_areas(data = fit_2$data, fit = fit_2, prediction_grid = pred_grid, dir = here::here("additional_runs", "rosethorn_rockfish", "wcgbts", "delta_gamma", "fit_2", "indices"))
