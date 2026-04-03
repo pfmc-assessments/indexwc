@@ -72,7 +72,14 @@ The more boundaries there are the longer the function will take to run.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">calc_index_areas</span><span class="op">(</span><span class="va">data</span>, <span class="va">fit</span>, <span class="va">prediction_grid</span>, <span class="va">dir</span>, boundaries <span class="op">=</span> <span class="st">"Coastwide"</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">calc_index_areas</span><span class="op">(</span></span>
+<span>  <span class="va">data</span>,</span>
+<span>  <span class="va">fit</span>,</span>
+<span>  <span class="va">prediction_grid</span>,</span>
+<span>  <span class="va">dir</span>,</span>
+<span>  boundaries <span class="op">=</span> <span class="st">"Coastwide"</span>,</span>
+<span>  cog <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -102,14 +109,40 @@ will only be returned (not saved to a file)</p></dd>
 indices for. These should be names from <a href="boundaries_data.html">boundaries_data</a>. The default is
 <code>"Coastwide"</code>, which calculates only the Coastwide index</p></dd>
 
+
+<dt id="arg-cog">cog<a class="anchor" aria-label="anchor" href="#arg-cog"></a></dt>
+<dd><p>Logical. If <code>TRUE</code>, center of gravity estimates will also be
+calculated using <code><a href="https://sdmTMB.github.io/sdmTMB/reference/get_index.html" class="external-link">sdmTMB::get_cog()</a></code> for each area. Defaults to <code>FALSE</code>.
+Note that COG results are returned in long format with separate rows for
+the X (easting) and Y (northing) coordinate axes.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A very large list is returned with predictions, model fits, and indices for
-each area specified in boundaries. Potentially, two figures are also saved
-to the disk displaying the index by year. The index for each area is also
-saved to a csv file in <code>dir</code> titled <code>est_by_area.csv</code>.</p>
-    </div>
+    <p>A list with the following components:</p><dl><dt><code>results</code></dt>
+<dd><p>A named list with one element per area, each containing
+the sdmTMB prediction object, the raw <code>index</code> data frame, and (if
+<code>cog = TRUE</code>) the raw <code>cog</code> data frame.</p></dd>
+
+<dt><code>indices</code></dt>
+<dd><p>A data frame of biomass index estimates across all areas,
+with columns: <code>area</code>, <code>year</code>, <code>est</code>, <code>lwr</code>, <code>upr</code>, <code>log_est</code>, <code>se</code>,
+<code>se_natural</code>, <code>type</code>. Saved to <code>est_by_area.csv</code> if <code>dir</code> is provided.</p></dd>
+
+<dt><code>cogs</code></dt>
+<dd><p><em>(Only present if <code>cog = TRUE</code>)</em> A data frame of center of
+gravity estimates across all areas, with columns: <code>area</code>, <code>year</code>, <code>est</code>,
+<code>lwr</code>, <code>upr</code>, <code>se</code>, <code>coord</code>, <code>type</code>. Unlike <code>indices</code>, COG results are
+in long format with one row per year per coordinate axis (<code>coord = "X"</code>
+for easting, <code>coord = "Y"</code> for northing). Saved to <code>cog_by_area.csv</code>
+if <code>dir</code> is provided.</p></dd>
+
+<dt><code>plot_indices</code></dt>
+<dd><p>A ggplot object of the biomass index across all
+areas.</p></dd>
+
+
+</dl></div>
     <div id="details">
     <h2>Details</h2>
     <p>The outer areas will be truncated based on the presence of positive tows
@@ -124,6 +157,7 @@ convergence is poor when there are a lot of zeros.</p>
 <ul><li><p><a href="boundaries_data.html">boundaries_data</a>, a data object</p></li>
 <li><p><code><a href="available_areas.html">available_areas()</a></code>, helper function to list available areas</p></li>
 <li><p><code><a href="https://sdmTMB.github.io/sdmTMB/reference/get_index.html" class="external-link">sdmTMB::get_index()</a></code>, used to generate the area-specific indices</p></li>
+<li><p><code><a href="https://sdmTMB.github.io/sdmTMB/reference/get_index.html" class="external-link">sdmTMB::get_cog()</a></code>, used to generate center of gravity estimates</p></li>
 <li><p><code><a href="https://sdmTMB.github.io/sdmTMB/reference/sdmTMB.html" class="external-link">sdmTMB::sdmTMB()</a></code>, used to create the <code>fit</code> object</p></li>
 </ul></div>
     </div>
@@ -149,6 +183,17 @@ convergence is poor when there are a lot of zeros.</p>
 <span class="r-in"><span><span class="co"># look at the index, which will be in "test" because that is what we</span></span></span>
 <span class="r-in"><span><span class="co"># named the boundary</span></span></span>
 <span class="r-in"><span><span class="va">index</span><span class="op">[[</span><span class="st">"test"</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"index"</span><span class="op">]</span><span class="op">]</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Also calculate center of gravity</span></span></span>
+<span class="r-in"><span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu">calc_index_areas</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="va">data</span>, <span class="va">fit</span>, <span class="va">grid</span>,</span></span>
+<span class="r-in"><span>  dir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd</a></span><span class="op">(</span><span class="op">)</span>, boundaries <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Coastwide"</span>, <span class="st">"CA"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  cog <span class="op">=</span> <span class="cn">TRUE</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># Full COG table (long format: two rows per year per area, one per coord)</span></span></span>
+<span class="r-in"><span><span class="va">results</span><span class="op">[[</span><span class="st">"cogs"</span><span class="op">]</span><span class="op">]</span></span></span>
+<span class="r-in"><span><span class="co"># Northing (latitude) only</span></span></span>
+<span class="r-in"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">results</span><span class="op">[[</span><span class="st">"cogs"</span><span class="op">]</span><span class="op">]</span>, <span class="va">coord</span> <span class="op">==</span> <span class="st">"Y"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>

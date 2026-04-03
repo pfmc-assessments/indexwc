@@ -273,7 +273,7 @@ Stepping through what elements are output:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">diagnostics</span><span class="op">$</span><span class="va">formula</span></span>
 <span><span class="co">#&gt; catch_weight ~ 0 + fyear + pass_scaled</span></span>
-<span><span class="co">#&gt; &lt;environment: 0x55c9f0e051e8&gt;</span></span></code></pre></div>
+<span><span class="co">#&gt; &lt;environment: 0x55edc5e008a0&gt;</span></span></code></pre></div>
 <p>The log-likelihood and AIC are returned with</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">diagnostics</span><span class="op">$</span><span class="va">loglike</span></span>
@@ -455,6 +455,7 @@ return everything</p>
 <span>  fit <span class="op">=</span> <span class="va">fit_simple</span>,</span>
 <span>  prediction_grid <span class="op">=</span> <span class="va">pred_grid</span>,</span>
 <span>  boundaries <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Coastwide"</span><span class="op">)</span>,</span>
+<span>  cog <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  dir <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>The indices may be visualized by extracting the time series plot</p>
@@ -626,6 +627,170 @@ return everything</p>
 <span><span class="co">#&gt; 78   2489.529 index</span></span>
 <span><span class="co">#&gt; 79   5261.333 index</span></span>
 <span><span class="co">#&gt; 80   3609.686 index</span></span></code></pre></div>
+<p>Similarly the center of gravity (COG) estimates are in</p>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">index</span><span class="op">$</span><span class="va">cogs</span></span>
+<span><span class="co">#&gt;          area year       est       lwr       upr           se coord type</span></span>
+<span><span class="co">#&gt; 1   Coastwide 2003  363.3589  363.3589  363.3589 1.167012e-11     X  cog</span></span>
+<span><span class="co">#&gt; 2   Coastwide 2004  363.3589  363.3589  363.3589 3.965283e-11     X  cog</span></span>
+<span><span class="co">#&gt; 3   Coastwide 2005  363.3589  363.3589  363.3589 1.670291e-11     X  cog</span></span>
+<span><span class="co">#&gt; 4   Coastwide 2006  363.3589  363.3589  363.3589 2.221014e-11     X  cog</span></span>
+<span><span class="co">#&gt; 5   Coastwide 2007  363.3589  363.3589  363.3589 8.596640e-12     X  cog</span></span>
+<span><span class="co">#&gt; 6   Coastwide 2008  363.3589  363.3589  363.3589 5.533175e-13     X  cog</span></span>
+<span><span class="co">#&gt; 7   Coastwide 2009  363.3589  363.3589  363.3589 3.343623e-11     X  cog</span></span>
+<span><span class="co">#&gt; 8   Coastwide 2010  363.3589  363.3589  363.3589 1.535532e-11     X  cog</span></span>
+<span><span class="co">#&gt; 9   Coastwide 2011  363.3589  363.3589  363.3589 1.492625e-11     X  cog</span></span>
+<span><span class="co">#&gt; 10  Coastwide 2012  363.3589  363.3589  363.3589 1.064122e-11     X  cog</span></span>
+<span><span class="co">#&gt; 11  Coastwide 2013  363.3589  363.3589  363.3589 3.106256e-11     X  cog</span></span>
+<span><span class="co">#&gt; 12  Coastwide 2014  363.3589  363.3589  363.3589 1.384620e-11     X  cog</span></span>
+<span><span class="co">#&gt; 13  Coastwide 2015  363.3589  363.3589  363.3589 4.269732e-11     X  cog</span></span>
+<span><span class="co">#&gt; 14  Coastwide 2016  363.3589  363.3589  363.3589 1.161030e-11     X  cog</span></span>
+<span><span class="co">#&gt; 15  Coastwide 2017  363.3589  363.3589  363.3589 1.629175e-11     X  cog</span></span>
+<span><span class="co">#&gt; 16  Coastwide 2018  363.3589  363.3589  363.3589 5.695504e-12     X  cog</span></span>
+<span><span class="co">#&gt; 17  Coastwide 2019  363.3589  363.3589  363.3589 7.645290e-11     X  cog</span></span>
+<span><span class="co">#&gt; 18  Coastwide 2021  363.3589  363.3589  363.3589 4.735354e-11     X  cog</span></span>
+<span><span class="co">#&gt; 19  Coastwide 2022  363.3589  363.3589  363.3589 2.461531e-11     X  cog</span></span>
+<span><span class="co">#&gt; 20  Coastwide 2023  363.3589  363.3589  363.3589 1.195471e-11     X  cog</span></span>
+<span><span class="co">#&gt; 21  Coastwide 2003 4943.5627 4943.5627 4943.5627 1.569911e-10     Y  cog</span></span>
+<span><span class="co">#&gt; 22  Coastwide 2004 4943.5627 4943.5627 4943.5627 8.535496e-10     Y  cog</span></span>
+<span><span class="co">#&gt; 23  Coastwide 2005 4943.5627 4943.5627 4943.5627 8.943621e-11     Y  cog</span></span>
+<span><span class="co">#&gt; 24  Coastwide 2006 4943.5627 4943.5627 4943.5627 3.015099e-10     Y  cog</span></span>
+<span><span class="co">#&gt; 25  Coastwide 2007 4943.5627 4943.5627 4943.5627 5.637825e-10     Y  cog</span></span>
+<span><span class="co">#&gt; 26  Coastwide 2008 4943.5627 4943.5627 4943.5627 2.335923e-10     Y  cog</span></span>
+<span><span class="co">#&gt; 27  Coastwide 2009 4943.5627 4943.5627 4943.5627 2.392024e-10     Y  cog</span></span>
+<span><span class="co">#&gt; 28  Coastwide 2010 4943.5627 4943.5627 4943.5627 1.493734e-10     Y  cog</span></span>
+<span><span class="co">#&gt; 29  Coastwide 2011 4943.5627 4943.5627 4943.5627 1.738148e-10     Y  cog</span></span>
+<span><span class="co">#&gt; 30  Coastwide 2012 4943.5627 4943.5627 4943.5627 1.704737e-10     Y  cog</span></span>
+<span><span class="co">#&gt; 31  Coastwide 2013 4943.5627 4943.5627 4943.5627 6.277199e-10     Y  cog</span></span>
+<span><span class="co">#&gt; 32  Coastwide 2014 4943.5627 4943.5627 4943.5627 1.749899e-10     Y  cog</span></span>
+<span><span class="co">#&gt; 33  Coastwide 2015 4943.5627 4943.5627 4943.5627 5.070414e-10     Y  cog</span></span>
+<span><span class="co">#&gt; 34  Coastwide 2016 4943.5627 4943.5627 4943.5627 1.941435e-10     Y  cog</span></span>
+<span><span class="co">#&gt; 35  Coastwide 2017 4943.5627 4943.5627 4943.5627 2.868511e-10     Y  cog</span></span>
+<span><span class="co">#&gt; 36  Coastwide 2018 4943.5627 4943.5627 4943.5627 3.328666e-10     Y  cog</span></span>
+<span><span class="co">#&gt; 37  Coastwide 2019 4943.5627 4943.5627 4943.5627 2.648720e-10     Y  cog</span></span>
+<span><span class="co">#&gt; 38  Coastwide 2021 4943.5627 4943.5627 4943.5627 7.429001e-11     Y  cog</span></span>
+<span><span class="co">#&gt; 39  Coastwide 2022 4943.5627 4943.5627 4943.5627 5.988704e-10     Y  cog</span></span>
+<span><span class="co">#&gt; 40  Coastwide 2023 4943.5627 4943.5627 4943.5627 3.440001e-11     Y  cog</span></span>
+<span><span class="co">#&gt; 41         WA 2003  352.9741  352.9741  352.9741 1.082482e-11     X  cog</span></span>
+<span><span class="co">#&gt; 42         WA 2004  352.9741  352.9741  352.9741 6.571508e-12     X  cog</span></span>
+<span><span class="co">#&gt; 43         WA 2005  352.9741  352.9741  352.9741 3.485577e-12     X  cog</span></span>
+<span><span class="co">#&gt; 44         WA 2006  352.9741  352.9741  352.9741 1.500334e-11     X  cog</span></span>
+<span><span class="co">#&gt; 45         WA 2007  352.9741  352.9741  352.9741 7.102427e-12     X  cog</span></span>
+<span><span class="co">#&gt; 46         WA 2008  352.9741  352.9741  352.9741 1.603871e-12     X  cog</span></span>
+<span><span class="co">#&gt; 47         WA 2009  352.9741  352.9741  352.9741 3.593627e-12     X  cog</span></span>
+<span><span class="co">#&gt; 48         WA 2010  352.9741  352.9741  352.9741 8.810218e-12     X  cog</span></span>
+<span><span class="co">#&gt; 49         WA 2011  352.9741  352.9741  352.9741 1.387647e-11     X  cog</span></span>
+<span><span class="co">#&gt; 50         WA 2012  352.9741  352.9741  352.9741 1.153772e-11     X  cog</span></span>
+<span><span class="co">#&gt; 51         WA 2013  352.9741  352.9741  352.9741 1.425780e-12     X  cog</span></span>
+<span><span class="co">#&gt; 52         WA 2014  352.9741  352.9741  352.9741 7.955174e-12     X  cog</span></span>
+<span><span class="co">#&gt; 53         WA 2015  352.9741  352.9741  352.9741 8.228027e-12     X  cog</span></span>
+<span><span class="co">#&gt; 54         WA 2016  352.9741  352.9741  352.9741 5.985614e-13     X  cog</span></span>
+<span><span class="co">#&gt; 55         WA 2017  352.9741  352.9741  352.9741 6.364059e-12     X  cog</span></span>
+<span><span class="co">#&gt; 56         WA 2018  352.9741  352.9741  352.9741 1.078781e-11     X  cog</span></span>
+<span><span class="co">#&gt; 57         WA 2019  352.9741  352.9741  352.9741 4.145591e-12     X  cog</span></span>
+<span><span class="co">#&gt; 58         WA 2021  352.9741  352.9741  352.9741 8.025248e-12     X  cog</span></span>
+<span><span class="co">#&gt; 59         WA 2022  352.9741  352.9741  352.9741 6.556409e-12     X  cog</span></span>
+<span><span class="co">#&gt; 60         WA 2023  352.9741  352.9741  352.9741 4.241445e-12     X  cog</span></span>
+<span><span class="co">#&gt; 61         WA 2003 5232.0851 5232.0851 5232.0851 9.753300e-11     Y  cog</span></span>
+<span><span class="co">#&gt; 62         WA 2004 5232.0851 5232.0851 5232.0851 2.529472e-10     Y  cog</span></span>
+<span><span class="co">#&gt; 63         WA 2005 5232.0851 5232.0851 5232.0851 5.391321e-11     Y  cog</span></span>
+<span><span class="co">#&gt; 64         WA 2006 5232.0851 5232.0851 5232.0851 5.891003e-11     Y  cog</span></span>
+<span><span class="co">#&gt; 65         WA 2007 5232.0851 5232.0851 5232.0851 2.488225e-11     Y  cog</span></span>
+<span><span class="co">#&gt; 66         WA 2008 5232.0851 5232.0851 5232.0851 2.068523e-10     Y  cog</span></span>
+<span><span class="co">#&gt; 67         WA 2009 5232.0851 5232.0851 5232.0851 1.078245e-10     Y  cog</span></span>
+<span><span class="co">#&gt; 68         WA 2010 5232.0851 5232.0851 5232.0851 3.334053e-11     Y  cog</span></span>
+<span><span class="co">#&gt; 69         WA 2011 5232.0851 5232.0851 5232.0851 8.234435e-12     Y  cog</span></span>
+<span><span class="co">#&gt; 70         WA 2012 5232.0851 5232.0851 5232.0851 2.055244e-10     Y  cog</span></span>
+<span><span class="co">#&gt; 71         WA 2013 5232.0851 5232.0851 5232.0851 7.051103e-11     Y  cog</span></span>
+<span><span class="co">#&gt; 72         WA 2014 5232.0851 5232.0851 5232.0851 1.861232e-10     Y  cog</span></span>
+<span><span class="co">#&gt; 73         WA 2015 5232.0851 5232.0851 5232.0851 1.188237e-10     Y  cog</span></span>
+<span><span class="co">#&gt; 74         WA 2016 5232.0851 5232.0851 5232.0851 2.596982e-11     Y  cog</span></span>
+<span><span class="co">#&gt; 75         WA 2017 5232.0851 5232.0851 5232.0851 1.269839e-10     Y  cog</span></span>
+<span><span class="co">#&gt; 76         WA 2018 5232.0851 5232.0851 5232.0851 1.604640e-10     Y  cog</span></span>
+<span><span class="co">#&gt; 77         WA 2019 5232.0851 5232.0851 5232.0851 4.576561e-11     Y  cog</span></span>
+<span><span class="co">#&gt; 78         WA 2021 5232.0851 5232.0851 5232.0851 1.493942e-12     Y  cog</span></span>
+<span><span class="co">#&gt; 79         WA 2022 5232.0851 5232.0851 5232.0851 1.130225e-10     Y  cog</span></span>
+<span><span class="co">#&gt; 80         WA 2023 5232.0851 5232.0851 5232.0851 1.634441e-11     Y  cog</span></span>
+<span><span class="co">#&gt; 81         OR 2003  369.3197  369.3197  369.3197 1.346427e-11     X  cog</span></span>
+<span><span class="co">#&gt; 82         OR 2004  369.3197  369.3197  369.3197 2.346957e-11     X  cog</span></span>
+<span><span class="co">#&gt; 83         OR 2005  369.3197  369.3197  369.3197 1.409578e-11     X  cog</span></span>
+<span><span class="co">#&gt; 84         OR 2006  369.3197  369.3197  369.3197 2.355909e-11     X  cog</span></span>
+<span><span class="co">#&gt; 85         OR 2007  369.3197  369.3197  369.3197 6.247887e-13     X  cog</span></span>
+<span><span class="co">#&gt; 86         OR 2008  369.3197  369.3197  369.3197 7.442263e-12     X  cog</span></span>
+<span><span class="co">#&gt; 87         OR 2009  369.3197  369.3197  369.3197 1.662508e-11     X  cog</span></span>
+<span><span class="co">#&gt; 88         OR 2010  369.3197  369.3197  369.3197 5.208987e-12     X  cog</span></span>
+<span><span class="co">#&gt; 89         OR 2011  369.3197  369.3197  369.3197 5.486822e-12     X  cog</span></span>
+<span><span class="co">#&gt; 90         OR 2012  369.3197  369.3197  369.3197 6.533365e-12     X  cog</span></span>
+<span><span class="co">#&gt; 91         OR 2013  369.3197  369.3197  369.3197 3.007760e-11     X  cog</span></span>
+<span><span class="co">#&gt; 92         OR 2014  369.3197  369.3197  369.3197 1.943084e-11     X  cog</span></span>
+<span><span class="co">#&gt; 93         OR 2015  369.3197  369.3197  369.3197 4.369331e-12     X  cog</span></span>
+<span><span class="co">#&gt; 94         OR 2016  369.3197  369.3197  369.3197 1.746371e-11     X  cog</span></span>
+<span><span class="co">#&gt; 95         OR 2017  369.3197  369.3197  369.3197 1.011977e-12     X  cog</span></span>
+<span><span class="co">#&gt; 96         OR 2018  369.3197  369.3197  369.3197 6.465907e-13     X  cog</span></span>
+<span><span class="co">#&gt; 97         OR 2019  369.3197  369.3197  369.3197 3.222837e-11     X  cog</span></span>
+<span><span class="co">#&gt; 98         OR 2021  369.3197  369.3197  369.3197 1.572647e-11     X  cog</span></span>
+<span><span class="co">#&gt; 99         OR 2022  369.3197  369.3197  369.3197 1.636222e-11     X  cog</span></span>
+<span><span class="co">#&gt; 100        OR 2023  369.3197  369.3197  369.3197 3.524318e-12     X  cog</span></span>
+<span><span class="co">#&gt; 101        OR 2003 4900.3008 4900.3008 4900.3008 6.508408e-12     Y  cog</span></span>
+<span><span class="co">#&gt; 102        OR 2004 4900.3008 4900.3008 4900.3008 1.018110e-10     Y  cog</span></span>
+<span><span class="co">#&gt; 103        OR 2005 4900.3008 4900.3008 4900.3008 1.428662e-10     Y  cog</span></span>
+<span><span class="co">#&gt; 104        OR 2006 4900.3008 4900.3008 4900.3008 1.690131e-10     Y  cog</span></span>
+<span><span class="co">#&gt; 105        OR 2007 4900.3008 4900.3008 4900.3008 1.663027e-11     Y  cog</span></span>
+<span><span class="co">#&gt; 106        OR 2008 4900.3008 4900.3008 4900.3008 8.139700e-11     Y  cog</span></span>
+<span><span class="co">#&gt; 107        OR 2009 4900.3008 4900.3008 4900.3008 8.994491e-11     Y  cog</span></span>
+<span><span class="co">#&gt; 108        OR 2010 4900.3008 4900.3008 4900.3008 6.561136e-11     Y  cog</span></span>
+<span><span class="co">#&gt; 109        OR 2011 4900.3008 4900.3008 4900.3008 5.723262e-11     Y  cog</span></span>
+<span><span class="co">#&gt; 110        OR 2012 4900.3008 4900.3008 4900.3008 2.461663e-12     Y  cog</span></span>
+<span><span class="co">#&gt; 111        OR 2013 4900.3008 4900.3008 4900.3008 5.128801e-10     Y  cog</span></span>
+<span><span class="co">#&gt; 112        OR 2014 4900.3008 4900.3008 4900.3008 7.168901e-11     Y  cog</span></span>
+<span><span class="co">#&gt; 113        OR 2015 4900.3008 4900.3008 4900.3008 1.373736e-10     Y  cog</span></span>
+<span><span class="co">#&gt; 114        OR 2016 4900.3008 4900.3008 4900.3008 2.600381e-11     Y  cog</span></span>
+<span><span class="co">#&gt; 115        OR 2017 4900.3008 4900.3008 4900.3008 2.172745e-12     Y  cog</span></span>
+<span><span class="co">#&gt; 116        OR 2018 4900.3008 4900.3008 4900.3008 7.562846e-11     Y  cog</span></span>
+<span><span class="co">#&gt; 117        OR 2019 4900.3008 4900.3008 4900.3008 1.546988e-10     Y  cog</span></span>
+<span><span class="co">#&gt; 118        OR 2021 4900.3008 4900.3008 4900.3008 1.125336e-10     Y  cog</span></span>
+<span><span class="co">#&gt; 119        OR 2022 4900.3008 4900.3008 4900.3008 6.983336e-11     Y  cog</span></span>
+<span><span class="co">#&gt; 120        OR 2023 4900.3008 4900.3008 4900.3008 1.417708e-11     Y  cog</span></span>
+<span><span class="co">#&gt; 121        CA 2003  364.6627  364.6627  364.6627 1.754646e-14     X  cog</span></span>
+<span><span class="co">#&gt; 122        CA 2004  364.6627  364.6627  364.6627 1.348863e-11     X  cog</span></span>
+<span><span class="co">#&gt; 123        CA 2005  364.6627  364.6627  364.6627 3.075604e-12     X  cog</span></span>
+<span><span class="co">#&gt; 124        CA 2006  364.6627  364.6627  364.6627 1.261669e-12     X  cog</span></span>
+<span><span class="co">#&gt; 125        CA 2007  364.6627  364.6627  364.6627 8.822669e-12     X  cog</span></span>
+<span><span class="co">#&gt; 126        CA 2008  364.6627  364.6627  364.6627 3.019263e-12     X  cog</span></span>
+<span><span class="co">#&gt; 127        CA 2009  364.6627  364.6627  364.6627 5.438582e-12     X  cog</span></span>
+<span><span class="co">#&gt; 128        CA 2010  364.6627  364.6627  364.6627 2.451577e-12     X  cog</span></span>
+<span><span class="co">#&gt; 129        CA 2011  364.6627  364.6627  364.6627 2.356729e-13     X  cog</span></span>
+<span><span class="co">#&gt; 130        CA 2012  364.6627  364.6627  364.6627 2.192008e-12     X  cog</span></span>
+<span><span class="co">#&gt; 131        CA 2013  364.6627  364.6627  364.6627 3.302905e-12     X  cog</span></span>
+<span><span class="co">#&gt; 132        CA 2014  364.6627  364.6627  364.6627 5.658227e-12     X  cog</span></span>
+<span><span class="co">#&gt; 133        CA 2015  364.6627  364.6627  364.6627 3.386770e-12     X  cog</span></span>
+<span><span class="co">#&gt; 134        CA 2016  364.6627  364.6627  364.6627 1.981724e-12     X  cog</span></span>
+<span><span class="co">#&gt; 135        CA 2017  364.6627  364.6627  364.6627 2.276188e-12     X  cog</span></span>
+<span><span class="co">#&gt; 136        CA 2018  364.6627  364.6627  364.6627 5.654117e-12     X  cog</span></span>
+<span><span class="co">#&gt; 137        CA 2019  364.6627  364.6627  364.6627 2.580949e-12     X  cog</span></span>
+<span><span class="co">#&gt; 138        CA 2021  364.6627  364.6627  364.6627 3.864083e-12     X  cog</span></span>
+<span><span class="co">#&gt; 139        CA 2022  364.6627  364.6627  364.6627 5.967827e-12     X  cog</span></span>
+<span><span class="co">#&gt; 140        CA 2023  364.6627  364.6627  364.6627 4.582542e-12     X  cog</span></span>
+<span><span class="co">#&gt; 141        CA 2003 4563.2135 4563.2135 4563.2135 1.686500e-11     Y  cog</span></span>
+<span><span class="co">#&gt; 142        CA 2004 4563.2135 4563.2135 4563.2135 4.364978e-11     Y  cog</span></span>
+<span><span class="co">#&gt; 143        CA 2005 4563.2135 4563.2135 4563.2135 1.150241e-10     Y  cog</span></span>
+<span><span class="co">#&gt; 144        CA 2006 4563.2135 4563.2135 4563.2135 3.632727e-11     Y  cog</span></span>
+<span><span class="co">#&gt; 145        CA 2007 4563.2135 4563.2135 4563.2135 7.496287e-11     Y  cog</span></span>
+<span><span class="co">#&gt; 146        CA 2008 4563.2135 4563.2135 4563.2135 1.068020e-10     Y  cog</span></span>
+<span><span class="co">#&gt; 147        CA 2009 4563.2135 4563.2135 4563.2135 4.201642e-11     Y  cog</span></span>
+<span><span class="co">#&gt; 148        CA 2010 4563.2135 4563.2135 4563.2135 1.266124e-11     Y  cog</span></span>
+<span><span class="co">#&gt; 149        CA 2011 4563.2135 4563.2135 4563.2135 4.018992e-11     Y  cog</span></span>
+<span><span class="co">#&gt; 150        CA 2012 4563.2135 4563.2135 4563.2135 9.062347e-11     Y  cog</span></span>
+<span><span class="co">#&gt; 151        CA 2013 4563.2135 4563.2135 4563.2135 1.138767e-11     Y  cog</span></span>
+<span><span class="co">#&gt; 152        CA 2014 4563.2135 4563.2135 4563.2135 1.169438e-11     Y  cog</span></span>
+<span><span class="co">#&gt; 153        CA 2015 4563.2135 4563.2135 4563.2135 3.720953e-11     Y  cog</span></span>
+<span><span class="co">#&gt; 154        CA 2016 4563.2135 4563.2135 4563.2135 3.945539e-11     Y  cog</span></span>
+<span><span class="co">#&gt; 155        CA 2017 4563.2135 4563.2135 4563.2135 2.313866e-11     Y  cog</span></span>
+<span><span class="co">#&gt; 156        CA 2018 4563.2135 4563.2135 4563.2135 8.695050e-11     Y  cog</span></span>
+<span><span class="co">#&gt; 157        CA 2019 4563.2135 4563.2135 4563.2135 8.495835e-12     Y  cog</span></span>
+<span><span class="co">#&gt; 158        CA 2021 4563.2135 4563.2135 4563.2135 2.169774e-11     Y  cog</span></span>
+<span><span class="co">#&gt; 159        CA 2022 4563.2135 4563.2135 4563.2135 1.508326e-10     Y  cog</span></span>
+<span><span class="co">#&gt; 160        CA 2023 4563.2135 4563.2135 4563.2135 1.002410e-11     Y  cog</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -636,7 +801,7 @@ can be inspected, and in many cases we might want to save everything.
 The <code>save_index_outputs</code> function in <code>indexwc</code>
 will write everything locally (for the directory structure, see
 <code><a href="../reference/save_index_outputs.html">?save_index_outputs</a></code>)</p>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/save_index_outputs.html">save_index_outputs</a></span><span class="op">(</span></span>
 <span>  fit <span class="op">=</span> <span class="va">fit_simple</span>,</span>
 <span>  diagnostics <span class="op">=</span> <span class="va">diagnostics</span>,</span>
