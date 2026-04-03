@@ -261,7 +261,6 @@ index <- calc_index_areas(
   fit = fit_simple,
   prediction_grid = pred_grid,
   boundaries = c("Coastwide"),
-  cog = TRUE, # calculate center of gravity
   dir = NULL
 )
 ```
@@ -276,12 +275,6 @@ or more custom code could be used to make a plot based off of
 
 ```{r diagprintindices, eval=TRUE, echo=TRUE}
 index$indices
-```
-
-In addition to the indices, the center of gravity estimates (with SEs) get returned in 
-
-```{r diagprintcogs, eval=TRUE, echo=TRUE}
-index$cogs
 ```
 
 ## Saving output

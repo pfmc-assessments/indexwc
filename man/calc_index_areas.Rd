@@ -4,14 +4,7 @@
 \alias{calc_index_areas}
 \title{Calculate area-specific indices between each set of boundaries}
 \usage{
-calc_index_areas(
-  data,
-  fit,
-  prediction_grid,
-  dir,
-  boundaries = "Coastwide",
-  cog = FALSE
-)
+calc_index_areas(data, fit, prediction_grid, dir, boundaries = "Coastwide")
 }
 \arguments{
 \item{data}{The data used for fitting the model}
@@ -27,30 +20,12 @@ will only be returned (not saved to a file)}
 \item{boundaries}{A character vector specifying which areas to calculate
 indices for. These should be names from \link{boundaries_data}. The default is
 \code{"Coastwide"}, which calculates only the Coastwide index}
-
-\item{cog}{Logical. If \code{TRUE}, center of gravity estimates will also be
-calculated using \code{\link[sdmTMB:get_index]{sdmTMB::get_cog()}} for each area. Defaults to \code{FALSE}.
-Note that COG results are returned in long format with separate rows for
-the X (easting) and Y (northing) coordinate axes.}
 }
 \value{
-A list with the following components:
-\describe{
-\item{\code{results}}{A named list with one element per area, each containing
-the sdmTMB prediction object, the raw \code{index} data frame, and (if
-\code{cog = TRUE}) the raw \code{cog} data frame.}
-\item{\code{indices}}{A data frame of biomass index estimates across all areas,
-with columns: \code{area}, \code{year}, \code{est}, \code{lwr}, \code{upr}, \code{log_est}, \code{se},
-\code{se_natural}, \code{type}. Saved to \code{est_by_area.csv} if \code{dir} is provided.}
-\item{\code{cogs}}{\emph{(Only present if \code{cog = TRUE})} A data frame of center of
-gravity estimates across all areas, with columns: \code{area}, \code{year}, \code{est},
-\code{lwr}, \code{upr}, \code{se}, \code{coord}, \code{type}. Unlike \code{indices}, COG results are
-in long format with one row per year per coordinate axis (\code{coord = "X"}
-for easting, \code{coord = "Y"} for northing). Saved to \code{cog_by_area.csv}
-if \code{dir} is provided.}
-\item{\code{plot_indices}}{A ggplot object of the biomass index across all
-areas.}
-}
+A very large list is returned with predictions, model fits, and indices for
+each area specified in boundaries. Potentially, two figures are also saved
+to the disk displaying the index by year. The index for each area is also
+saved to a csv file in \code{dir} titled \code{est_by_area.csv}.
 }
 \description{
 Calculate annual estimates of biomass (mt) for each area specified in
@@ -81,17 +56,6 @@ index <- calc_index_areas(
 # look at the index, which will be in "test" because that is what we
 # named the boundary
 index[["test"]][["index"]]
-
-# Also calculate center of gravity
-results <- calc_index_areas(
-  data, fit, grid,
-  dir = getwd(), boundaries = c("Coastwide", "CA"),
-  cog = TRUE
-)
-# Full COG table (long format: two rows per year per area, one per coord)
-results[["cogs"]]
-# Northing (latitude) only
-dplyr::filter(results[["cogs"]], coord == "Y")
 }
 
 }
@@ -100,7 +64,6 @@ dplyr::filter(results[["cogs"]], coord == "Y")
 \item \link{boundaries_data}, a data object
 \item \code{\link[=available_areas]{available_areas()}}, helper function to list available areas
 \item \code{\link[sdmTMB:get_index]{sdmTMB::get_index()}}, used to generate the area-specific indices
-\item \code{\link[sdmTMB:get_index]{sdmTMB::get_cog()}}, used to generate center of gravity estimates
 \item \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}}, used to create the \code{fit} object
 }
 }

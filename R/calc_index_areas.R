@@ -21,10 +21,6 @@
 #' @param boundaries A character vector specifying which areas to calculate
 #'   indices for. These should be names from [boundaries_data]. The default is
 #'   `"Coastwide"`, which calculates only the Coastwide index
-#' @param cog Logical. If `TRUE`, center of gravity estimates will also be
-#'   calculated using [sdmTMB::get_cog()] for each area. Defaults to `FALSE`.
-#'   Note that COG results are returned in long format with separate rows for
-#'   the X (easting) and Y (northing) coordinate axes.
 #' @export
 #' @importFrom utils write.csv
 #' @author Kelli F. Johnson
@@ -32,26 +28,12 @@
 #' * [boundaries_data], a data object
 #' * [available_areas()], helper function to list available areas
 #' * [sdmTMB::get_index()], used to generate the area-specific indices
-#' * [sdmTMB::get_cog()], used to generate center of gravity estimates
 #' * [sdmTMB::sdmTMB()], used to create the `fit` object
 #' @return
-#' A list with the following components:
-#' \describe{
-#'   \item{`results`}{A named list with one element per area, each containing
-#'     the sdmTMB prediction object, the raw `index` data frame, and (if
-#'     `cog = TRUE`) the raw `cog` data frame.}
-#'   \item{`indices`}{A data frame of biomass index estimates across all areas,
-#'     with columns: `area`, `year`, `est`, `lwr`, `upr`, `log_est`, `se`,
-#'     `se_natural`, `type`. Saved to `est_by_area.csv` if `dir` is provided.}
-#'   \item{`cogs`}{*(Only present if `cog = TRUE`)* A data frame of center of
-#'     gravity estimates across all areas, with columns: `area`, `year`, `est`,
-#'     `lwr`, `upr`, `se`, `coord`, `type`. Unlike `indices`, COG results are
-#'     in long format with one row per year per coordinate axis (`coord = "X"`
-#'     for easting, `coord = "Y"` for northing). Saved to `cog_by_area.csv`
-#'     if `dir` is provided.}
-#'   \item{`plot_indices`}{A ggplot object of the biomass index across all
-#'     areas.}
-#' }
+#' A very large list is returned with predictions, model fits, and indices for
+#' each area specified in boundaries. Potentially, two figures are also saved
+#' to the disk displaying the index by year. The index for each area is also
+#' saved to a csv file in `dir` titled `est_by_area.csv`.
 #' @examples
 #' \dontrun{
 #' # Read back in the saved object
@@ -68,25 +50,13 @@
 #' # look at the index, which will be in "test" because that is what we
 #' # named the boundary
 #' index[["test"]][["index"]]
-#'
-#' # Also calculate center of gravity
-#' results <- calc_index_areas(
-#'   data, fit, grid,
-#'   dir = getwd(), boundaries = c("Coastwide", "CA"),
-#'   cog = TRUE
-#' )
-#' # Full COG table (long format: two rows per year per area, one per coord)
-#' results[["cogs"]]
-#' # Northing (latitude) only
-#' dplyr::filter(results[["cogs"]], coord == "Y")
 #' }
 #'
 calc_index_areas <- function(data,
                              fit,
                              prediction_grid,
                              dir,
-                             boundaries = "Coastwide",
-                             cog = FALSE) {
+                             boundaries = "Coastwide") {
   # Make sure all boundaries are character vector
   if (!is.character(boundaries)) {
     cli::cli_abort(c(
@@ -133,34 +103,22 @@ calc_index_areas <- function(data,
     ))
   }
   prediction_grid <- as.data.frame(prediction_grid)
-
-  # Name the grids from boundaries_fixed so names flow through automatically
-  # to results, index_areas, and cog_areas without any after-the-fact fixup
   boundaries_grids <- purrr::map2(
     .x = boundaries_fixed[, "upper"],
     .y = boundaries_fixed[, "lower"],
     .f = filter_grid,
     grid = prediction_grid
-  ) |>
-    purrr::set_names(rownames(boundaries_fixed))
+  )
 
-  # Internal function used in map to make predictions and return index,
-  # and optionally center of gravity. Both get_index() and get_cog() reuse
-  # the same prediction object so we only pay the prediction cost once.
+  # Internal function used in map to make predictions and return index
   predict_and_index <- function(grid, object) {
     prediction <- predict(object, newdata = grid, return_tmb_object = TRUE)
-    prediction[["index"]] <- sdmTMB::get_index(
+    index <- sdmTMB::get_index(
       obj = prediction,
       bias_correct = TRUE,
       area = grid[["area_km2_WCGBTS"]]
     )
-    if (cog) {
-      prediction[["cog"]] <- sdmTMB::get_cog(
-        obj = prediction,
-        bias_correct = TRUE, # default
-        area = grid[["area_km2_WCGBTS"]]
-      )
-    }
+    prediction[["index"]] <- index
     return(prediction)
   }
 
@@ -172,21 +130,22 @@ calc_index_areas <- function(data,
     object = fit
   )
 
-  index_areas <- purrr::map(results, "index") |>
+  if (is.null(names(results))) {
+    names(results) <- names(boundaries)
+  }
+  index_areas <- purrr::map(
+    results,
+    "index"
+  ) |>
     purrr::list_rbind(names_to = "area") |>
-    dplyr::mutate(area = forcats::fct_inorder(.data$area))
+    dplyr::mutate(
+      area = forcats::fct_inorder(.data$area)
+    )
 
   out <- list(
     results = results,
     indices = index_areas
   )
-
-  if (cog) {
-    cog_areas <- purrr::map(results, "cog") |>
-      purrr::list_rbind(names_to = "area") |>
-      dplyr::mutate(area = forcats::fct_inorder(.data$area))
-    out[["cogs"]] <- cog_areas
-  }
 
   # Make the directory to plot the index in and plot all areas on one figure
   # and then just the coastwide index on another figure by itself.
@@ -198,15 +157,6 @@ calc_index_areas <- function(data,
       file = file.path(dir, "est_by_area.csv"),
       row.names = FALSE
     )
-
-    if (cog) {
-      write.csv(
-        cog_areas,
-        file = file.path(dir, "cog_by_area.csv"),
-        row.names = FALSE
-      )
-    }
-
     if (any(grepl("wide", index_areas[["area"]], ignore.case = TRUE))) {
       gg_index_coastwide <- plot_indices(
         data = dplyr::filter(
