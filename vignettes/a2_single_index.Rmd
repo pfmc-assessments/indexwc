@@ -261,6 +261,7 @@ index <- calc_index_areas(
   fit = fit_simple,
   prediction_grid = pred_grid,
   boundaries = c("Coastwide"),
+  cog = TRUE,
   dir = NULL
 )
 ```
