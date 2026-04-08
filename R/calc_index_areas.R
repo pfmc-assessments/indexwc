@@ -181,7 +181,7 @@ calc_index_areas <- function(data,
 
   results <- purrr::imap(
     .x = as.list(rownames(boundaries_fixed)),
-    .f = ~get_area_results(
+    .f = ~ get_area_results(
       area_name = .x,
       area_bounds = boundaries_fixed[.x, ],
       full_pred = full_prediction,
@@ -241,7 +241,6 @@ calc_index_areas <- function(data,
   out$plot_indices <- plot_indices(index_areas, file_name = NULL)
   return(out)
 }
-
 
 
 #' Get available areas for index calculation
