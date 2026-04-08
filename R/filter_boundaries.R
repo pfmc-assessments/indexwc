@@ -36,18 +36,18 @@ filter_boundaries <- function(y, boundaries) {
     boundaries_data,
     \(z) all_x_inside(y, z[2], z[1])
   )
-  boundaries_with_data <- boundaries_data[bool_inside]
+  boundaries_with_data <- boundaries[bool_inside]
   rm(bool_inside)
 
   # Shrink the boundaries so we are not predicting to somewhere the species
   # has never been seen
   boundaries_tops <- shrink_boundary(
-    purrr::map(boundaries_with_data, 1),
+    unlist(purrr::map(boundaries_with_data, 1)),
     max(y),
     ">"
   )
   boundaries_bottoms <- shrink_boundary(
-    purrr::map(boundaries_with_data, 2),
+    unlist(purrr::map(boundaries_with_data, 2)),
     min(y),
     "<"
   )
@@ -82,7 +82,7 @@ filter_boundaries <- function(y, boundaries) {
   colnames(out) <- c("upper", "lower")
   # Remove boundaries where upper equals lower b/c a point is right on the
   # boundary
-  out <- out[out[, "upper"] != out[, "lower"], ]
+  out <- out[out[, "upper"] != out[, "lower"], , drop = FALSE]
   return(out)
 }
 

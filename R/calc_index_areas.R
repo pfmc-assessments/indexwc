@@ -25,6 +25,10 @@
 #'   calculated using [sdmTMB::get_cog()] for each area. Defaults to `FALSE`.
 #'   Note that COG results are returned in long format with separate rows for
 #'   the X (easting) and Y (northing) coordinate axes.
+#' @param bias_correct Logical. If `TRUE` [sdmTMB::get_index()] and
+#'   [sdmTMB::get_cog()] will use bias correction to account for the non-linear
+#'   transformation of random effects when calculating the index. Will be faster
+#'   if set to `FALSE`, but is `TRUE` by default
 #' @export
 #' @importFrom utils write.csv
 #' @author Kelli F. Johnson
@@ -86,7 +90,8 @@ calc_index_areas <- function(data,
                              prediction_grid,
                              dir,
                              boundaries = "Coastwide",
-                             cog = FALSE) {
+                             cog = FALSE,
+                             bias_correct = TRUE) {
   # Make sure all boundaries are character vector
   if (!is.character(boundaries)) {
     cli::cli_abort(c(
@@ -134,43 +139,57 @@ calc_index_areas <- function(data,
   }
   prediction_grid <- as.data.frame(prediction_grid)
 
-  # Name the grids from boundaries_fixed so names flow through automatically
-  # to results, index_areas, and cog_areas without any after-the-fact fixup
-  boundaries_grids <- purrr::map2(
-    .x = boundaries_fixed[, "upper"],
-    .y = boundaries_fixed[, "lower"],
-    .f = filter_grid,
-    grid = prediction_grid
-  ) |>
-    purrr::set_names(rownames(boundaries_fixed))
+  union_upper <- max(boundaries_fixed[, "upper"])
+  union_lower <- min(boundaries_fixed[, "lower"])
 
-  # Internal function used in map to make predictions and return index,
-  # and optionally center of gravity. Both get_index() and get_cog() reuse
-  # the same prediction object so we only pay the prediction cost once.
-  predict_and_index <- function(grid, object) {
-    prediction <- predict(object, newdata = grid, return_tmb_object = TRUE)
-    prediction[["index"]] <- sdmTMB::get_index(
-      obj = prediction,
-      bias_correct = TRUE,
-      area = grid[["area_km2_WCGBTS"]]
+  union_grid <- filter_grid(
+    union_upper,
+    union_lower,
+    grid = prediction_grid
+  )
+
+  full_prediction <- predict(fit, newdata = union_grid, return_tmb_object = TRUE)
+
+  get_area_results <- function(area_name, area_bounds, full_pred, full_grid,
+                               calculate_cog = FALSE) {
+    in_region <- full_grid$latitude >= area_bounds["lower"] &
+      full_grid$latitude <= area_bounds["upper"]
+
+    area_weights <- ifelse(in_region, full_grid$area_km2_WCGBTS, 0)
+
+    index <- sdmTMB::get_index(
+      obj = full_pred,
+      bias_correct = bias_correct,
+      area = area_weights
     )
-    if (cog) {
-      prediction[["cog"]] <- sdmTMB::get_cog(
-        obj = prediction,
-        bias_correct = TRUE,
-        area = grid[["area_km2_WCGBTS"]]
+
+    result <- list(
+      prediction = full_pred,
+      index = index
+    )
+
+    if (calculate_cog) {
+      result[["cog"]] <- sdmTMB::get_cog(
+        obj = full_pred,
+        bias_correct = bias_correct,
+        area = area_weights
       )
     }
-    return(prediction)
+
+    return(result)
   }
 
-  # Use fit with each area (i.e., grid between a set of boundaries) and
-  # return a data frame with area specifying which area the index is from
-  results <- purrr::map(
-    .x = boundaries_grids,
-    .f = predict_and_index,
-    object = fit
-  )
+  results <- purrr::imap(
+    .x = as.list(rownames(boundaries_fixed)),
+    .f = ~get_area_results(
+      area_name = .x,
+      area_bounds = boundaries_fixed[.x, ],
+      full_pred = full_prediction,
+      full_grid = union_grid,
+      calculate_cog = cog
+    )
+  ) |>
+    purrr::set_names(rownames(boundaries_fixed))
 
   index_areas <- purrr::map(results, "index") |>
     purrr::list_rbind(names_to = "area") |>
@@ -222,6 +241,7 @@ calc_index_areas <- function(data,
   out$plot_indices <- plot_indices(index_areas, file_name = NULL)
   return(out)
 }
+
 
 
 #' Get available areas for index calculation

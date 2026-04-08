@@ -10,7 +10,8 @@ calc_index_areas(
   prediction_grid,
   dir,
   boundaries = "Coastwide",
-  cog = FALSE
+  cog = FALSE,
+  bias_correct = TRUE
 )
 }
 \arguments{
@@ -32,6 +33,11 @@ indices for. These should be names from \link{boundaries_data}. The default is
 calculated using \code{\link[sdmTMB:get_index]{sdmTMB::get_cog()}} for each area. Defaults to \code{FALSE}.
 Note that COG results are returned in long format with separate rows for
 the X (easting) and Y (northing) coordinate axes.}
+
+\item{bias_correct}{Logical. If \code{TRUE} \code{\link[sdmTMB:get_index]{sdmTMB::get_index()}} and
+\code{\link[sdmTMB:get_index]{sdmTMB::get_cog()}} will use bias correction to account for the non-linear
+transformation of random effects when calculating the index. Will be faster
+if set to \code{FALSE}, but is \code{TRUE} by default}
 }
 \value{
 A list with the following components:
