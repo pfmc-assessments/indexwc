@@ -78,7 +78,8 @@ The more boundaries there are the longer the function will take to run.</p>
 <span>  <span class="va">prediction_grid</span>,</span>
 <span>  <span class="va">dir</span>,</span>
 <span>  boundaries <span class="op">=</span> <span class="st">"Coastwide"</span>,</span>
-<span>  cog <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  cog <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  bias_correct <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -115,6 +116,13 @@ indices for. These should be names from <a href="boundaries_data.html">boundarie
 calculated using <code><a href="https://sdmTMB.github.io/sdmTMB/reference/get_index.html" class="external-link">sdmTMB::get_cog()</a></code> for each area. Defaults to <code>FALSE</code>.
 Note that COG results are returned in long format with separate rows for
 the X (easting) and Y (northing) coordinate axes.</p></dd>
+
+
+<dt id="arg-bias-correct">bias_correct<a class="anchor" aria-label="anchor" href="#arg-bias-correct"></a></dt>
+<dd><p>Logical. If <code>TRUE</code> <code><a href="https://sdmTMB.github.io/sdmTMB/reference/get_index.html" class="external-link">sdmTMB::get_index()</a></code> and
+<code><a href="https://sdmTMB.github.io/sdmTMB/reference/get_index.html" class="external-link">sdmTMB::get_cog()</a></code> will use bias correction to account for the non-linear
+transformation of random effects when calculating the index. Will be faster
+if set to <code>FALSE</code>, but is <code>TRUE</code> by default</p></dd>
 
 </dl></div>
     <div id="value">
