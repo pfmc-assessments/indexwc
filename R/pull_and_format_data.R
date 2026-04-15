@@ -51,7 +51,6 @@ pull_and_format_data <- function(
   years = 2003:2050,
   verbose = TRUE
 ) {
-  nwfscSurvey::check_dir(dir = dir, verbose = verbose)
   if (is.missing(configuration_to_run) & is.null(common_name)) {
     cli::cli_abort(
       "Either a common_name or configuration_to_run must be specified"
@@ -62,7 +61,6 @@ pull_and_format_data <- function(
       common_name = common_name,
       survey = survey,
       years = years,
-      dir = dir,
       verbose = verbose
     )
     n <- length(common_name)
