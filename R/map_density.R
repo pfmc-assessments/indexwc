@@ -5,7 +5,7 @@
 #' @param save_prefix A string providing the desired prefix to use when saving
 #'   the density plots. The default is to save them in the current working
 #'   directory using the name `"density[0-9]{2}.png"`. Obviously, the same
-#'   outcome would result from just `"density"` but the use of `file.path()`
+#'   outcome would result from just `"density"` but the use of `fs::path()`
 #'   in the default is present to provide an example for users who want to
 #'   change the path to something other than their current directory.
 #' @param n_row,n_col Integers specifying the number of rows and columns for
@@ -30,7 +30,7 @@
 #' @importFrom rlang .data
 map_density <- function(
   predictions,
-  save_prefix = file.path(getwd(), "density"),
+  save_prefix = fs::path(getwd(), "density"),
   n_row = 1,
   n_col = 2,
   column_grep = "^est[2]*$",

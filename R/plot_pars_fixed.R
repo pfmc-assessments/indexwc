@@ -52,7 +52,7 @@ plot_pars_fixed <- function(
     ggplot2::theme_bw()
   if (!is.null(dir) && !is.null(file_name)) {
     suppressMessages(ggplot2::ggsave(
-      filename = file.path(dir, file_name),
+      filename = fs::path(dir, file_name),
       plot = gg_out,
       height = 10,
       width = 10,

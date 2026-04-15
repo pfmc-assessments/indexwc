@@ -67,7 +67,7 @@ map_year_re <- function(predictions, dir, nrow = 3, ncol = 4, verbose = FALSE) {
       )
 
       suppressMessages(ggplot2::ggsave(
-        filename = file.path(dir, paste0("year_random_effects_", page, ".png")),
+        filename = fs::path(dir, paste0("year_random_effects_", page, ".png")),
         width = 10,
         height = height,
         units = "in"
@@ -75,7 +75,7 @@ map_year_re <- function(predictions, dir, nrow = 3, ncol = 4, verbose = FALSE) {
     }
   } else {
     if (verbose) {
-      message(
+      cli::cli_alert_warning(
         "The espsilon_st column not found in the predictions. Random effects map not created."
       )
     }

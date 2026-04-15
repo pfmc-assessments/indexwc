@@ -50,7 +50,7 @@ map_effects <- function(predictions, dir, verbose = FALSE) {
 
   suppressMessages(ggplot2::ggsave(
     plot = g,
-    filename = file.path(dir, paste0("fixed_and_spatial_effects.png")),
+    filename = fs::path(dir, paste0("fixed_and_spatial_effects.png")),
     width = 14,
     height = 10,
     units = "in"
