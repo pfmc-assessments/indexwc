@@ -82,6 +82,7 @@ run_sdmtmb <- function(
     ) %in%
       colnames(data)
   ))
+  nwfscSurvey::check_dir(dir = dir_main, verbose = TRUE)
   # Create directory structure
   if (!is.null(dir_main)) {
     dir_new <- data |>

@@ -40,6 +40,7 @@ run <- function(data, family, formula, dir_main = getwd(), n_knots = 500, ...) {
       colnames(data)
   ))
 
+  nwfscSurvey::check_dir(dir = dir_main, verbose = TRUE)
   # Objects
   data_grouped <- data |>
     dplyr::group_by(survey_name, common_name)
