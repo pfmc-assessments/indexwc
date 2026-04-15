@@ -15,7 +15,9 @@
 #' @param data The data used for fitting the model
 #' @param fit A fitted sdmTMB model object
 #' @param prediction_grid The prediction grid for the survey that sdmTMB will
-#'   use to make model predictions to
+#'   use to make model predictions to. Default is `NULL` where the data
+#'   ranges from the fit object will be used to create a prediction grid
+#'   using [lookup_grid()].
 #' @param dir Directory path where results will be saved. If `NULL`, results
 #'   will only be returned (not saved to a file)
 #' @param boundaries A character vector specifying which areas to calculate
@@ -31,7 +33,7 @@
 #'   if set to `FALSE`, but is `TRUE` by default
 #' @export
 #' @importFrom utils write.csv
-#' @author Kelli F. Johnson
+#' @author Kelli F. Johnson, Chantel Wetzel, and Eric Ward
 #' @seealso
 #' * [boundaries_data], a data object
 #' * [available_areas()], helper function to list available areas
@@ -88,8 +90,8 @@
 calc_index_areas <- function(
   data,
   fit,
-  prediction_grid,
-  dir,
+  dir = NULL,
+  prediction_grid = NULL,
   boundaries = "Coastwide",
   cog = FALSE,
   bias_correct = TRUE
@@ -108,6 +110,37 @@ calc_index_areas <- function(
       may want to turn off bias correct if they are interested in calculating the center of
       gravity."
     )
+  }
+  nwfscSurvey::check_dir(dir = dir, verbose = TRUE)
+  # Handle both indexwc_fit objects and raw sdmTMB objects
+  if (inherits(fit, "indexwc_fit")) {
+    sdmtmb_fit <- fit$fit
+    # Auto-create prediction grid if not provided and we have an indexwc_fit
+    if (is.null(prediction_grid)) {
+      prediction_grid <- lookup_grid(
+        x = fit$data[["survey_name"]][1],
+        max_latitude = fit$ranges$latitude_max,
+        min_latitude = fit$ranges$latitude_min,
+        max_longitude = fit$ranges$longitude_max,
+        min_longitude = fit$ranges$longitude_min,
+        max_depth = abs(fit$ranges$depth_max),
+        years = sort(unique(fit$data$year)),
+        data = california_current_grid
+      )
+    }
+  } else if (inherits(fit, "sdmTMB")) {
+    sdmtmb_fit <- fit
+    if (is.null(prediction_grid)) {
+      cli::cli_abort(c(
+        "x" = "prediction_grid is required when fit is a raw sdmTMB object",
+        "i" = "Either provide prediction_grid or use an indexwc_fit object from {.fn fit_index}"
+      ))
+    }
+  } else {
+    cli::cli_abort(c(
+      "x" = "fit must be of class {.cls indexwc_fit} or {.cls sdmTMB}",
+      "i" = "Did you use {.fn fit_index} or {.fn sdmTMB::sdmTMB}?"
+    ))
   }
 
   # Check that all requested areas exist in boundaries_data
@@ -198,16 +231,16 @@ calc_index_areas <- function(
   if (!is.null(dir)) {
     fs::dir_create(dir, recurse = TRUE)
 
-    write.csv(
-      index_areas,
-      file = file.path(dir, "est_by_area.csv"),
+    utils::write.csv(
+      x = index_areas,
+      file = fs::path(dir, "est_by_area.csv"),
       row.names = FALSE
     )
 
     if (cog) {
-      write.csv(
-        cog_areas,
-        file = file.path(dir, "cog_by_area.csv"),
+      utils::write.csv(
+        x = cog_areas,
+        file = fs::path(dir, "cog_by_area.csv"),
         row.names = FALSE
       )
     }
