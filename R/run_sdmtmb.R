@@ -173,10 +173,6 @@ run_sdmtmb <- function(
   if (!fit[["pos_def_hessian"]]) {
     fit <- sdmTMB::run_extra_optimization(fit)
   }
-  # Save model output
-  if (!is.null(dir)) {
-    saveRDS(fit, file = fs::path(dir_data, "fit.rds"))
-  }
   # Attach mesh for downstream use
   fit$mesh <- mesh
   fit$ranges <- ranges
@@ -184,6 +180,10 @@ run_sdmtmb <- function(
     fit$dir <- dir_data
   } else {
     fit$dir <- dir
+  }
+  # Save model output
+  if (!is.null(dir)) {
+    saveRDS(fit, file = fs::path(dir_data, "fit.rds"))
   }
   return(fit)
 }
