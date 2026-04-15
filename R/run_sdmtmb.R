@@ -5,7 +5,11 @@
 #' results to a structured directory. The fitted model is returned with minimal
 #' attachments for downstream diagnostic and index calculations.
 #'
-#' @param dir_main A string specifying a path where results will be saved. The
+#' @param dir A string specifying a path where results will be saved. The
+#'   default is your current working directory. A subdirectory structure will be
+#'   created based on the species, survey, and model family. If `NULL`, the fitted
+#'   object is returned with nothing saved to disk
+#' @param dir_main Deprecated. A string specifying a path where results will be saved. The
 #'   default is your current working directory. A subdirectory structure will be
 #'   created based on the species, survey, and model family. If `NULL`, the fitted
 #'   object is returned with nothing saved to disk
@@ -58,15 +62,24 @@
 #'
 #' @importFrom rlang .data
 run_sdmtmb <- function(
-  dir_main = getwd(),
   data,
   family,
   formula,
+  dir = getwd(),
+  dir_main = lifecycle::deprecated(),
   n_knots = 500,
   share_range = FALSE,
   sdmtmb_control = sdmTMB::sdmTMBcontrol(newton_loops = 3),
   ...
 ) {
+  if (lifecycle::is_present(dir_main)) {
+    lifecycle::deprecate_warn(
+      when = "1.0",
+      what = "indexwc::run_sdmtmb(dir_main =)",
+      with = "indexwc::run_sdmtmb(dir =)"
+    )
+    dir <- dir_main
+  }
   # Checks
   stopifnot(inherits(family, "family"))
   stopifnot(all(
@@ -82,9 +95,9 @@ run_sdmtmb <- function(
     ) %in%
       colnames(data)
   ))
-  nwfscSurvey::check_dir(dir = dir_main, verbose = TRUE)
+  nwfscSurvey::check_dir(dir = dir, verbose = TRUE)
   # Create directory structure
-  if (!is.null(dir_main)) {
+  if (!is.null(dir)) {
     dir_new <- data |>
       dplyr::group_by(.data$survey_name, .data$common_name) |>
       dplyr::count() |>
@@ -92,7 +105,7 @@ run_sdmtmb <- function(
         common_without = format_common_name(.data$common_name),
         survey_without = format_common_name(.data$survey_name),
         directory = fs::path(
-          dir_main,
+          dir,
           .data$common_without,
           .data$survey_without,
           format_family(family)
@@ -106,7 +119,7 @@ run_sdmtmb <- function(
   }
   formula <- format_formula(formula)
   cli::cli_inform(c(
-    "*" = "Running sdmTMB for {data[1, 'common_name']}"
+    "*" = "Running sdmTMB for {data[1, 'common_name']} with {family$clean_name} error structure"
   ))
   # Create prediction grid
   ranges <- data |>
@@ -127,15 +140,17 @@ run_sdmtmb <- function(
       .data$depth > ranges[["depth_max"]]
     ) |>
     droplevels()
-  grid <- lookup_grid(
-    x = data[["survey_name"]][1],
-    max_latitude = ranges[["latitude_max"]],
-    min_latitude = ranges[["latitude_min"]],
-    max_longitude = ranges[["longitude_max"]],
-    min_longitude = ranges[["longitude_min"]],
-    max_depth = abs(ranges[["depth_max"]]),
-    years = sort(unique(data_truncated$year))
-  )
+  # The grid is not being used in this function
+  # grid <- lookup_grid(
+  #   x = data[["survey_name"]][1],
+  #   max_latitude = ranges[["latitude_max"]],
+  #   min_latitude = ranges[["latitude_min"]],
+  #   max_longitude = ranges[["longitude_max"]],
+  #   min_longitude = ranges[["longitude_min"]],
+  #   max_depth = abs(ranges[["depth_max"]]),
+  #   years = sort(unique(data_truncated$year)),
+  #   data = california_current_grid
+  # )
   # Create and save mesh
   mesh <- sdmTMB::make_mesh(
     data = data_truncated,
@@ -159,15 +174,16 @@ run_sdmtmb <- function(
     fit <- sdmTMB::run_extra_optimization(fit)
   }
   # Save model output
-  if (!is.null(dir_main)) {
+  if (!is.null(dir)) {
     saveRDS(fit, file = fs::path(dir_data, "fit.rds"))
   }
   # Attach mesh for downstream use
   fit$mesh <- mesh
-  if (!is.null(dir_main)) {
+  fit$ranges <- ranges
+  if (!is.null(dir)) {
     fit$dir <- dir_data
   } else {
-    fit$dir <- dir_main
+    fit$dir <- dir
   }
   return(fit)
 }
