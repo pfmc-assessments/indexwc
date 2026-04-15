@@ -101,6 +101,14 @@ calc_index_areas <- function(
       "i" = "Example: {.code boundaries = c('Coastwide', 'CA', 'OR')}"
     ))
   }
+  if (cog & bias_correct) {
+    cli::cli_alert_warning(
+      "Calculating both the center of gravity (cog = TRUE) and applying bias correction
+      (bias_correct = TRUE) may result in memory issues depending upon the model. Users
+      may want to turn off bias correct if they are interested in calculating the center of
+      gravity."
+    )
+  }
 
   # Check that all requested areas exist in boundaries_data
   if (!all(boundaries %in% names(boundaries_data))) {
@@ -145,13 +153,13 @@ calc_index_areas <- function(
   union_lower <- min(boundaries_fixed[, "lower"])
 
   union_grid <- filter_grid(
-    union_upper,
-    union_lower,
+    boundary_north = union_upper,
+    boundary_south = union_lower,
     grid = prediction_grid
   )
 
-  full_prediction <- predict(
-    fit,
+  full_prediction <- stats::predict(
+    object = fit,
     newdata = union_grid,
     return_tmb_object = TRUE
   )
