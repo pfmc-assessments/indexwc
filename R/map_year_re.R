@@ -29,10 +29,7 @@ map_year_re <- function(predictions, dir, nrow = 3, ncol = 4, verbose = FALSE) {
   column <- ifelse(
     "epsilon_st2" %in% colnames(predictions),
     "epsilon_st2",
-    ifelse("epsilon_st" %in% colnames(predictions),
-      "epsilon_st",
-      "skip"
-    )
+    ifelse("epsilon_st" %in% colnames(predictions), "epsilon_st", "skip")
   )
 
   if (column != "skip") {
@@ -59,10 +56,14 @@ map_year_re <- function(predictions, dir, nrow = 3, ncol = 4, verbose = FALSE) {
         ) +
         ggplot2::facet_wrap(~Year, ncol = ncol, nrow = nrow) +
         ggplot2::labs(x = "Longitude", y = "Latitude") +
-        ggplot2::ggtitle("Spatio-temporal random effects of the catch rate model")
+        ggplot2::ggtitle(
+          "Spatio-temporal random effects of the catch rate model"
+        )
 
       height <- ifelse(
-        length(g[[page]]) == nrow * ncol, 10, 7
+        length(g[[page]]) == nrow * ncol,
+        10,
+        7
       )
 
       suppressMessages(ggplot2::ggsave(
@@ -74,7 +75,9 @@ map_year_re <- function(predictions, dir, nrow = 3, ncol = 4, verbose = FALSE) {
     }
   } else {
     if (verbose) {
-      message("The espsilon_st column not found in the predictions. Random effects map not created.")
+      message(
+        "The espsilon_st column not found in the predictions. Random effects map not created."
+      )
     }
   }
 }

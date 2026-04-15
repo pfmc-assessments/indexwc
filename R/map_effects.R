@@ -11,10 +11,7 @@ map_effects <- function(predictions, dir, verbose = FALSE) {
   column <- ifelse(
     "est_non_rf2" %in% colnames(predictions),
     "est_non_rf2",
-    ifelse("est_non_rf" %in% colnames(predictions),
-      "est_non_rf",
-      "skip"
-    )
+    ifelse("est_non_rf" %in% colnames(predictions), "est_non_rf", "skip")
   )
 
   if (column != "skip") {
@@ -24,18 +21,16 @@ map_effects <- function(predictions, dir, verbose = FALSE) {
       ggplot2::ggtitle("Fixed pass effects")
   } else {
     if (verbose) {
-      message("The est_non_rf column not found in the predictions. Fixed effects map not created.")
+      message(
+        "The est_non_rf column not found in the predictions. Fixed effects map not created."
+      )
     }
   }
-
 
   column <- ifelse(
     "omega_s2" %in% colnames(predictions),
     "omega_s2",
-    ifelse("omega_s" %in% colnames(predictions),
-      "omega_s",
-      "skip"
-    )
+    ifelse("omega_s" %in% colnames(predictions), "omega_s", "skip")
   )
 
   if (column != "skip") {
@@ -45,7 +40,9 @@ map_effects <- function(predictions, dir, verbose = FALSE) {
       ggplot2::ggtitle("Spatial random effects")
   } else {
     if (verbose) {
-      message("The omega_s column not found in the predictions. Spatial random effects map not created.")
+      message(
+        "The omega_s column not found in the predictions. Spatial random effects map not created."
+      )
     }
   }
 
@@ -54,6 +51,8 @@ map_effects <- function(predictions, dir, verbose = FALSE) {
   suppressMessages(ggplot2::ggsave(
     plot = g,
     filename = file.path(dir, paste0("fixed_and_spatial_effects.png")),
-    width = 14, height = 10, units = "in"
+    width = 14,
+    height = 10,
+    units = "in"
   ))
 }

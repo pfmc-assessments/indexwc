@@ -75,9 +75,7 @@
 #' @importFrom rlang .data
 #' @importFrom utils write.table sessionInfo
 #' @importFrom stats AIC logLik formula predict
-diagnose <- function(dir,
-                     fit,
-                     prediction_grid = NULL) {
+diagnose <- function(dir, fit, prediction_grid = NULL) {
   # Handle both indexwc_fit objects and raw sdmTMB objects
   if (inherits(fit, "indexwc_fit")) {
     sdmtmb_fit <- fit$fit
@@ -111,7 +109,9 @@ diagnose <- function(dir,
 
   # mesh plot
   filename <- NULL
-  if (!is.null(dir)) filename <- fs::path(dir, "mesh.png")
+  if (!is.null(dir)) {
+    filename <- fs::path(dir, "mesh.png")
+  }
   mesh_plot <- plot_mesh(sdmtmb_fit$mesh, file_name = filename)
 
   # Get sanity diagnostics
@@ -139,7 +139,8 @@ diagnose <- function(dir,
         c("NLL", -1 * run_diagnostics$loglike)
       ),
       file = file.path(dir, "aic_nll.txt"),
-      row.names = FALSE, col.names = FALSE
+      row.names = FALSE,
+      col.names = FALSE
     )
   }
 
@@ -186,7 +187,9 @@ diagnose <- function(dir,
 
   # QQ plot
   filename <- NULL
-  if (!is.null(dir)) filename <- file.path(dir, "qq.png")
+  if (!is.null(dir)) {
+    filename <- file.path(dir, "qq.png")
+  }
   qqplot <- plot_qq(
     fit = sdmtmb_fit,
     file_name = filename
@@ -219,9 +222,14 @@ diagnose <- function(dir,
 
   # Anisotropy plot
   filename <- NULL
-  if (!is.null(dir)) filename <- fs::path(dir, "anisotropy.png")
-  gg_aniso <- try(sdmTMB::plot_anisotropy(object = sdmtmb_fit) +
-    ggplot2::theme_bw(), silent = TRUE)
+  if (!is.null(dir)) {
+    filename <- fs::path(dir, "anisotropy.png")
+  }
+  gg_aniso <- try(
+    sdmTMB::plot_anisotropy(object = sdmtmb_fit) +
+      ggplot2::theme_bw(),
+    silent = TRUE
+  )
   if (!is.null(filename)) {
     suppressMessages(ggplot2::ggsave(
       filename = filename,
@@ -245,7 +253,9 @@ diagnose <- function(dir,
   predictions <- add_utm_columns(predictions)
   # Density plots
   save_prefix <- NULL
-  if (!is.null(dir)) save_prefix <- file.path(dir, "density")
+  if (!is.null(dir)) {
+    save_prefix <- file.path(dir, "density")
+  }
 
   density_plot <- map_density(
     predictions = predictions,
@@ -255,7 +265,10 @@ diagnose <- function(dir,
   # Save data with residuals and predictions
   if (!is.null(dir)) {
     data_with_residuals <- sdmtmb_fit$data
-    save(data_with_residuals, file = file.path(dir, "data_with_residuals.rdata"))
+    save(
+      data_with_residuals,
+      file = file.path(dir, "data_with_residuals.rdata")
+    )
     save(predictions, file = file.path(dir, "predictions.rdata"))
   }
 

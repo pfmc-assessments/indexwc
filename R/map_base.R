@@ -15,10 +15,7 @@
 #' map_base()
 #' # TODO: example with map_base second
 #' }
-map_base <- function(x_min = -155,
-                     x_max = -115,
-                     y_min = 20,
-                     y_max = 48) {
+map_base <- function(x_min = -155, x_max = -115, y_min = 20, y_max = 48) {
   # map_data <- rnaturalearth::ne_countries(
   #   scale = "medium",
   #   returnclass = "sf",

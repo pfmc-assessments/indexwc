@@ -18,7 +18,9 @@
 write_default_text <- function(species_list = NULL) {
   # check for internet connection
   if (!curl::has_internet()) {
-    cli::cli_abort("No internet connection detected. The function may not work.")
+    cli::cli_abort(
+      "No internet connection detected. The function may not work."
+    )
   }
   # If species_list is NULL, read the configuration file and extract the list of species
   if (is.null(species_list)) {
@@ -38,7 +40,9 @@ write_default_text <- function(species_list = NULL) {
     ) |>
       dplyr::pull(species)
     if (!all(species_list %in% all_species)) {
-      cli::cli_abort("Some species in species_list are not found in the configuration file: {setdiff(species_list, all_species)}")
+      cli::cli_abort(
+        "Some species in species_list are not found in the configuration file: {setdiff(species_list, all_species)}"
+      )
     }
   }
   cli::cli_alert_info("species_list: {paste(species_list, sep = ', ')}")
@@ -66,9 +70,15 @@ write_default_text <- function(species_list = NULL) {
     rmarkdown::render("inst/default_text.Rmd")
 
     # Copy the generated Markdown file to a species-specific file
-    file.rename("inst/default_text.md", paste0("inst/", gsub(" ", "_", species), "_default_text.md"))
+    file.rename(
+      "inst/default_text.md",
+      paste0("inst/", gsub(" ", "_", species), "_default_text.md")
+    )
 
     # Copy the generated PDF file to a species-specific file
-    file.rename("inst/default_text.pdf", paste0("inst/", gsub(" ", "_", species), "_default_text.pdf"))
+    file.rename(
+      "inst/default_text.pdf",
+      paste0("inst/", gsub(" ", "_", species), "_default_text.pdf")
+    )
   }
 }

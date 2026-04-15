@@ -28,12 +28,14 @@
 #' * [ggforce::n_pages()] for how many pages the object has
 #'
 #' @importFrom rlang .data
-map_density <- function(predictions,
-                        save_prefix = file.path(getwd(), "density"),
-                        n_row = 1,
-                        n_col = 2,
-                        column_grep = "^est[2]*$",
-                        tile_size = c(2000, 2000)) {
+map_density <- function(
+  predictions,
+  save_prefix = file.path(getwd(), "density"),
+  n_row = 1,
+  n_col = 2,
+  column_grep = "^est[2]*$",
+  tile_size = c(2000, 2000)
+) {
   column <- grep(column_grep, colnames(predictions), value = TRUE)
   predictions <- dplyr::rename(
     .data = predictions,
@@ -46,9 +48,18 @@ map_density <- function(predictions,
     range(predictions$X),
     range(predictions$Y)
   )
-  data_raster <- raster::raster(data_extent,
-    ncol = floor((methods::slot(data_extent, "xmax") - methods::slot(data_extent, "xmin")) / 2),
-    nrow = floor((methods::slot(data_extent, "ymax") - methods::slot(data_extent, "ymin")) / 2)
+  data_raster <- raster::raster(
+    data_extent,
+    ncol = floor(
+      (methods::slot(data_extent, "xmax") -
+        methods::slot(data_extent, "xmin")) /
+        2
+    ),
+    nrow = floor(
+      (methods::slot(data_extent, "ymax") -
+        methods::slot(data_extent, "ymin")) /
+        2
+    )
   )
   data_grouped <- predictions |>
     dplyr::group_by(.data$year)
@@ -81,12 +92,13 @@ map_density <- function(predictions,
   n_pages <- ggforce::n_pages(gg)
   plots_by_page <- purrr::map(
     seq_len(n_pages),
-    ~ gg + ggforce::facet_wrap_paginate(
-      "year",
-      nrow = n_row,
-      ncol = n_col,
-      page = .x
-    )
+    ~ gg +
+      ggforce::facet_wrap_paginate(
+        "year",
+        nrow = n_row,
+        ncol = n_col,
+        page = .x
+      )
   )
   if (!is.null(save_prefix)) {
     purrr::walk2(

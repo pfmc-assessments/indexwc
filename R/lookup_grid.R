@@ -12,16 +12,18 @@
 #' @param data the name of the grid, defaults to california_current_grid (WCGBTS)
 #' @importFrom rlang .data
 #' @export
-lookup_grid <- function(x,
-                        years,
-                        max_latitude,
-                        min_latitude,
-                        max_longitude,
-                        min_longitude,
-                        mean_depth,
-                        sd_depth,
-                        max_depth = Inf,
-                        data = california_current_grid) {
+lookup_grid <- function(
+  x,
+  years,
+  max_latitude,
+  min_latitude,
+  max_longitude,
+  min_longitude,
+  mean_depth,
+  sd_depth,
+  max_depth = Inf,
+  data = california_current_grid
+) {
   if (missing(max_latitude)) {
     max_latitude <- max(data[["latitude"]], na.rm = TRUE)
   }

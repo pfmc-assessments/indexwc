@@ -57,20 +57,28 @@
 #' * [lookup_grid()], creates the prediction grid
 #'
 #' @importFrom rlang .data
-run_sdmtmb <- function(dir_main = getwd(),
-                       data,
-                       family,
-                       formula,
-                       n_knots = 500,
-                       share_range = FALSE,
-                       sdmtmb_control = sdmTMB::sdmTMBcontrol(newton_loops = 3),
-                       ...) {
+run_sdmtmb <- function(
+  dir_main = getwd(),
+  data,
+  family,
+  formula,
+  n_knots = 500,
+  share_range = FALSE,
+  sdmtmb_control = sdmTMB::sdmTMBcontrol(newton_loops = 3),
+  ...
+) {
   # Checks
   stopifnot(inherits(family, "family"))
   stopifnot(all(
     c(
-      "year", "fyear", "survey_name", "common_name",
-      "catch_weight", "effort", "x", "y"
+      "year",
+      "fyear",
+      "survey_name",
+      "common_name",
+      "catch_weight",
+      "effort",
+      "x",
+      "y"
     ) %in%
       colnames(data)
   ))
@@ -111,8 +119,10 @@ run_sdmtmb <- function(dir_main = getwd(),
     )
   data_truncated <- data |>
     dplyr::filter(
-      .data$latitude > ranges[["latitude_min"]] & .data$latitude < ranges[["latitude_max"]],
-      .data$longitude > ranges[["longitude_min"]] & .data$longitude < ranges[["longitude_max"]],
+      .data$latitude > ranges[["latitude_min"]] &
+        .data$latitude < ranges[["latitude_max"]],
+      .data$longitude > ranges[["longitude_min"]] &
+        .data$longitude < ranges[["longitude_max"]],
       .data$depth > ranges[["depth_max"]]
     ) |>
     droplevels()
@@ -153,5 +163,10 @@ run_sdmtmb <- function(dir_main = getwd(),
   }
   # Attach mesh for downstream use
   fit$mesh <- mesh
+  if (!is.null(dir_main)) {
+    fit$dir <- dir_data
+  } else {
+    fit$dir <- dir_main
+  }
   return(fit)
 }

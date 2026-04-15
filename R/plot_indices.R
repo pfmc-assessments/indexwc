@@ -26,10 +26,12 @@
 #' specified by the save_loc function input.
 #'
 #' @importFrom rlang .data
-plot_indices <- function(data,
-                         save_loc = getwd(),
-                         file_name = "index.png",
-                         legend_loc = "right") {
+plot_indices <- function(
+  data,
+  save_loc = getwd(),
+  file_name = "index.png",
+  legend_loc = "right"
+) {
   if (!"area" %in% colnames(data)) {
     data[["area"]] <- ""
   }

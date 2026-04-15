@@ -88,11 +88,13 @@
 #' }
 #'
 #' @importFrom rlang .data
-save_index_outputs <- function(fit,
-                               diagnostics,
-                               indices,
-                               dir_main,
-                               overwrite = FALSE) {
+save_index_outputs <- function(
+  fit,
+  diagnostics,
+  indices,
+  dir_main,
+  overwrite = FALSE
+) {
   # Check structure of fit
   if (!inherits(fit, "sdmTMB")) {
     cli::cli_abort(c(
@@ -219,7 +221,10 @@ save_index_outputs <- function(fit,
     aic = diagnostics$aic,
     effects = diagnostics$effects
   )
-  save(run_diagnostics, file = fs::path(dir_diagnostics, "run_diagnostics_and_estimates.rdata"))
+  save(
+    run_diagnostics,
+    file = fs::path(dir_diagnostics, "run_diagnostics_and_estimates.rdata")
+  )
 
   # Save QQ plot
   if (!is.null(diagnostics$qq_plot)) {
@@ -245,7 +250,13 @@ save_index_outputs <- function(fit,
           )
           suppressMessages(ggplot2::ggsave(
             filename = filename,
-            plot = residual_plot + ggforce::facet_wrap_paginate("year", nrow = 1, ncol = 2, page = page),
+            plot = residual_plot +
+              ggforce::facet_wrap_paginate(
+                "year",
+                nrow = 1,
+                ncol = 2,
+                page = page
+              ),
             height = 5,
             width = 10
           ))
@@ -255,7 +266,10 @@ save_index_outputs <- function(fit,
   }
 
   # Save anisotropy plot
-  if (!is.null(diagnostics$anisotropy_plot) && inherits(diagnostics$anisotropy_plot, "ggplot")) {
+  if (
+    !is.null(diagnostics$anisotropy_plot) &&
+      inherits(diagnostics$anisotropy_plot, "ggplot")
+  ) {
     suppressMessages(ggplot2::ggsave(
       filename = fs::path(dir_diagnostics, "anisotropy.png"),
       plot = diagnostics$anisotropy_plot,
@@ -292,7 +306,10 @@ save_index_outputs <- function(fit,
 
   # Save data with residuals
   data_with_residuals <- diagnostics$data_with_residuals
-  save(data_with_residuals, file = fs::path(dir_diagnostics, "data_with_residuals.rdata"))
+  save(
+    data_with_residuals,
+    file = fs::path(dir_diagnostics, "data_with_residuals.rdata")
+  )
 
   # Save predictions
   predictions <- diagnostics$predictions
