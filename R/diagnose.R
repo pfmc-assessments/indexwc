@@ -75,7 +75,12 @@
 #' @importFrom rlang .data
 #' @importFrom utils write.table sessionInfo
 #' @importFrom stats AIC logLik formula predict
-diagnose <- function(dir, fit, prediction_grid = NULL) {
+diagnose <- function(
+  fit,
+  dir = NULL,
+  prediction_grid = NULL
+) {
+  nwfscSurvey::check_dir(dir = dir, verbose = TRUE)
   # Handle both indexwc_fit objects and raw sdmTMB objects
   if (inherits(fit, "indexwc_fit")) {
     sdmtmb_fit <- fit$fit
@@ -83,13 +88,14 @@ diagnose <- function(dir, fit, prediction_grid = NULL) {
     # Auto-create prediction grid if not provided and we have an indexwc_fit
     if (is.null(prediction_grid)) {
       prediction_grid <- lookup_grid(
-        x = fit$metadata$survey_name,
+        x = fit$data[["survey_name"]][1],
         max_latitude = fit$ranges$latitude_max,
         min_latitude = fit$ranges$latitude_min,
         max_longitude = fit$ranges$longitude_max,
         min_longitude = fit$ranges$longitude_min,
         max_depth = abs(fit$ranges$depth_max),
-        years = sort(unique(fit$data$year))
+        years = sort(unique(fit$data$year)),
+        data = california_current_grid
       )
     }
   } else if (inherits(fit, "sdmTMB")) {
@@ -138,7 +144,7 @@ diagnose <- function(dir, fit, prediction_grid = NULL) {
         c("AIC", run_diagnostics$aic),
         c("NLL", -1 * run_diagnostics$loglike)
       ),
-      file = file.path(dir, "aic_nll.txt"),
+      file = fs::path(dir, "aic_nll.txt"),
       row.names = FALSE,
       col.names = FALSE
     )
@@ -167,7 +173,7 @@ diagnose <- function(dir, fit, prediction_grid = NULL) {
   if (!is.null(dir)) {
     save(
       run_diagnostics,
-      file = file.path(dir, "run_diagnostics_and_estimates.rdata")
+      file = fs::path(dir, "run_diagnostics_and_estimates.rdata")
     )
   }
 
@@ -188,7 +194,7 @@ diagnose <- function(dir, fit, prediction_grid = NULL) {
   # QQ plot
   filename <- NULL
   if (!is.null(dir)) {
-    filename <- file.path(dir, "qq.png")
+    filename <- fs::path(dir, "qq.png")
   }
   qqplot <- plot_qq(
     fit = sdmtmb_fit,
@@ -208,7 +214,7 @@ diagnose <- function(dir, fit, prediction_grid = NULL) {
       # Set filename (NULL if no dir)
       save_prefix <- NULL
       if (!is.null(f_dir)) {
-        save_prefix <- file.path(f_dir, paste0("residuals_", x, "_"))
+        save_prefix <- fs::path(f_dir, paste0("residuals_", x, "_"))
       }
 
       map_residuals(
@@ -254,7 +260,7 @@ diagnose <- function(dir, fit, prediction_grid = NULL) {
   # Density plots
   save_prefix <- NULL
   if (!is.null(dir)) {
-    save_prefix <- file.path(dir, "density")
+    save_prefix <- fs::path(dir, "density")
   }
 
   density_plot <- map_density(
@@ -267,9 +273,9 @@ diagnose <- function(dir, fit, prediction_grid = NULL) {
     data_with_residuals <- sdmtmb_fit$data
     save(
       data_with_residuals,
-      file = file.path(dir, "data_with_residuals.rdata")
+      file = fs::path(dir, "data_with_residuals.rdata")
     )
-    save(predictions, file = file.path(dir, "predictions.rdata"))
+    save(predictions, file = fs::path(dir, "predictions.rdata"))
   }
 
   return(list(
