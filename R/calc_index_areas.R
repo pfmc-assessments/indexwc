@@ -171,7 +171,8 @@ calc_index_areas <- function(
       area_bounds = boundaries_fixed[.x, ],
       full_pred = full_prediction,
       full_grid = union_grid,
-      calculate_cog = cog
+      calculate_cog = cog,
+      bias_correct = bias_correct
     )
   ) |>
     purrr::set_names(rownames(boundaries_fixed))
