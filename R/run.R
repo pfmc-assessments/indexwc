@@ -18,7 +18,14 @@
 #'
 #' @family run
 #' @export
-run <- function(data, family, formula, dir_main = getwd(), n_knots = 500, ...) {
+run <- function(
+  data,
+  family,
+  formula,
+  dir_main = getwd(),
+  n_knots = 500,
+  ...
+) {
   lifecycle::deprecate_warn(
     when = "0.7",
     what = "run()",
