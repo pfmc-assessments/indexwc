@@ -85,13 +85,15 @@
 #' dplyr::filter(results[["cogs"]], coord == "Y")
 #' }
 #'
-calc_index_areas <- function(data,
-                             fit,
-                             prediction_grid,
-                             dir,
-                             boundaries = "Coastwide",
-                             cog = FALSE,
-                             bias_correct = TRUE) {
+calc_index_areas <- function(
+  data,
+  fit,
+  prediction_grid,
+  dir,
+  boundaries = "Coastwide",
+  cog = FALSE,
+  bias_correct = TRUE
+) {
   # Make sure all boundaries are character vector
   if (!is.character(boundaries)) {
     cli::cli_abort(c(
@@ -148,36 +150,11 @@ calc_index_areas <- function(data,
     grid = prediction_grid
   )
 
-  full_prediction <- predict(fit, newdata = union_grid, return_tmb_object = TRUE)
-
-  get_area_results <- function(area_name, area_bounds, full_pred, full_grid,
-                               calculate_cog = FALSE) {
-    in_region <- full_grid$latitude >= area_bounds["lower"] &
-      full_grid$latitude <= area_bounds["upper"]
-
-    area_weights <- ifelse(in_region, full_grid$area_km2_WCGBTS, 0)
-
-    index <- sdmTMB::get_index(
-      obj = full_pred,
-      bias_correct = bias_correct,
-      area = area_weights
-    )
-
-    result <- list(
-      prediction = full_pred,
-      index = index
-    )
-
-    if (calculate_cog) {
-      result[["cog"]] <- sdmTMB::get_cog(
-        obj = full_pred,
-        bias_correct = bias_correct,
-        area = area_weights
-      )
-    }
-
-    return(result)
-  }
+  full_prediction <- predict(
+    fit,
+    newdata = union_grid,
+    return_tmb_object = TRUE
+  )
 
   results <- purrr::imap(
     .x = as.list(rownames(boundaries_fixed)),
