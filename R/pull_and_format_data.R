@@ -4,7 +4,6 @@
 #' filtered data, and a prediction grid used to estimate indices of abundance
 #' in [calc_index_areas()] and [diagnose()].
 #'
-#'
 #' @param configuration_to_run A data frame based on the configuration data object
 #'   that is used to pull and format data list used in downstream functions (e.g.,
 #'   [run_sdmtmb()]). If a configuration_to_run is specified, the function will
@@ -123,7 +122,7 @@ pull_and_format_data <- function(
       depth_scaled = -1 * (neg_depth - mean_neg_depth) / sd_neg_depth,
       depth_scaled_squared = depth_scaled * depth_scaled
     ) |>
-    dplyr::select(-mean_neg_depth, -sd_neg_depth)
+    dplyr::select(-mean_neg_depth, -sd_neg_depth, -neg_depth)
   args_list <- list(
     dat = rep(list(modified_grid), length(years)),
     time_name = rep(list("year"), length(years)),
