@@ -1,0 +1,98 @@
+---
+title: "Coastwide indices"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Coastwide indices simple}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+  
+  
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  comment = "#>"
+)
+options(repos = c(CRAN = "https://cloud.r-project.org"))
+```
+
+## Overview
+
+This vignette highlights the ability to generate coastwide indices for stocks using available functions in the `indexwc` package for a West Coast groundfish stock for the West Coast Groundfish Bottom Trawl Survey using the configuration data object.
+
+```{r, eval=TRUE, echo=TRUE}
+library(dplyr)
+library(indexwc)
+options(repos = c(CRAN = "https://cloud.r-project.org"))
+```
+
+## Get data and settings
+
+```{r, eval=TRUE, echo=TRUE}
+# Load from the rda file
+configuration_to_run <- configuration |>
+  dplyr::filter(species == "sablefish", source == "NWFSC.Combo", family == "sdmTMB::delta_gamma()") 
+```
+
+```{r, eval = TRUE, echo = TRUE}
+my_data <- pull_and_format_data(
+   configuration_to_run = configuration_to_run
+)
+```
+
+## Estimate the model
+
+```{r, eval = TRUE, echo = TRUE}
+names(my_data)
+my_data$family
+my_data$formula
+my_data$knots
+my_data$share_range
+my_data$anisotropy
+list(my_data$spatiotemporal1, my_data$spatiotemporal2)
+
+```
+
+```{r, eval=FALSE, echo = TRUE}
+fit <- run_sdmtmb(
+  data = my_data$data_filtered[[1]],
+  family = my_data$family,
+  formula = my_data$formula,
+  n_knots = my_data$knots,
+  share_range = my_data$share_range,
+  anisotropy = my_data$anisotropy,
+  spatiotemporal = list(my_data$spatiotemporal1, my_data$spatiotemporal2)
+)
+```
+
+## Diagnostics
+
+```{r, eval = FALSE, echo = TRUE}
+diag <- diagnose(
+ fit = fit
+)
+```
+
+## Calculate an index of abundance
+
+```{r, eval = FALSE, echo = TRUE}
+index <- calc_index_areas(
+   data = fit$data,
+   fit = fit,
+   boundaries = "Coastwide"
+)
+```
+
+## Write out all files and figures
+
+```{r, eval = FALSE, echo = TRUE}
+save_index_outputs(
+ fit = fit,
+ diagnostics = diag,
+ indices = index,
+ dir = "C:/indices"
+)
+```
