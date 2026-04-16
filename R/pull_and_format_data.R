@@ -50,7 +50,7 @@ pull_and_format_data <- function(
   years = 2003:2050,
   verbose = TRUE
 ) {
-  if (is.missing(configuration_to_run) & is.null(common_name)) {
+  if (missing(configuration_to_run) & is.null(common_name)) {
     cli::cli_abort(
       "Either a common_name or configuration_to_run must be specified"
     )
@@ -112,30 +112,30 @@ pull_and_format_data <- function(
       dplyr::ungroup()
   }
 
-  year_list <- lapply(data$data_filtered, function(x) x$year)
-  years <- purrr::map(year_list, unique)
-  modified_grid <- california_current_grid |>
-    dplyr::mutate(
-      neg_depth = -1 * depth,
-      mean_neg_depth = mean(neg_depth),
-      sd_neg_depth = sd(neg_depth),
-      depth_scaled = -1 * (neg_depth - mean_neg_depth) / sd_neg_depth,
-      depth_scaled_squared = depth_scaled * depth_scaled
-    ) |>
-    dplyr::select(-mean_neg_depth, -sd_neg_depth, -neg_depth)
-  args_list <- list(
-    dat = rep(list(modified_grid), length(years)),
-    time_name = rep(list("year"), length(years)),
-    time_values = years
-  )
-  prediction_grid_df <- purrr::pmap(
-    .l = args_list,
-    .f = sdmTMB::replicate_df
-  )
-  prediction_grid <- purrr::map(
-    prediction_grid_df,
-    ~ dplyr::mutate(.x, fyear = as.factor(year))
-  )
-  data$prediction_grid <- prediction_grid
+  #year_list <- lapply(data$data_filtered, function(x) x$year)
+  #years <- purrr::map(year_list, unique)
+  #modified_grid <- california_current_grid |>
+  #  dplyr::mutate(
+  #    neg_depth = -1 * depth,
+  #    mean_neg_depth = mean(neg_depth),
+  #    sd_neg_depth = sd(neg_depth),
+  #    depth_scaled = -1 * (neg_depth - mean_neg_depth) / sd_neg_depth,
+  #    depth_scaled_squared = depth_scaled * depth_scaled
+  #  ) |>
+  #  dplyr::select(-mean_neg_depth, -sd_neg_depth, -neg_depth)
+  #args_list <- list(
+  #  dat = rep(list(modified_grid), length(years)),
+  #  time_name = rep(list("year"), length(years)),
+  #  time_values = years
+  #)
+  #prediction_grid_df <- purrr::pmap(
+  #  .l = args_list,
+  #  .f = sdmTMB::replicate_df
+  #)
+  #prediction_grid <- purrr::map(
+  #  prediction_grid_df,
+  #  ~ dplyr::mutate(.x, fyear = as.factor(year))
+  #)
+  #data$prediction_grid <- prediction_grid
   return(data)
 }
