@@ -72,23 +72,23 @@ lookup_grid <- function(
     out_truncated,
     c("longitude", "latitude"),
     utm_crs = utm_zone_10
-  )) |>
-    dplyr::select(
-      .data$x,
-      .data$y,
-      .data$area_km2,
-      .data$pass_scaled,
-      .data$vessel_year,
-      .data$longitude,
-      .data$latitude,
-      .data$depth,
-      .data$depth_scaled,
-      .data$depth_scaled_squared,
-      .data$split_mendocino,
-      .data$split_conception,
-      .data$split_monterey,
-      .data$split_state
-    )
+  )) #|> Return all columns instead
+  #  dplyr::select(
+  #    .data$x,
+  #    .data$y,
+  #    .data$area_km2,
+  #    .data$pass_scaled,
+  #    .data$vessel_year,
+  #    .data$longitude,
+  #    .data$latitude,
+  #    .data$depth,
+  #    .data$depth_scaled,
+  #    .data$depth_scaled_squared,
+  #    .data$split_mendocino,
+  #    .data$split_conception,
+  #    .data$split_monterey,
+  #    .data$split_state
+  #  )
   year_grid <- purrr::map_dfr(
     .x = years,
     .f = function(year_i, data) {
