@@ -176,7 +176,7 @@ This code is optimized to fit multiple models (across stocks / species, or model
 family_obj <- eval(rlang::parse_expr(configuration_to_run$family))
 
 fit <- run_sdmtmb(
-  dir_main = NULL,
+  dir = NULL,
   data,
   family = family_obj,
   formula = configuration_to_run$formula,

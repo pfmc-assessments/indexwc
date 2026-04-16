@@ -1,5 +1,5 @@
 ---
-title: "Coastwide indices"
+title: "Coastwide indices: detailed example"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
@@ -39,7 +39,7 @@ First we'll load in the configuration file. This step is not needed -- and the f
 
 ```{r, eval=TRUE, echo=TRUE}
 # Load from the rda file
-configuration_ytk <- configuration |>
+configuration_ytk <- indexwc::configuration |>
   dplyr::filter(species == "yellowtail rockfish")
 ```
 
@@ -104,7 +104,7 @@ A key point to highlight is that in this code, we use `sdmTMBcontrol()` to pass 
 family_obj <- eval(rlang::parse_expr(configuration_to_run$family))
 
 fit <- run_sdmtmb(
-  dir_main = NULL,
+  dir,
   data,
   family = family_obj,
   formula = configuration_to_run$formula,
@@ -125,7 +125,7 @@ For simplicity and speed, we can change simplify our previous yellowtail model t
 family_obj <- eval(rlang::parse_expr(configuration_to_run$family))
 
 fit_simple <- run_sdmtmb(
-  dir_main = NULL,
+  dir = getwd(),
   data,
   family = family_obj,
   formula = configuration_to_run$formula,
@@ -293,7 +293,7 @@ save_index_outputs(
   fit = fit_simple,
   diagnostics = diagnostics,
   indices = index,
-  dir_main = paste0(getwd(), "/yellowtail_example")
+  dir = paste0(getwd(), "/yellowtail_example")
 )
 ```
 
