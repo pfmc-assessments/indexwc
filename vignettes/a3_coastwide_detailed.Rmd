@@ -3,7 +3,7 @@ title: "Coastwide indices: detailed example"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Coastwide indices}
+  %\VignetteIndexEntry{Coastwide indices: detailed example}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

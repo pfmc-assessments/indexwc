@@ -1,9 +1,9 @@
 ---
-title: "Coastwide indices"
+title: "Coastwide indices: simple example"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Coastwide indices simple}
+  %\VignetteIndexEntry{Coastwide indices: simple example}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -23,7 +23,7 @@ options(repos = c(CRAN = "https://cloud.r-project.org"))
 
 This vignette highlights the ability to generate coastwide indices for stocks using available functions in the `indexwc` package for a West Coast groundfish stock for the West Coast Groundfish Bottom Trawl Survey using the configuration data object.
 
-```{r, eval=TRUE, echo=TRUE}
+```{r packages, eval=TRUE, echo=TRUE}
 library(dplyr)
 library(indexwc)
 options(repos = c(CRAN = "https://cloud.r-project.org"))
@@ -31,13 +31,13 @@ options(repos = c(CRAN = "https://cloud.r-project.org"))
 
 ## Get data and settings
 
-```{r, eval=TRUE, echo=TRUE}
+```{r config, eval=TRUE, echo=TRUE}
 # Load from the rda file
 configuration_to_run <- configuration |>
   dplyr::filter(species == "sablefish", source == "NWFSC.Combo", family == "sdmTMB::delta_gamma()") 
 ```
 
-```{r, eval = TRUE, echo = TRUE}
+```{r pull-data, eval = TRUE, echo = TRUE}
 my_data <- pull_and_format_data(
    configuration_to_run = configuration_to_run
 )
@@ -45,7 +45,7 @@ my_data <- pull_and_format_data(
 
 ## Estimate the model
 
-```{r, eval = TRUE, echo = TRUE}
+```{r settings, eval = TRUE, echo = TRUE}
 names(my_data)
 my_data$family
 my_data$formula
@@ -56,7 +56,7 @@ list(my_data$spatiotemporal1, my_data$spatiotemporal2)
 
 ```
 
-```{r, eval=FALSE, echo = TRUE}
+```{r run-model, eval=FALSE, echo = TRUE}
 fit <- run_sdmtmb(
   data = my_data$data_filtered[[1]],
   family = my_data$family,
@@ -70,7 +70,7 @@ fit <- run_sdmtmb(
 
 ## Diagnostics
 
-```{r, eval = FALSE, echo = TRUE}
+```{r diagnostics, eval = FALSE, echo = TRUE}
 diag <- diagnose(
  fit = fit
 )
@@ -78,7 +78,7 @@ diag <- diagnose(
 
 ## Calculate an index of abundance
 
-```{r, eval = FALSE, echo = TRUE}
+```{r index, eval = FALSE, echo = TRUE}
 index <- calc_index_areas(
    data = fit$data,
    fit = fit,
@@ -88,7 +88,7 @@ index <- calc_index_areas(
 
 ## Write out all files and figures
 
-```{r, eval = FALSE, echo = TRUE}
+```{r save-output, eval = FALSE, echo = TRUE}
 save_index_outputs(
  fit = fit,
  diagnostics = diag,
