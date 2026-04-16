@@ -5,22 +5,21 @@
 \title{Run \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}}}
 \usage{
 run_sdmtmb(
-  dir_main = getwd(),
   data,
   family,
   formula,
+  dir = NULL,
+  dir_main = lifecycle::deprecated(),
   n_knots = 500,
+  spatial = list("on", "on"),
+  spatiotemporal = list("iid", "iid"),
+  anisotropy = TRUE,
   share_range = FALSE,
   sdmtmb_control = sdmTMB::sdmTMBcontrol(newton_loops = 3),
   ...
 )
 }
 \arguments{
-\item{dir_main}{A string specifying a path where results will be saved. The
-default is your current working directory. A subdirectory structure will be
-created based on the species, survey, and model family. If \code{NULL}, the fitted
-object is returned with nothing saved to disk}
-
 \item{data}{A data frame containing the survey data. Must include columns:
 \code{year}, \code{fyear}, \code{survey_name}, \code{common_name}, \code{catch_weight}, \code{effort},
 \code{x}, \code{y}, \code{latitude}, \code{longitude}, and \code{depth}.}
@@ -32,10 +31,38 @@ See \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}} for options. Common choices in
 \item{formula}{A formula specifying the fixed effects structure. Should
 reference columns in \code{data}. See \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}} for details.}
 
+\item{dir}{A string specifying a path where results will be saved. The
+default is your current working directory. A subdirectory structure will be
+created based on the species, survey, and model family. If \code{NULL}, the fitted
+object is returned with nothing saved to disk}
+
+\item{dir_main}{Deprecated. A string specifying a path where results will be saved. The
+default is your current working directory. A subdirectory structure will be
+created based on the species, survey, and model family. If \code{NULL}, the fitted
+object is returned with nothing saved to disk}
+
 \item{n_knots}{An integer specifying the number of knots you want in your
 mesh that is created by \pkg{fmesher}. More knots is not always better. The
 default is to use 500 knots. Future work will look at specifying a
 threshold distance between points rather than number of knots.}
+
+\item{spatial}{Estimate spatial random fields? Options are 'on' / 'off'
+or TRUE / FALSE. Optionally, a list for delta models, e.g. list('on', 'off').
+Default is list('on', 'on') to estimate spatial random fields for a delta
+model.}
+
+\item{spatiotemporal}{Estimate the spatiotemporal random fields as 'iid'
+(independent and identically distributed; default), stationary 'ar1'
+(first-order autoregressive), a random walk ('rw'), or fixed at 0 'off'.
+If a delta model, can be a list. Default is list('iid', 'iid') to estimate
+spatialtemporal random fields for a delta model. These settings are
+available in the configuration file under spatiotemporal1 for the presence
+absence model and spatiotemporal2 for the catch rate model.}
+
+\item{anisotropy}{Logical: allow for anisotropy (spatial correlation that is
+directionally dependent).  This is commonly needed for West Coast groundfish
+stocks that have a coastwide range due to the directionality of the coast
+line. Default is TRUE.}
 
 \item{share_range}{Logical, whether or not to share the range between the
 spatial and spatiotemporal fields. This defaults to \code{FALSE}, but adds extra

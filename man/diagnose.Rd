@@ -4,13 +4,13 @@
 \alias{diagnose}
 \title{Summarize model estimates and plot diagnostics}
 \usage{
-diagnose(dir, fit, prediction_grid = NULL)
+diagnose(fit, dir = NULL, prediction_grid = NULL)
 }
 \arguments{
+\item{fit}{An object of class \code{sdmTMB} returned by \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}}.}
+
 \item{dir}{Directory path where results will be saved. If \code{NULL},
 results are only returned as a list (not saved to disk).}
-
-\item{fit}{An object of class \code{sdmTMB} returned by \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}}.}
 
 \item{prediction_grid}{The prediction grid for the survey that sdmTMB will
 use to make model predictions to. Should not be NULL}

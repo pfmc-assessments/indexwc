@@ -4,18 +4,31 @@
 \alias{save_index_outputs}
 \title{Save index model outputs to disk}
 \usage{
-save_index_outputs(fit, diagnostics, indices, dir_main, overwrite = FALSE)
+save_index_outputs(
+  fit,
+  diagnostics,
+  indices,
+  dir = getwd(),
+  dir_main = lifecycle::deprecated(),
+  overwrite = FALSE
+)
 }
 \arguments{
-\item{fit}{An sdmTMB model object returned by \code{\link[=run_sdmtmb]{run_sdmtmb()}} with \code{dir_main = NULL}}
+\item{fit}{An sdmTMB model object returned by \code{\link[=run_sdmtmb]{run_sdmtmb()}} with \code{dir = NULL}}
 
 \item{diagnostics}{A list returned by \code{\link[=diagnose]{diagnose()}} with \code{dir = NULL}}
 
 \item{indices}{A list returned by \code{\link[=calc_index_areas]{calc_index_areas()}} with \code{dir = NULL}}
 
-\item{dir_main}{A string specifying the base directory where results will be saved.
-The function will create a subdirectory structure based on species, survey, and
-model family (same as \code{\link[=run_sdmtmb]{run_sdmtmb()}} creates when \code{dir_main} is specified)}
+\item{dir}{A string specifying a path where results will be saved. The
+default is your current working directory. A subdirectory structure will be
+created based on the species, survey, and model family. If \code{NULL}, the fitted
+object is returned with nothing saved to disk}
+
+\item{dir_main}{Deprecated. A string specifying a path where results will be saved. The
+default is your current working directory. A subdirectory structure will be
+created based on the species, survey, and model family. If \code{NULL}, the fitted
+object is returned with nothing saved to disk}
 
 \item{overwrite}{Logical. If \code{TRUE}, existing files will be overwritten. Default is \code{FALSE}}
 }
@@ -31,7 +44,7 @@ specified from the start.
 
 The directory structure created is:
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{dir_main/
+\if{html}{\out{<div class="sourceCode">}}\preformatted{dir/
 └── species_name/
     └── survey_name/
         └── family_name/
@@ -59,36 +72,37 @@ The directory structure created is:
 }
 \examples{
 \dontrun{
+
+# Pull and format data
+my_data <- pull_and_format_data(
+   configuration_to_run = configuration[1,]
+)
+
 # Fit model without saving
 fit <- run_sdmtmb(
-  dir_main = NULL,
-  data = my_data,
-  family = sdmTMB::delta_gamma(),
-  formula = catch_weight ~ 0 + fyear
+  data = my_data$data_filtered,
+  family = my_data$family,
+  formula = my_data$formula
 )
 
 # Run diagnostics without saving
 diag <- diagnose(
-  dir = NULL,
-  fit = fit,
-  prediction_grid = my_grid
+  fit = fit
 )
 
 # Calculate indices without saving
-idx <- calc_index_areas(
+index <- calc_index_areas(
   data = fit$data,
   fit = fit,
-  prediction_grid = my_grid,
-  dir = NULL,
-  boundaries = c("Coastwide", "CA", "OR", "WA")
+  boundaries = "Coastwide"
 )
 
 # Now save everything to disk
 paths <- save_index_outputs(
   fit = fit,
   diagnostics = diag,
-  indices = idx,
-  dir_main = "~/my_indices"
+  indices = index,
+  dir = fit$dir
 )
 }
 

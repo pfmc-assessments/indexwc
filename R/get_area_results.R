@@ -1,4 +1,4 @@
-#'
+#' Calculate index based upon the selected areas based on the prediction grid
 #'
 #'
 #'
@@ -21,7 +21,7 @@
 #'   transformation of random effects when calculating the index. Will be faster
 #'   if set to `FALSE`, but is `TRUE` by default
 #' @export
-#' @author Eric Ward and Chantel Wetzel
+#' @author Kelli F. Johnson, Chantel Wetzel, and Eric Ward
 #'
 #'
 get_area_results <- function(
