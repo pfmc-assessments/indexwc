@@ -4,12 +4,17 @@
 #' and [calc_index_areas()] when run with `dir = NULL` and writes them all to
 #' disk in the same directory structure as the original indexwc code.
 #'
-#' @param fit An sdmTMB model object returned by [run_sdmtmb()] with `dir_main = NULL`
+#' @param fit An sdmTMB model object returned by [run_sdmtmb()] with `dir = NULL`
 #' @param diagnostics A list returned by [diagnose()] with `dir = NULL`
 #' @param indices A list returned by [calc_index_areas()] with `dir = NULL`
-#' @param dir_main A string specifying the base directory where results will be saved.
-#'   The function will create a subdirectory structure based on species, survey, and
-#'   model family (same as [run_sdmtmb()] creates when `dir_main` is specified)
+#' @param dir A string specifying a path where results will be saved. The
+#'   default is your current working directory. A subdirectory structure will be
+#'   created based on the species, survey, and model family. If `NULL`, the fitted
+#'   object is returned with nothing saved to disk
+#' @param dir_main Deprecated. A string specifying a path where results will be saved. The
+#'   default is your current working directory. A subdirectory structure will be
+#'   created based on the species, survey, and model family. If `NULL`, the fitted
+#'   object is returned with nothing saved to disk
 #' @param overwrite Logical. If `TRUE`, existing files will be overwritten. Default is `FALSE`
 #'
 #' @details
@@ -19,7 +24,7 @@
 #'
 #' The directory structure created is:
 #' ```
-#' dir_main/
+#' dir/
 #' └── species_name/
 #'     └── survey_name/
 #'         └── family_name/
@@ -54,36 +59,37 @@
 #'
 #' @examples
 #' \dontrun{
+#'
+#' # Pull and format data
+#' my_data <- pull_and_format_data(
+#'    configuration_to_run = configuration[1,]
+#' )
+#'
 #' # Fit model without saving
 #' fit <- run_sdmtmb(
-#'   dir_main = NULL,
-#'   data = my_data,
-#'   family = sdmTMB::delta_gamma(),
-#'   formula = catch_weight ~ 0 + fyear
+#'   data = my_data$data_filtered,
+#'   family = my_data$family,
+#'   formula = my_data$formula
 #' )
 #'
 #' # Run diagnostics without saving
 #' diag <- diagnose(
-#'   dir = NULL,
-#'   fit = fit,
-#'   prediction_grid = my_grid
+#'   fit = fit
 #' )
 #'
 #' # Calculate indices without saving
-#' idx <- calc_index_areas(
+#' index <- calc_index_areas(
 #'   data = fit$data,
 #'   fit = fit,
-#'   prediction_grid = my_grid,
-#'   dir = NULL,
-#'   boundaries = c("Coastwide", "CA", "OR", "WA")
+#'   boundaries = "Coastwide"
 #' )
 #'
 #' # Now save everything to disk
 #' paths <- save_index_outputs(
 #'   fit = fit,
 #'   diagnostics = diag,
-#'   indices = idx,
-#'   dir_main = "~/my_indices"
+#'   indices = index,
+#'   dir = fit$dir
 #' )
 #' }
 #'
@@ -92,9 +98,19 @@ save_index_outputs <- function(
   fit,
   diagnostics,
   indices,
-  dir_main,
+  dir = getwd(),
+  dir_main = lifecycle::deprecated(),
   overwrite = FALSE
 ) {
+  nwfscSurvey::check_dir(dir = dir, verbose = TRUE)
+  if (lifecycle::is_present(dir_main)) {
+    lifecycle::deprecate_warn(
+      when = "1.0",
+      what = "indexwc::run_sdmtmb(dir_main =)",
+      with = "indexwc::run_sdmtmb(dir =)"
+    )
+    dir <- dir_main
+  }
   # Check structure of fit
   if (!inherits(fit, "sdmTMB")) {
     cli::cli_abort(c(
@@ -116,19 +132,17 @@ save_index_outputs <- function(
       "i" = "Did you run {.fn calc_index_areas}?"
     ))
   }
-
   # Extract metadata from fit object to create directory structure
   data <- fit$data
   family_obj <- fit$family
-
-  dir_new <- data |>
+  dir_save <- data |>
     dplyr::group_by(.data$survey_name, .data$common_name) |>
     dplyr::count() |>
     dplyr::mutate(
       common_without = format_common_name(.data$common_name),
       survey_without = format_common_name(.data$survey_name),
       directory = fs::path(
-        dir_main,
+        dir,
         .data$common_without,
         .data$survey_without,
         format_family(family_obj)
@@ -136,7 +150,7 @@ save_index_outputs <- function(
     ) |>
     dplyr::pull(.data$directory)
 
-  if (length(dir_new) != 1) {
+  if (length(dir_save) != 1) {
     cli::cli_abort(c(
       "x" = "Multiple species or surveys detected in data",
       "i" = "This function expects a single species/survey combination"
@@ -144,9 +158,9 @@ save_index_outputs <- function(
   }
 
   # Create directory structure, following indexwc
-  dir_data <- fs::path(dir_new, "data")
-  dir_diagnostics <- fs::path(dir_new, "diagnostics")
-  dir_index <- fs::path(dir_new, "index")
+  dir_data <- fs::path(dir_save, "data")
+  dir_diagnostics <- fs::path(dir_save, "diagnostics")
+  dir_index <- fs::path(dir_save, "index")
 
   fs::dir_create(dir_data, recurse = TRUE)
   fs::dir_create(dir_diagnostics, recurse = TRUE)
@@ -161,9 +175,9 @@ save_index_outputs <- function(
     existing <- existing_files[fs::file_exists(existing_files)]
     if (length(existing) > 0) {
       cli::cli_abort(c(
-        "x" = "Files already exist in {.path {dir_new}}",
+        "x" = "Files already exist in {.path {dir}}",
         "i" = "Set {.code overwrite = TRUE} to replace existing files",
-        "i" = "Or choose a different {.arg dir_main}"
+        "i" = "Or choose a different {.arg dir}"
       ))
     }
   }
@@ -171,7 +185,6 @@ save_index_outputs <- function(
   ##############################################################################
   # Save model fit and data (from run_sdmtmb)
   ##############################################################################
-
   # Save the original data
   data_to_save <- data
   save(data_to_save, file = fs::path(dir_data, "data.rdata"))
@@ -180,19 +193,9 @@ save_index_outputs <- function(
   saveRDS(fit, file = fs::path(dir_data, "fit.rds"))
 
   ##############################################################################
-  # Save diagnostics (from diagnose)
+  # Check model
   ##############################################################################
-
-  # Save mesh plot
-  if (!is.null(diagnostics$mesh_plot)) {
-    suppressMessages(ggplot2::ggsave(
-      filename = fs::path(dir_diagnostics, "mesh.png"),
-      plot = diagnostics$mesh_plot,
-      height = 7,
-      width = 7
-    ))
-  }
-
+  cli::cli_inform(c("*" = "Running sanity check..."))
   # Save sanity checks
   utils::write.table(
     diagnostics$sanity,
@@ -212,6 +215,60 @@ save_index_outputs <- function(
     row.names = FALSE,
     col.names = FALSE
   )
+
+  ##############################################################################
+  # Save indices (from calc_index_areas)
+  ##############################################################################
+  cli::cli_inform(c("*" = "Saving and plotting indices..."))
+  # Save index table
+  write.csv(
+    indices$indices,
+    file = fs::path(dir_index, "est_by_area.csv"),
+    row.names = FALSE
+  )
+
+  # Save coastwide index plot if it exists
+  if (any(grepl("wide", indices$indices[["area"]], ignore.case = TRUE))) {
+    gg_index_coastwide <- plot_indices(
+      data = dplyr::filter(
+        indices$indices,
+        grepl("wide", area, ignore.case = TRUE)
+      ),
+      save_loc = NULL,
+      file_name = NULL
+    )
+    suppressMessages(ggplot2::ggsave(
+      filename = fs::path(dir_index, "index_coastwide.png"),
+      plot = gg_index_coastwide,
+      height = 7,
+      width = 7
+    ))
+  }
+
+  # Save all areas index plot
+  if (!is.null(indices$plot_indices)) {
+    suppressMessages(ggplot2::ggsave(
+      filename = fs::path(dir_index, "index_all_areas.png"),
+      plot = indices$plot_indices,
+      height = 7,
+      width = 10
+    ))
+  }
+
+  ##############################################################################
+  # Save diagnostics (from diagnose)
+  ##############################################################################
+  cli::cli_inform(c("*" = "Plotting diagnostics..."))
+
+  # Save mesh plot
+  if (!is.null(diagnostics$mesh_plot)) {
+    suppressMessages(ggplot2::ggsave(
+      filename = fs::path(dir_diagnostics, "mesh.png"),
+      plot = diagnostics$mesh_plot,
+      height = 7,
+      width = 7
+    ))
+  }
 
   # Save run diagnostics and estimates
   run_diagnostics <- list(
@@ -314,44 +371,4 @@ save_index_outputs <- function(
   # Save predictions
   predictions <- diagnostics$predictions
   save(predictions, file = fs::path(dir_diagnostics, "predictions.rdata"))
-
-  ##############################################################################
-  # Save indices (from calc_index_areas)
-  ##############################################################################
-  cli::cli_inform(c("*" = "Saving indices..."))
-
-  # Save index table
-  write.csv(
-    indices$indices,
-    file = fs::path(dir_index, "est_by_area.csv"),
-    row.names = FALSE
-  )
-
-  # Save coastwide index plot if it exists
-  if (any(grepl("wide", indices$indices[["area"]], ignore.case = TRUE))) {
-    gg_index_coastwide <- plot_indices(
-      data = dplyr::filter(
-        indices$indices,
-        grepl("wide", area, ignore.case = TRUE)
-      ),
-      save_loc = NULL,
-      file_name = NULL
-    )
-    suppressMessages(ggplot2::ggsave(
-      filename = fs::path(dir_index, "index_coastwide.png"),
-      plot = gg_index_coastwide,
-      height = 7,
-      width = 7
-    ))
-  }
-
-  # Save all areas index plot
-  if (!is.null(indices$plot_indices)) {
-    suppressMessages(ggplot2::ggsave(
-      filename = fs::path(dir_index, "index_all_areas.png"),
-      plot = indices$plot_indices,
-      height = 7,
-      width = 10
-    ))
-  }
 }
