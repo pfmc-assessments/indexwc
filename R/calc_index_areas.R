@@ -112,35 +112,18 @@ calc_index_areas <- function(
     )
   }
   nwfscSurvey::check_dir(dir = dir, verbose = TRUE)
-  # Handle both indexwc_fit objects and raw sdmTMB objects
-  if (inherits(fit, "indexwc_fit")) {
-    sdmtmb_fit <- fit$fit
-    # Auto-create prediction grid if not provided and we have an indexwc_fit
-    if (is.null(prediction_grid)) {
-      prediction_grid <- lookup_grid(
-        x = fit$data[["survey_name"]][1],
-        max_latitude = fit$ranges$latitude_max,
-        min_latitude = fit$ranges$latitude_min,
-        max_longitude = fit$ranges$longitude_max,
-        min_longitude = fit$ranges$longitude_min,
-        max_depth = abs(fit$ranges$depth_max),
-        years = sort(unique(fit$data$year)),
-        data = california_current_grid
-      )
-    }
-  } else if (inherits(fit, "sdmTMB")) {
-    sdmtmb_fit <- fit
-    if (is.null(prediction_grid)) {
-      cli::cli_abort(c(
-        "x" = "prediction_grid is required when fit is a raw sdmTMB object",
-        "i" = "Either provide prediction_grid or use an indexwc_fit object from {.fn fit_index}"
-      ))
-    }
-  } else {
-    cli::cli_abort(c(
-      "x" = "fit must be of class {.cls indexwc_fit} or {.cls sdmTMB}",
-      "i" = "Did you use {.fn fit_index} or {.fn sdmTMB::sdmTMB}?"
-    ))
+  # Auto-create prediction grid if not provided and we have an indexwc_fit
+  if (is.null(prediction_grid)) {
+    prediction_grid <- lookup_grid(
+      x = fit$data[["survey_name"]][1],
+      max_latitude = fit$ranges$latitude_max,
+      min_latitude = fit$ranges$latitude_min,
+      max_longitude = fit$ranges$longitude_max,
+      min_longitude = fit$ranges$longitude_min,
+      max_depth = abs(fit$ranges$depth_max),
+      years = sort(unique(fit$data$year)),
+      data = california_current_grid
+    )
   }
 
   # Check that all requested areas exist in boundaries_data
