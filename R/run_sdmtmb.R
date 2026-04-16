@@ -25,6 +25,21 @@
 #'   mesh that is created by \pkg{fmesher}. More knots is not always better. The
 #'   default is to use 500 knots. Future work will look at specifying a
 #'   threshold distance between points rather than number of knots.
+#' @param spatial Estimate spatial random fields? Options are 'on' / 'off'
+#'    or TRUE / FALSE. Optionally, a list for delta models, e.g. list('on', 'off').
+#'    Default is list('on', 'on') to estimate spatial random fields for a delta
+#'    model.
+#' @param spatiotemporal Estimate the spatiotemporal random fields as 'iid'
+#'   (independent and identically distributed; default), stationary 'ar1'
+#'   (first-order autoregressive), a random walk ('rw'), or fixed at 0 'off'.
+#'   If a delta model, can be a list. Default is list('iid', 'iid') to estimate
+#'   spatialtemporal random fields for a delta model. These settings are
+#'   available in the configuration file under spatiotemporal1 for the presence
+#'   absence model and spatiotemporal2 for the catch rate model.
+#' @param anisotropy Logical: allow for anisotropy (spatial correlation that is
+#'   directionally dependent).  This is commonly needed for West Coast groundfish
+#'   stocks that have a coastwide range due to the directionality of the coast
+#'   line. Default is TRUE.
 #' @param share_range Logical, whether or not to share the range between the
 #'   spatial and spatiotemporal fields. This defaults to `FALSE`, but adds extra
 #'   parameters. The default in sdmTMB is `TRUE`, and sharing the range may
@@ -65,9 +80,12 @@ run_sdmtmb <- function(
   data,
   family,
   formula,
-  dir = getwd(),
+  dir = NULL,
   dir_main = lifecycle::deprecated(),
   n_knots = 500,
+  spatial = list("on", "on"),
+  spatiotemporal = list("iid", "iid"),
+  anisotropy = TRUE,
   share_range = FALSE,
   sdmtmb_control = sdmTMB::sdmTMBcontrol(newton_loops = 3),
   ...
@@ -81,6 +99,9 @@ run_sdmtmb <- function(
     dir <- dir_main
   }
   # Checks
+  if (!inherits(family, "family")) {
+    family <- eval(rlang::parse_expr(family))
+  }
   stopifnot(inherits(family, "family"))
   stopifnot(all(
     c(
@@ -140,17 +161,7 @@ run_sdmtmb <- function(
       .data$depth > ranges[["depth_max"]]
     ) |>
     droplevels()
-  # The grid is not being used in this function
-  # grid <- lookup_grid(
-  #   x = data[["survey_name"]][1],
-  #   max_latitude = ranges[["latitude_max"]],
-  #   min_latitude = ranges[["latitude_min"]],
-  #   max_longitude = ranges[["longitude_max"]],
-  #   min_longitude = ranges[["longitude_min"]],
-  #   max_depth = abs(ranges[["depth_max"]]),
-  #   years = sort(unique(data_truncated$year)),
-  #   data = california_current_grid
-  # )
+
   # Create and save mesh
   mesh <- sdmTMB::make_mesh(
     data = data_truncated,
@@ -165,8 +176,11 @@ run_sdmtmb <- function(
     data = data_truncated,
     mesh = mesh,
     family = family,
-    control = sdmtmb_control,
+    spatial = spatial,
+    spatiotemporal = spatiotemporal,
+    anisotropy = anisotropy,
     share_range = share_range,
+    control = sdmtmb_control,
     ...
   )
   # Refit if hessian not positive definite
