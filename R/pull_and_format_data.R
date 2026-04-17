@@ -50,38 +50,43 @@ pull_and_format_data <- function(
   years = 2003:2050,
   verbose = TRUE
 ) {
-  if (missing(configuration_to_run) & is.null(common_name)) {
-    cli::cli_abort(
-      "Either a common_name or configuration_to_run must be specified"
-    )
+  if (missing(configuration_to_run)) {
+    if (is.null(common_name)) {
+      cli::cli_abort(
+        "Either a common_name or configuration_to_run must be specified"
+      )
+    }
   }
-  if (is.null(configuration_to_run)) {
+  if (missing(configuration_to_run)) {
     pulled_data <- nwfscSurvey::pull_catch(
       common_name = common_name,
       survey = survey,
       years = years,
       verbose = verbose
     )
-    n <- length(common_name)
+
     format_data <- format_data(data = pulled_data)
     data <- list()
     data$species <- unique(format_data$common_name)
     data$fxn <- NULL
     data$source <- survey
-    data$family <- rep("sdmTMB::delta_gamma()", n)
-    data$formula <- rep("catch_weight ~ 0 + fyear + pass_scaled", n)
-    data$min_depth <- rep(min(format_data$depth), n)
-    data$max_depth <- rep(max(format_data$depth), n)
-    data$min_latitude <- rep(min(format_data$latitude), n)
-    data$max_latitude <- rep(max(format_data$latitude), n)
-    data$min_year <- rep(min(format_data$year), n)
-    data$max_year <- rep(max(format_data$year, n))
-    data$anisotropy <- rep(TRUE, n)
-    data$knots <- rep(250, n)
-    data$spatiotemporal1 <- rep("iid", n)
-    data$spatiotemporal2 <- rep("on", n)
-    data$share_range <- rep(FALSE, n)
-    data$used <- rep(FALSE, n)
+    data$family <- "sdmTMB::delta_gamma()"
+    data$formula <- ifelse(
+      test = survey == "NWFSC.Combo",
+      yes = "catch_weight ~ 0 + fyear + pass_scaled",
+      no = "catch_weight ~ 0 + fyear"
+    )
+    data$min_depth <- min(format_data$depth)
+    data$max_depth <- max(format_data$depth)
+    data$min_latitude <- min(format_data$latitude)
+    data$max_latitude <- max(format_data$latitude)
+    data$min_year <- min(format_data$year)
+    data$max_year <- max(format_data$year)
+    data$anisotropy <- TRUE
+    data$knots <- 250
+    data$spatiotemporal1 <- "iid"
+    data$spatiotemporal2 <- "iid"
+    data$share_range <- FALSE
     data$data_raw <- format_data
     data$data_filtered <- format_data
     if (verbose) {
@@ -92,7 +97,6 @@ pull_and_format_data <- function(
     }
   } else {
     data <- configuration_to_run |>
-      # Row by row ... do stuff then ungroup
       dplyr::rowwise() |>
       # Pull the data based on the function found in fxn column
       dplyr::mutate(
@@ -112,30 +116,5 @@ pull_and_format_data <- function(
       dplyr::ungroup()
   }
 
-  #year_list <- lapply(data$data_filtered, function(x) x$year)
-  #years <- purrr::map(year_list, unique)
-  #modified_grid <- california_current_grid |>
-  #  dplyr::mutate(
-  #    neg_depth = -1 * depth,
-  #    mean_neg_depth = mean(neg_depth),
-  #    sd_neg_depth = sd(neg_depth),
-  #    depth_scaled = -1 * (neg_depth - mean_neg_depth) / sd_neg_depth,
-  #    depth_scaled_squared = depth_scaled * depth_scaled
-  #  ) |>
-  #  dplyr::select(-mean_neg_depth, -sd_neg_depth, -neg_depth)
-  #args_list <- list(
-  #  dat = rep(list(modified_grid), length(years)),
-  #  time_name = rep(list("year"), length(years)),
-  #  time_values = years
-  #)
-  #prediction_grid_df <- purrr::pmap(
-  #  .l = args_list,
-  #  .f = sdmTMB::replicate_df
-  #)
-  #prediction_grid <- purrr::map(
-  #  prediction_grid_df,
-  #  ~ dplyr::mutate(.x, fyear = as.factor(year))
-  #)
-  #data$prediction_grid <- prediction_grid
   return(data)
 }
