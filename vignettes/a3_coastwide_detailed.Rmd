@@ -153,7 +153,7 @@ diagnostics <- diagnose(
 If `dir` is specified, output and diagnostics for all models and predictions are stored in a folder that `indexwc` creates. If no directory is specified `diagnose(dir = NULL,...)` then named list is returned. Stepping through what elements are output:
 
 The `sdmTMB::sanity()` checks can be accessed with 
-```{r sanity, eval=TRUE, echo=TRUE}
+```{r sanity, eval=FALSE, echo=TRUE}
 diagnostics$sanity
 ```
 
