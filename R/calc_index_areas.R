@@ -112,6 +112,18 @@ calc_index_areas <- function(
     )
   }
   nwfscSurvey::check_dir(dir = dir, verbose = TRUE)
+  if (!is.null(dir)) {
+    if (is.null(fit$dir)) {
+      cli::cli_alert_info(
+        "fit$dir is NULL and output will be saved with the dir location"
+      )
+    } else {
+      dir <- fs::path(dir, fit$dir)
+    }
+    # Create directory structure, following indexwc
+    dir_index <- fs::path(dir, "index")
+    fs::dir_create(dir_index, recurse = TRUE)
+  }
   # Auto-create prediction grid if not provided and we have an indexwc_fit
   if (is.null(prediction_grid)) {
     prediction_grid <- lookup_grid(
@@ -212,18 +224,18 @@ calc_index_areas <- function(
   # Make the directory to plot the index in and plot all areas on one figure
   # and then just the coastwide index on another figure by itself.
   if (!is.null(dir)) {
-    fs::dir_create(dir, recurse = TRUE)
+    fs::dir_create(dir_index, recurse = TRUE)
 
     utils::write.csv(
       x = index_areas,
-      file = fs::path(dir, "est_by_area.csv"),
+      file = fs::path(dir_index, "est_by_area.csv"),
       row.names = FALSE
     )
 
     if (cog) {
       utils::write.csv(
         x = cog_areas,
-        file = fs::path(dir, "cog_by_area.csv"),
+        file = fs::path(dir_index, "cog_by_area.csv"),
         row.names = FALSE
       )
     }
@@ -234,7 +246,7 @@ calc_index_areas <- function(
           index_areas,
           grepl("wide", area, ignore.case = TRUE)
         ),
-        save_loc = dir,
+        save_loc = dir_index,
         file_name = "index_coastwide.png"
       )
     }
