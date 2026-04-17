@@ -90,7 +90,7 @@ diagnose <- function(
         "fit$dir is NULL and output will be saved with the dir location"
       )
     } else {
-      dir <- fs::path(dir, fit$dir)
+      dir <- fit$dir
     }
     # Create directory structure, following indexwc
     dir_diagnostics <- fs::path(dir, "diagnostics")
@@ -115,10 +115,10 @@ diagnose <- function(
   if (!is.null(dir)) {
     filename <- fs::path(dir_diagnostics, "mesh.png")
   }
-  mesh_plot <- plot_mesh(sdmtmb_fit$mesh, file_name = filename)
+  mesh_plot <- plot_mesh(fit$mesh, file_name = filename)
 
   # Get sanity diagnostics
-  sanity_out <- sanity_data(sdmtmb_fit)
+  sanity_out <- sanity_data(fit)
   if (!is.null(dir)) {
     utils::write.table(
       sanity_out,
@@ -131,10 +131,10 @@ diagnose <- function(
 
   # Diagnostics related to log likelihood
   run_diagnostics <- list()
-  run_diagnostics$model <- sdmtmb_fit$family$clean_name
-  run_diagnostics$formula <- sdmtmb_fit$formula[[1]]
-  run_diagnostics$loglike <- logLik(sdmtmb_fit)
-  run_diagnostics$aic <- AIC(sdmtmb_fit)
+  run_diagnostics$model <- fit$family$clean_name
+  run_diagnostics$formula <- fit$formula[[1]]
+  run_diagnostics$loglike <- logLik(fit)
+  run_diagnostics$aic <- AIC(fit)
   if (!is.null(dir)) {
     write.table(
       rbind(
@@ -149,14 +149,14 @@ diagnose <- function(
 
   # This extracts the fixed and random effects
   all_combos <- tidyr::expand_grid(
-    x = seq(length(sdmtmb_fit$formula)),
+    x = seq(length(fit$formula)),
     y = c("fixed", "ran_pars")
   )
   run_diagnostics[["effects"]] <- purrr::map2_dfr(
     .x = all_combos[["x"]],
     .y = all_combos[["y"]],
     .f = ~ broom::tidy(
-      x = sdmtmb_fit,
+      x = fit,
       model = .x,
       effects = .y,
       conf.int = TRUE,
@@ -175,14 +175,14 @@ diagnose <- function(
   }
 
   # Calculate residuals
-  sdmtmb_fit[["data"]][["residuals"]] <- stats::residuals(
-    sdmtmb_fit,
+  fit[["data"]][["residuals"]] <- stats::residuals(
+    fit,
     model = 1,
     type = "mle-mvn"
   )
-  if (length(formula(sdmtmb_fit)) > 1) {
-    sdmtmb_fit[["data"]][["residuals2"]] <- stats::residuals(
-      sdmtmb_fit,
+  if (length(formula(fit)) > 1) {
+    fit[["data"]][["residuals2"]] <- stats::residuals(
+      fit,
       model = 2,
       type = "mle-mvn"
     )
@@ -194,15 +194,15 @@ diagnose <- function(
     filename <- fs::path(dir_diagnostics, "qq.png")
   }
   qqplot <- plot_qq(
-    fit = sdmtmb_fit,
+    fit = fit,
     file_name = filename
   )
 
   # Residual maps by year
-  sdmtmb_fit[["data"]]$X <- sdmtmb_fit[["data"]]$x
-  sdmtmb_fit[["data"]]$Y <- sdmtmb_fit[["data"]]$y
+  fit[["data"]]$X <- fit[["data"]]$x
+  fit[["data"]]$Y <- fit[["data"]]$y
   residual_maps_by_year <- purrr::map(
-    seq_along(sdmtmb_fit[["formula"]]),
+    seq_along(fit[["formula"]]),
     .f = function(x, y, f_dir) {
       y[["residuals"]] <- y[[
         paste0("residuals", ifelse(x == 1, "", x))
@@ -219,7 +219,7 @@ diagnose <- function(
         save_prefix = save_prefix
       )
     },
-    y = sdmtmb_fit[["data"]],
+    y = fit[["data"]],
     f_dir = dir_diagnostics
   )
 
@@ -229,7 +229,7 @@ diagnose <- function(
     filename <- fs::path(dir_diagnostics, "anisotropy.png")
   }
   gg_aniso <- try(
-    sdmTMB::plot_anisotropy(object = sdmtmb_fit) +
+    sdmTMB::plot_anisotropy(object = fit) +
       ggplot2::theme_bw(),
     silent = TRUE
   )
@@ -244,13 +244,13 @@ diagnose <- function(
 
   # Fixed effects plots
   fixed_effects_plot <- plot_pars_fixed(
-    fit = sdmtmb_fit,
+    fit = fit,
     dir = dir_diagnostics
   )
 
   # Calculate predictions based on the grid
   predictions <- predict(
-    sdmtmb_fit,
+    fit,
     newdata = prediction_grid
   )
   if (!all(c("X", "Y") %in% colnames(predictions))) {
@@ -269,7 +269,7 @@ diagnose <- function(
 
   # Save data with residuals and predictions
   if (!is.null(dir)) {
-    data_with_residuals <- sdmtmb_fit$data
+    data_with_residuals <- fit$data
     save(
       data_with_residuals,
       file = fs::path(dir_diagnostics, "data_with_residuals.rdata")
@@ -291,7 +291,7 @@ diagnose <- function(
     fixed_effects_plot = fixed_effects_plot,
     density_plots = density_plot,
     predictions = predictions,
-    data_with_residuals = sdmtmb_fit$data,
+    data_with_residuals = fit$data,
     date = Sys.Date(),
     session_info = sessionInfo()
   ))

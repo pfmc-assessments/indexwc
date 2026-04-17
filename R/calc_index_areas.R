@@ -118,7 +118,7 @@ calc_index_areas <- function(
         "fit$dir is NULL and output will be saved with the dir location"
       )
     } else {
-      dir <- fs::path(dir, fit$dir)
+      dir <- fit$dir
     }
     # Create directory structure, following indexwc
     dir_index <- fs::path(dir, "index")

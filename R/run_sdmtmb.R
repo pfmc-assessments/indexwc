@@ -195,7 +195,7 @@ run_sdmtmb <- function(
   fit$mesh <- mesh
   fit$ranges <- ranges
   if (!is.null(dir)) {
-    fit$dir <- dir_data
+    fit$dir <- dir_new
   } else {
     fit$dir <- dir
   }
