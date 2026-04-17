@@ -121,13 +121,17 @@ run_sdmtmb <- function(
   if (!is.null(dir)) {
     dir_new <- data |>
       dplyr::group_by(.data$survey_name, .data$common_name) |>
-      dplyr::count() |>
+      dplyr::summarise(
+        range = paste0(min(.data$latitude), "-", max(.data$latitude)),
+        .groups = "drop_last"
+      ) |>
       dplyr::mutate(
         common_without = format_common_name(.data$common_name),
+        range_without = range,
         survey_without = format_common_name(.data$survey_name),
         directory = fs::path(
           dir,
-          .data$common_without,
+          paste0(.data$common_without, "_", range_without),
           .data$survey_without,
           format_family(family)
         )
