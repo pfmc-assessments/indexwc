@@ -18,6 +18,9 @@ get_area_results(
 indices for. These should be names from \link{boundaries_data}. The default is
 \code{"Coastwide"}, which calculates only the Coastwide index}
 
+\item{area_bounds}{Prediction grid as modified by \code{\link[=filter_boundaries]{filter_boundaries()}} and
+\code{boundaries}.}
+
 \item{full_pred}{Object of model predictions created by \code{\link[stats:predict]{stats::predict()}}.}
 
 \item{full_grid}{Filtered grid created by \code{\link[=filter_grid]{filter_grid()}}.}
@@ -31,9 +34,6 @@ the X (easting) and Y (northing) coordinate axes.}
 \code{\link[sdmTMB:get_index]{sdmTMB::get_cog()}} will use bias correction to account for the non-linear
 transformation of random effects when calculating the index. Will be faster
 if set to \code{FALSE}, but is \code{TRUE} by default}
-
-\item{area_bound}{Prediction grid as modified by \code{\link[=filter_boundaries]{filter_boundaries()}} and
-\code{boundaries}.}
 }
 \description{
 Calculate index based upon the selected areas based on the prediction grid

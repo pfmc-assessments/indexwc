@@ -33,7 +33,7 @@
 #'   (independent and identically distributed; default), stationary 'ar1'
 #'   (first-order autoregressive), a random walk ('rw'), or fixed at 0 'off'.
 #'   If a delta model, can be a list. Default is list('iid', 'iid') to estimate
-#'   spatialtemporal random fields for a delta model. These settings are
+#'   spatiotemporal random fields for a delta model. These settings are
 #'   available in the configuration file under spatiotemporal1 for the presence
 #'   absence model and spatiotemporal2 for the catch rate model.
 #' @param anisotropy Logical: allow for anisotropy (spatial correlation that is
