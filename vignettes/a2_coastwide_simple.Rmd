@@ -21,7 +21,8 @@ options(repos = c(CRAN = "https://cloud.r-project.org"))
 
 ## Overview
 
-This vignette highlights the ability to generate coastwide indices for stocks using available functions in the `indexwc` package for a West Coast groundfish stock for the West Coast Groundfish Bottom Trawl Survey using the configuration data object.
+This vignette highlights the ability to generate coastwide indices for West Coast groundfish stocks for bottom trawl surveys using available functions in the `indexwc` package and the available configuration data object.   
+
 
 ```{r packages, eval=TRUE, echo=TRUE}
 library(dplyr)
@@ -31,11 +32,19 @@ options(repos = c(CRAN = "https://cloud.r-project.org"))
 
 ## Get data and settings
 
-```{r config, eval=TRUE, echo=TRUE}
+`indexwc` includes a maintained configuration file that contains default settings for index creation for West Coast groundfish species. The configuration is a data frame with entries by row for species, alternative model error structures (e.g., delta-lognormal, delta-gamma), formulas, and various bottom trawl surveys (e.g., West Coast Groundfish Bottom Trawl Survey [WCGBTS], etc.). The data frame includes various columns defining the commonly used model configuration parameters (e.g., spatiotemporal settings, anisotropy, etc.). Please see the configuration vignette for additional information. 
+
+In the below example, the configuration file will be used to pull and run a model for sablefish using data from the WCGBTS (aka "NWFSC.Combo" as defined in the `nwfscSurvey`) using a delta-gamma model error structure.  
+
+```{r config, eval = TRUE, echo = TRUE}
 # Load from the rda file
 configuration_to_run <- configuration |>
   dplyr::filter(species == "sablefish", source == "NWFSC.Combo", family == "sdmTMB::delta_gamma()") 
+
+print(configuration_to_run)
 ```
+
+The selected configuration is then passed to `pull_and_format_data()` that pulls and returns a data list with entries for model settings based on the configuration file. 
 
 ```{r pull-data, eval = TRUE, echo = TRUE}
 my_data <- pull_and_format_data(
@@ -43,7 +52,7 @@ my_data <- pull_and_format_data(
 )
 ```
 
-## Estimate the model
+Double check the items in the `my_data` list created above:
 
 ```{r settings, eval = TRUE, echo = TRUE}
 names(my_data)
@@ -56,7 +65,11 @@ list(my_data$spatiotemporal1, my_data$spatiotemporal2)
 
 ```
 
-```{r run-model, eval=FALSE, echo = TRUE}
+## Estimate the model
+
+Running `sdmTMB` models can be done through `run_sdmtmb()` that has function arguments defining the model type and structure to run.  `run_sdmtmb()` includes an argument for saving the fit object from `sdmTMB`, however, the default setting is `dir = NULL` where output will not be saved at this stage.  
+
+```{r run-model, eval = FALSE, echo = TRUE}
 fit <- run_sdmtmb(
   data = my_data$data_filtered[[1]],
   family = my_data$family,
@@ -68,7 +81,16 @@ fit <- run_sdmtmb(
 )
 ```
 
+`run_sdmtb()` returns a list that contains all information from running the model.  To see the estimated parameters for the model, type the assigned R object from `run_sdmtmb()`. 
+
+```{r print-fit, eval = FALSE, echo = TRUE}
+fit
+```
+
+
 ## Diagnostics
+
+A range of diagnostics are available and all diagnostics can be done using `diagnose()`:
 
 ```{r diagnostics, eval = FALSE, echo = TRUE}
 diag <- diagnose(
@@ -76,7 +98,19 @@ diag <- diagnose(
 )
 ```
 
+A sanity check is performed to evaluate model convergence and the AIC is calculated and the fixed effects are evaluated. A prediction grid based upon the California Current is created within `diagnose()` that is then used to evaluate QQ, residuals, and model predicted density.  
+
+`diagnose()` has the following arguments available for use:
+
+```{r diagnostics-args, eval = FALSE, echo = TRUE}
+args(diagnose)
+```
+
+If a directory is not provided (`dir = NULL`), then no output is saved at this point.
+
 ## Calculate an index of abundance
+
+Finally, an index of abundance is estimated using `calc_index_areas()`
 
 ```{r index, eval = FALSE, echo = TRUE}
 index <- calc_index_areas(
@@ -86,7 +120,18 @@ index <- calc_index_areas(
 )
 ```
 
+`calc_index_areas()` has the following arguments available for use:
+
+
+```{r index-args, eval = FALSE, echo = TRUE}
+args(diagnose)
+```
+
+If a directory is not provided (`dir = NULL`), then no output is saved at this point.
+
 ## Write out all files and figures
+
+Now that the model has been fit and diagnostics and an index of abundance has been calculated, all of the output objects can be written using `save_index_outputs()`:
 
 ```{r save-output, eval = FALSE, echo = TRUE}
 save_index_outputs(
@@ -96,3 +141,33 @@ save_index_outputs(
  dir = "C:/indices"
 )
 ```
+
+The directory structure created is:
+
+```{r save-output-files, eval = FALSE, echo = TRUE}
+ dir/
+ └── species_name/
+     └── survey_name/
+         └── family_name/
+             ├── data/
+             │   ├── data.rdata
+             │   └── fit.rds
+             ├── diagnostics/
+             │   ├── mesh.png
+             │   ├── sanity_data_frame.csv
+             │   ├── aic_nll.txt
+             │   ├── run_diagnostics_and_estimates.rdata
+             │   ├── qq.png
+             │   ├── residuals_1_*.png
+             │   ├── residuals_2_*.png (if delta model)
+             │   ├── anisotropy.png
+             │   ├── fixed_effects.png
+             │   ├── density_*.png
+             │   ├── data_with_residuals.rdata
+             │   └── predictions.rdata
+             └── index/
+                 ├── est_by_area.csv
+                 ├── index_coastwide.png (if Coastwide calculated)
+                 └── index_all_areas.png
+```
+
