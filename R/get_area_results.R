@@ -8,7 +8,7 @@
 #' @param area_name A character vector specifying which areas to calculate
 #'   indices for. These should be names from [boundaries_data]. The default is
 #'   `"Coastwide"`, which calculates only the Coastwide index
-#' @param area_bound Prediction grid as modified by [filter_boundaries()] and
+#' @param area_bounds Prediction grid as modified by [filter_boundaries()] and
 #'   `boundaries`.
 #' @param full_pred Object of model predictions created by [stats::predict()].
 #' @param full_grid Filtered grid created by [filter_grid()].
