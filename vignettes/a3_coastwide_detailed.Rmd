@@ -284,7 +284,7 @@ index$cogs
 
 As demonstrated above, there are a lot of plots and diagnostics that can be inspected, and in many cases we might want to save everything. The `save_index_outputs` function in `indexwc` will write everything locally (for the directory structure, see `?save_index_outputs`)
 
-```{r save-output echo = FALSE, eval = FALSE}
+```{r save-output, echo = FALSE, eval = FALSE}
 save_index_outputs(
   fit = fit_simple,
   diagnostics = diagnostics,
