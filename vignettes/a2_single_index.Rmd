@@ -99,7 +99,7 @@ The filtered data has several thousand less rows than the raw data.
 
 Now we can use the `indexwc` package to fit the model. The `indexwc` package acts as a wrapper for `sdmTMB` here, combining the estimation process (`sdmTMB()`) with the index generation (`get_index()`).
 
-A key point to highlight is that in this code, we use `sdmTMBcontrol()` to pass in a list that contains the variables above we use to set the spatial bounds and initialize the parameters. For datasets without missing values, you may not want to include this `sdmTMBcontrol()` line, but it may be useful to adjust the `newton_loops`, etc.
+A key point to highlight is that in this code, we use `sdmTMBcontrol()` to pass in a list that contains the variables above we use to "map off" (i.e., not estimate) and initialize the parameters. For datasets without missing values, you may not want to include this `sdmTMBcontrol()` line, but it may be useful to adjust the `newton_loops`, etc.
 
 ```{r fitmodel, eval=FALSE, echo=TRUE}
 # the character string needs to be parsed before used as input
