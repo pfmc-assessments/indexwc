@@ -75,7 +75,9 @@ configuration_to_run <- configuration_ytk_wcgbt |>
 
 ### Preparing the data
 
-This code block pulls trawl survey from the NWFSC data warehouse and applies filters (based on latitude, depth, and year) to each observation.
+This code block pulls in a saved data file from the NWFSC data warehouse and applies filters (based on latitude, depth, and year) to each observation.
+
+Alternatively, the user can pull the data directly with the nwfscSurvey R package.
 
 ```{r filterdata, eval=TRUE, echo=TRUE}
 data("yellowtail")
