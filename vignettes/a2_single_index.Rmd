@@ -285,6 +285,7 @@ Similarly the center of gravity (COG) estimates are in
 ```{r diagprintcogs, eval=TRUE, echo=TRUE}
 index$cogs
 ```
+Note: In the simple model example, spatial and spatiotemporal fields are "off" and COG estimates do not vary by year.
 
 ## Saving output
 
