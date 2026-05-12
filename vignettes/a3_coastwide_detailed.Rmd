@@ -131,6 +131,7 @@ fit_simple <- run_sdmtmb(
   share_range = configuration_to_run$share_range,
   spatial = "off",
   spatiotemporal = "off",
+  anisotropy = FALSE,
   sdmtmb_control = sdmTMB::sdmTMBcontrol(newton_loops = 1)
 )
 ```

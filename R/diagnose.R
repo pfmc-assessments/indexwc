@@ -84,6 +84,7 @@ diagnose <- function(
   prediction_grid = NULL
 ) {
   nwfscSurvey::check_dir(dir = dir, verbose = TRUE)
+  dir_diagnostics <- NULL
   if (!is.null(dir)) {
     if (is.null(fit$dir)) {
       cli::cli_alert_info(
