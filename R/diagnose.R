@@ -1,7 +1,10 @@
 #' Summarize model estimates and plot diagnostics
 #'
 #' @param dir Directory path where results will be saved. If `NULL`,
-#'   results are only returned as a list (not saved to disk).
+#'   results are only returned as a list (not saved to disk). The directory
+#'   should be the top folder where diagnostic figures will be saved to
+#'   directory in the fit object list (fit$dir) if available which is set as:
+#'   dir/common_name_latitude_range/survey/error_structure
 #' @param fit An object of class `sdmTMB` returned by [sdmTMB::sdmTMB()].
 #' @param prediction_grid The prediction grid for the survey that sdmTMB will
 #'   use to make model predictions to. Should not be NULL
@@ -75,51 +78,52 @@
 #' @importFrom rlang .data
 #' @importFrom utils write.table sessionInfo
 #' @importFrom stats AIC logLik formula predict
-diagnose <- function(dir,
-                     fit,
-                     prediction_grid = NULL) {
-  # Handle both indexwc_fit objects and raw sdmTMB objects
-  if (inherits(fit, "indexwc_fit")) {
-    sdmtmb_fit <- fit$fit
-
-    # Auto-create prediction grid if not provided and we have an indexwc_fit
-    if (is.null(prediction_grid)) {
-      prediction_grid <- lookup_grid(
-        x = fit$metadata$survey_name,
-        max_latitude = fit$ranges$latitude_max,
-        min_latitude = fit$ranges$latitude_min,
-        max_longitude = fit$ranges$longitude_max,
-        min_longitude = fit$ranges$longitude_min,
-        max_depth = abs(fit$ranges$depth_max),
-        years = sort(unique(fit$data$year))
+diagnose <- function(
+  fit,
+  dir = NULL,
+  prediction_grid = NULL
+) {
+  nwfscSurvey::check_dir(dir = dir, verbose = TRUE)
+  dir_diagnostics <- NULL
+  if (!is.null(dir)) {
+    if (is.null(fit$dir)) {
+      cli::cli_alert_info(
+        "fit$dir is NULL and output will be saved with the dir location"
       )
+    } else {
+      dir <- fit$dir
     }
-  } else if (inherits(fit, "sdmTMB")) {
-    sdmtmb_fit <- fit
-    if (is.null(prediction_grid)) {
-      cli::cli_abort(c(
-        "x" = "prediction_grid is required when fit is a raw sdmTMB object",
-        "i" = "Either provide prediction_grid or use an indexwc_fit object from {.fn fit_index}"
-      ))
-    }
-  } else {
-    cli::cli_abort(c(
-      "x" = "fit must be of class {.cls indexwc_fit} or {.cls sdmTMB}",
-      "i" = "Did you use {.fn fit_index} or {.fn sdmTMB::sdmTMB}?"
-    ))
+    # Create directory structure, following indexwc
+    dir_diagnostics <- fs::path(dir, "diagnostics")
+    fs::dir_create(dir_diagnostics, recurse = TRUE)
+  }
+  # Auto-create prediction grid if not provided and we have an indexwc_fit
+  if (is.null(prediction_grid)) {
+    prediction_grid <- lookup_grid(
+      x = fit$data[["survey_name"]][1],
+      max_latitude = fit$ranges$latitude_max,
+      min_latitude = fit$ranges$latitude_min,
+      max_longitude = fit$ranges$longitude_max,
+      min_longitude = fit$ranges$longitude_min,
+      max_depth = abs(fit$ranges$depth_max),
+      years = sort(unique(fit$data$year)),
+      data = california_current_grid
+    )
   }
 
   # mesh plot
   filename <- NULL
-  if (!is.null(dir)) filename <- fs::path(dir, "mesh.png")
-  mesh_plot <- plot_mesh(sdmtmb_fit$mesh, file_name = filename)
+  if (!is.null(dir)) {
+    filename <- fs::path(dir_diagnostics, "mesh.png")
+  }
+  mesh_plot <- plot_mesh(fit$mesh, file_name = filename)
 
   # Get sanity diagnostics
-  sanity_out <- sanity_data(sdmtmb_fit)
+  sanity_out <- sanity_data(fit)
   if (!is.null(dir)) {
     utils::write.table(
       sanity_out,
-      file = fs::path(dir, "sanity_data_frame.csv"),
+      file = fs::path(dir_diagnostics, "sanity_data_frame.csv"),
       append = FALSE,
       sep = ",",
       row.names = FALSE
@@ -128,31 +132,32 @@ diagnose <- function(dir,
 
   # Diagnostics related to log likelihood
   run_diagnostics <- list()
-  run_diagnostics$model <- sdmtmb_fit$family$clean_name
-  run_diagnostics$formula <- sdmtmb_fit$formula[[1]]
-  run_diagnostics$loglike <- logLik(sdmtmb_fit)
-  run_diagnostics$aic <- AIC(sdmtmb_fit)
+  run_diagnostics$model <- fit$family$clean_name
+  run_diagnostics$formula <- fit$formula[[1]]
+  run_diagnostics$loglike <- logLik(fit)
+  run_diagnostics$aic <- AIC(fit)
   if (!is.null(dir)) {
     write.table(
       rbind(
         c("AIC", run_diagnostics$aic),
         c("NLL", -1 * run_diagnostics$loglike)
       ),
-      file = file.path(dir, "aic_nll.txt"),
-      row.names = FALSE, col.names = FALSE
+      file = fs::path(dir_diagnostics, "aic_nll.txt"),
+      row.names = FALSE,
+      col.names = FALSE
     )
   }
 
   # This extracts the fixed and random effects
   all_combos <- tidyr::expand_grid(
-    x = seq(length(sdmtmb_fit$formula)),
+    x = seq(length(fit$formula)),
     y = c("fixed", "ran_pars")
   )
   run_diagnostics[["effects"]] <- purrr::map2_dfr(
     .x = all_combos[["x"]],
     .y = all_combos[["y"]],
     .f = ~ broom::tidy(
-      x = sdmtmb_fit,
+      x = fit,
       model = .x,
       effects = .y,
       conf.int = TRUE,
@@ -166,19 +171,19 @@ diagnose <- function(dir,
   if (!is.null(dir)) {
     save(
       run_diagnostics,
-      file = file.path(dir, "run_diagnostics_and_estimates.rdata")
+      file = fs::path(dir_diagnostics, "run_diagnostics_and_estimates.rdata")
     )
   }
 
   # Calculate residuals
-  sdmtmb_fit[["data"]][["residuals"]] <- stats::residuals(
-    sdmtmb_fit,
+  fit[["data"]][["residuals"]] <- stats::residuals(
+    fit,
     model = 1,
     type = "mle-mvn"
   )
-  if (length(formula(sdmtmb_fit)) > 1) {
-    sdmtmb_fit[["data"]][["residuals2"]] <- stats::residuals(
-      sdmtmb_fit,
+  if (length(formula(fit)) > 1) {
+    fit[["data"]][["residuals2"]] <- stats::residuals(
+      fit,
       model = 2,
       type = "mle-mvn"
     )
@@ -186,17 +191,19 @@ diagnose <- function(dir,
 
   # QQ plot
   filename <- NULL
-  if (!is.null(dir)) filename <- file.path(dir, "qq.png")
+  if (!is.null(dir)) {
+    filename <- fs::path(dir_diagnostics, "qq.png")
+  }
   qqplot <- plot_qq(
-    fit = sdmtmb_fit,
+    fit = fit,
     file_name = filename
   )
 
   # Residual maps by year
-  sdmtmb_fit[["data"]]$X <- sdmtmb_fit[["data"]]$x
-  sdmtmb_fit[["data"]]$Y <- sdmtmb_fit[["data"]]$y
+  fit[["data"]]$X <- fit[["data"]]$x
+  fit[["data"]]$Y <- fit[["data"]]$y
   residual_maps_by_year <- purrr::map(
-    seq_along(sdmtmb_fit[["formula"]]),
+    seq_along(fit[["formula"]]),
     .f = function(x, y, f_dir) {
       y[["residuals"]] <- y[[
         paste0("residuals", ifelse(x == 1, "", x))
@@ -205,7 +212,7 @@ diagnose <- function(dir,
       # Set filename (NULL if no dir)
       save_prefix <- NULL
       if (!is.null(f_dir)) {
-        save_prefix <- file.path(f_dir, paste0("residuals_", x, "_"))
+        save_prefix <- fs::path(f_dir, paste0("residuals_", x, "_"))
       }
 
       map_residuals(
@@ -213,15 +220,20 @@ diagnose <- function(dir,
         save_prefix = save_prefix
       )
     },
-    y = sdmtmb_fit[["data"]],
-    f_dir = dir
+    y = fit[["data"]],
+    f_dir = dir_diagnostics
   )
 
   # Anisotropy plot
   filename <- NULL
-  if (!is.null(dir)) filename <- fs::path(dir, "anisotropy.png")
-  gg_aniso <- try(sdmTMB::plot_anisotropy(object = sdmtmb_fit) +
-    ggplot2::theme_bw(), silent = TRUE)
+  if (!is.null(dir)) {
+    filename <- fs::path(dir_diagnostics, "anisotropy.png")
+  }
+  gg_aniso <- try(
+    sdmTMB::plot_anisotropy(object = fit) +
+      ggplot2::theme_bw(),
+    silent = TRUE
+  )
   if (!is.null(filename)) {
     suppressMessages(ggplot2::ggsave(
       filename = filename,
@@ -233,19 +245,23 @@ diagnose <- function(dir,
 
   # Fixed effects plots
   fixed_effects_plot <- plot_pars_fixed(
-    fit = sdmtmb_fit,
-    dir = dir
+    fit = fit,
+    dir = dir_diagnostics
   )
 
   # Calculate predictions based on the grid
   predictions <- predict(
-    sdmtmb_fit,
+    fit,
     newdata = prediction_grid
   )
-  predictions <- add_utm_columns(predictions)
+  if (!all(c("X", "Y") %in% colnames(predictions))) {
+    predictions <- add_utm_columns(predictions)
+  }
   # Density plots
   save_prefix <- NULL
-  if (!is.null(dir)) save_prefix <- file.path(dir, "density")
+  if (!is.null(dir)) {
+    save_prefix <- fs::path(dir_diagnostics, "density")
+  }
 
   density_plot <- map_density(
     predictions = predictions,
@@ -254,9 +270,12 @@ diagnose <- function(dir,
 
   # Save data with residuals and predictions
   if (!is.null(dir)) {
-    data_with_residuals <- sdmtmb_fit$data
-    save(data_with_residuals, file = file.path(dir, "data_with_residuals.rdata"))
-    save(predictions, file = file.path(dir, "predictions.rdata"))
+    data_with_residuals <- fit$data
+    save(
+      data_with_residuals,
+      file = fs::path(dir_diagnostics, "data_with_residuals.rdata")
+    )
+    save(predictions, file = fs::path(dir_diagnostics, "predictions.rdata"))
   }
 
   return(list(
@@ -273,7 +292,7 @@ diagnose <- function(dir,
     fixed_effects_plot = fixed_effects_plot,
     density_plots = density_plot,
     predictions = predictions,
-    data_with_residuals = sdmtmb_fit$data,
+    data_with_residuals = fit$data,
     date = Sys.Date(),
     session_info = sessionInfo()
   ))

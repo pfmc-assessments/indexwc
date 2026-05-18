@@ -7,7 +7,11 @@
 #'
 #' @author Chantel R. Wetzel
 #' @export
-plot_pars_fixed <- function(fit, dir, file_name = "parameters_fixed_effects.png") {
+plot_pars_fixed <- function(
+  fit,
+  dir,
+  file_name = "parameters_fixed_effects.png"
+) {
   plot_fixed_helper <- function(fit, model_number = 1) {
     out <- tidy(fit, model = model_number, silent = TRUE) |>
       dplyr::mutate(
@@ -29,7 +33,11 @@ plot_pars_fixed <- function(fit, dir, file_name = "parameters_fixed_effects.png"
       seq(n_plot),
       .f = ~ plot_fixed_helper(fit = fit, model_number = .x)
     ),
-    mapping = ggplot2::aes(x = .data$term, y = .data$estimate, color = .data$model)
+    mapping = ggplot2::aes(
+      x = .data$term,
+      y = .data$estimate,
+      color = .data$model
+    )
   ) +
     ggplot2::geom_point() +
     ggplot2::geom_errorbar(
@@ -44,7 +52,7 @@ plot_pars_fixed <- function(fit, dir, file_name = "parameters_fixed_effects.png"
     ggplot2::theme_bw()
   if (!is.null(dir) && !is.null(file_name)) {
     suppressMessages(ggplot2::ggsave(
-      filename = file.path(dir, file_name),
+      filename = fs::path(dir, file_name),
       plot = gg_out,
       height = 10,
       width = 10,

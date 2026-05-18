@@ -10,7 +10,7 @@ vignette: >
 
 ```{r, echo=FALSE}
 options(repos = c(CRAN = "https://cloud.r-project.org"))
-load(here::here("data", "configuration.rda"))
+library(indexwc)
 ```
 
 # NWFSC West Coast Groundfish Bottom Trawl Survey

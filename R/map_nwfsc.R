@@ -15,7 +15,10 @@ plot_map <- function(data, column) {
   lon_range <- c(min(data$longitude), max(data$longitude))
   lat_range <- c(min(data$latitude), max(data$latitude))
 
-  ggplot2::ggplot(data, ggplot2::aes(longitude, latitude, fill = {{ column }})) +
+  ggplot2::ggplot(
+    data,
+    ggplot2::aes(longitude, latitude, fill = {{ column }})
+  ) +
     ggplot2::geom_tile(width = 0.1, height = 0.1) +
     ggplot2::coord_fixed() +
     nwfscSurvey::draw_theme() +

@@ -21,7 +21,7 @@ the faceted figures. The default is one row and two columns.}
 \item{save_prefix}{A string providing the desired prefix to use when saving
 the density plots. The default is to save them in the current working
 directory using the name \code{"density[0-9]{2}.png"}. Obviously, the same
-outcome would result from just \code{"density"} but the use of \code{file.path()}
+outcome would result from just \code{"density"} but the use of \code{fs::path()}
 in the default is present to provide an example for users who want to
 change the path to something other than their current directory.}
 }

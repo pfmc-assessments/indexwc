@@ -10,10 +10,7 @@
 #' @author Chantel R. Wetzel
 #' @export
 #'
-map_residuals <- function(data,
-                          n_row = 1,
-                          n_col = 2,
-                          save_prefix = NULL) {
+map_residuals <- function(data, n_row = 1, n_col = 2, save_prefix = NULL) {
   gg <- map_base() +
     ggplot2::geom_point(
       data = data,

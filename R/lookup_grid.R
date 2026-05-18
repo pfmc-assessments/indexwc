@@ -12,16 +12,18 @@
 #' @param data the name of the grid, defaults to california_current_grid (WCGBTS)
 #' @importFrom rlang .data
 #' @export
-lookup_grid <- function(x,
-                        years,
-                        max_latitude,
-                        min_latitude,
-                        max_longitude,
-                        min_longitude,
-                        mean_depth,
-                        sd_depth,
-                        max_depth = Inf,
-                        data = california_current_grid) {
+lookup_grid <- function(
+  x,
+  years,
+  max_latitude,
+  min_latitude,
+  max_longitude,
+  min_longitude,
+  mean_depth,
+  sd_depth,
+  max_depth = Inf,
+  data = california_current_grid
+) {
   if (missing(max_latitude)) {
     max_latitude <- max(data[["latitude"]], na.rm = TRUE)
   }
@@ -70,23 +72,23 @@ lookup_grid <- function(x,
     out_truncated,
     c("longitude", "latitude"),
     utm_crs = utm_zone_10
-  )) |>
-    dplyr::select(
-      .data$x,
-      .data$y,
-      .data$area_km2,
-      .data$pass_scaled,
-      .data$vessel_year,
-      .data$longitude,
-      .data$latitude,
-      .data$depth,
-      .data$depth_scaled,
-      .data$depth_scaled_squared,
-      .data$split_mendocino,
-      .data$split_conception,
-      .data$split_monterey,
-      .data$split_state
-    )
+  )) #|> Return all columns instead
+  #  dplyr::select(
+  #    .data$x,
+  #    .data$y,
+  #    .data$area_km2,
+  #    .data$pass_scaled,
+  #    .data$vessel_year,
+  #    .data$longitude,
+  #    .data$latitude,
+  #    .data$depth,
+  #    .data$depth_scaled,
+  #    .data$depth_scaled_squared,
+  #    .data$split_mendocino,
+  #    .data$split_conception,
+  #    .data$split_monterey,
+  #    .data$split_state
+  #  )
   year_grid <- purrr::map_dfr(
     .x = years,
     .f = function(year_i, data) {

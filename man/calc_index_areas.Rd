@@ -7,8 +7,8 @@
 calc_index_areas(
   data,
   fit,
-  prediction_grid,
-  dir,
+  dir = NULL,
+  prediction_grid = NULL,
   boundaries = "Coastwide",
   cog = FALSE,
   bias_correct = TRUE
@@ -19,11 +19,13 @@ calc_index_areas(
 
 \item{fit}{A fitted sdmTMB model object}
 
-\item{prediction_grid}{The prediction grid for the survey that sdmTMB will
-use to make model predictions to}
-
 \item{dir}{Directory path where results will be saved. If \code{NULL}, results
 will only be returned (not saved to a file)}
+
+\item{prediction_grid}{The prediction grid for the survey that sdmTMB will
+use to make model predictions to. Default is \code{NULL} where the data
+ranges from the fit object will be used to create a prediction grid
+using \code{\link[=lookup_grid]{lookup_grid()}}.}
 
 \item{boundaries}{A character vector specifying which areas to calculate
 indices for. These should be names from \link{boundaries_data}. The default is
@@ -111,5 +113,5 @@ dplyr::filter(results[["cogs"]], coord == "Y")
 }
 }
 \author{
-Kelli F. Johnson
+Kelli F. Johnson, Chantel Wetzel, and Eric Ward
 }

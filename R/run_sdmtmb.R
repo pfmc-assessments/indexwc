@@ -5,7 +5,11 @@
 #' results to a structured directory. The fitted model is returned with minimal
 #' attachments for downstream diagnostic and index calculations.
 #'
-#' @param dir_main A string specifying a path where results will be saved. The
+#' @param dir A string specifying a path where results will be saved. The
+#'   default is your current working directory. A subdirectory structure will be
+#'   created based on the species, survey, and model family. If `NULL`, the fitted
+#'   object is returned with nothing saved to disk
+#' @param dir_main Deprecated. A string specifying a path where results will be saved. The
 #'   default is your current working directory. A subdirectory structure will be
 #'   created based on the species, survey, and model family. If `NULL`, the fitted
 #'   object is returned with nothing saved to disk
@@ -21,6 +25,21 @@
 #'   mesh that is created by \pkg{fmesher}. More knots is not always better. The
 #'   default is to use 500 knots. Future work will look at specifying a
 #'   threshold distance between points rather than number of knots.
+#' @param spatial Estimate spatial random fields? Options are 'on' / 'off'
+#'    or TRUE / FALSE. Optionally, a list for delta models, e.g. list('on', 'off').
+#'    Default is list('on', 'on') to estimate spatial random fields for a delta
+#'    model.
+#' @param spatiotemporal Estimate the spatiotemporal random fields as 'iid'
+#'   (independent and identically distributed; default), stationary 'ar1'
+#'   (first-order autoregressive), a random walk ('rw'), or fixed at 0 'off'.
+#'   If a delta model, can be a list. Default is list('iid', 'iid') to estimate
+#'   spatiotemporal random fields for a delta model. These settings are
+#'   available in the configuration file under spatiotemporal1 for the presence
+#'   absence model and spatiotemporal2 for the catch rate model.
+#' @param anisotropy Logical: allow for anisotropy (spatial correlation that is
+#'   directionally dependent).  This is commonly needed for West Coast groundfish
+#'   stocks that have a coastwide range due to the directionality of the coast
+#'   line. Default is TRUE.
 #' @param share_range Logical, whether or not to share the range between the
 #'   spatial and spatiotemporal fields. This defaults to `FALSE`, but adds extra
 #'   parameters. The default in sdmTMB is `TRUE`, and sharing the range may
@@ -57,34 +76,62 @@
 #' * [lookup_grid()], creates the prediction grid
 #'
 #' @importFrom rlang .data
-run_sdmtmb <- function(dir_main = getwd(),
-                       data,
-                       family,
-                       formula,
-                       n_knots = 500,
-                       share_range = FALSE,
-                       sdmtmb_control = sdmTMB::sdmTMBcontrol(newton_loops = 3),
-                       ...) {
+run_sdmtmb <- function(
+  data,
+  family,
+  formula,
+  dir = NULL,
+  dir_main = lifecycle::deprecated(),
+  n_knots = 500,
+  spatial = list("on", "on"),
+  spatiotemporal = list("iid", "iid"),
+  anisotropy = TRUE,
+  share_range = FALSE,
+  sdmtmb_control = sdmTMB::sdmTMBcontrol(newton_loops = 3),
+  ...
+) {
+  if (lifecycle::is_present(dir_main)) {
+    lifecycle::deprecate_warn(
+      when = "1.0",
+      what = "indexwc::run_sdmtmb(dir_main =)",
+      with = "indexwc::run_sdmtmb(dir =)"
+    )
+    dir <- dir_main
+  }
   # Checks
+  if (!inherits(family, "family")) {
+    family <- eval(rlang::parse_expr(family))
+  }
   stopifnot(inherits(family, "family"))
   stopifnot(all(
     c(
-      "year", "fyear", "survey_name", "common_name",
-      "catch_weight", "effort", "x", "y"
+      "year",
+      "fyear",
+      "survey_name",
+      "common_name",
+      "catch_weight",
+      "effort",
+      "x",
+      "y"
     ) %in%
       colnames(data)
   ))
+  nwfscSurvey::check_dir(dir = dir, verbose = TRUE)
   # Create directory structure
-  if (!is.null(dir_main)) {
+  if (!is.null(dir)) {
     dir_new <- data |>
       dplyr::group_by(.data$survey_name, .data$common_name) |>
-      dplyr::count() |>
+      dplyr::summarise(
+        range = paste0(min(.data$latitude), "-", max(.data$latitude)),
+        .groups = "drop_last"
+      ) |>
       dplyr::mutate(
         common_without = format_common_name(.data$common_name),
+        range_without = range,
         survey_without = format_common_name(.data$survey_name),
         directory = fs::path(
-          dir_main,
-          .data$common_without,
+          dir,
+          paste0(.data$common_without, "_", range_without),
           .data$survey_without,
           format_family(family)
         )
@@ -97,7 +144,7 @@ run_sdmtmb <- function(dir_main = getwd(),
   }
   formula <- format_formula(formula)
   cli::cli_inform(c(
-    "*" = "Running sdmTMB for {data[1, 'common_name']}"
+    "*" = "Running sdmTMB for {data[1, 'common_name']} with {family$clean_name} error structure"
   ))
   # Create prediction grid
   ranges <- data |>
@@ -111,20 +158,14 @@ run_sdmtmb <- function(dir_main = getwd(),
     )
   data_truncated <- data |>
     dplyr::filter(
-      .data$latitude > ranges[["latitude_min"]] & .data$latitude < ranges[["latitude_max"]],
-      .data$longitude > ranges[["longitude_min"]] & .data$longitude < ranges[["longitude_max"]],
+      .data$latitude > ranges[["latitude_min"]] &
+        .data$latitude < ranges[["latitude_max"]],
+      .data$longitude > ranges[["longitude_min"]] &
+        .data$longitude < ranges[["longitude_max"]],
       .data$depth > ranges[["depth_max"]]
     ) |>
     droplevels()
-  grid <- lookup_grid(
-    x = data[["survey_name"]][1],
-    max_latitude = ranges[["latitude_max"]],
-    min_latitude = ranges[["latitude_min"]],
-    max_longitude = ranges[["longitude_max"]],
-    min_longitude = ranges[["longitude_min"]],
-    max_depth = abs(ranges[["depth_max"]]),
-    years = sort(unique(data_truncated$year))
-  )
+
   # Create and save mesh
   mesh <- sdmTMB::make_mesh(
     data = data_truncated,
@@ -139,19 +180,28 @@ run_sdmtmb <- function(dir_main = getwd(),
     data = data_truncated,
     mesh = mesh,
     family = family,
-    control = sdmtmb_control,
+    spatial = spatial,
+    spatiotemporal = spatiotemporal,
+    anisotropy = anisotropy,
     share_range = share_range,
+    control = sdmtmb_control,
     ...
   )
   # Refit if hessian not positive definite
   if (!fit[["pos_def_hessian"]]) {
     fit <- sdmTMB::run_extra_optimization(fit)
   }
-  # Save model output
-  if (!is.null(dir_main)) {
-    saveRDS(fit, file = fs::path(dir_data, "fit.rds"))
-  }
   # Attach mesh for downstream use
   fit$mesh <- mesh
+  fit$ranges <- ranges
+  if (!is.null(dir)) {
+    fit$dir <- dir_new
+  } else {
+    fit$dir <- dir
+  }
+  # Save model output
+  if (!is.null(dir)) {
+    saveRDS(fit, file = fs::path(dir_data, "fit.rds"))
+  }
   return(fit)
 }

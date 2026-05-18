@@ -18,12 +18,14 @@
 #'
 #' @family run
 #' @export
-run <- function(data,
-                family,
-                formula,
-                dir_main = getwd(),
-                n_knots = 500,
-                ...) {
+run <- function(
+  data,
+  family,
+  formula,
+  dir_main = getwd(),
+  n_knots = 500,
+  ...
+) {
   lifecycle::deprecate_warn(
     when = "0.7",
     what = "run()",
@@ -33,12 +35,19 @@ run <- function(data,
   stopifnot(inherits(family, "family"))
   stopifnot(all(
     c(
-      "year", "fyear", "survey_name", "common_name",
-      "catch_weight", "effort", "x", "y"
+      "year",
+      "fyear",
+      "survey_name",
+      "common_name",
+      "catch_weight",
+      "effort",
+      "x",
+      "y"
     ) %in%
       colnames(data)
   ))
 
+  nwfscSurvey::check_dir(dir = dir_main, verbose = TRUE)
   # Objects
   data_grouped <- data |>
     dplyr::group_by(survey_name, common_name)
