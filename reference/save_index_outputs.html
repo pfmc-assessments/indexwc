@@ -19,7 +19,7 @@ disk in the same directory structure as the original indexwc code."><!-- mathjax
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">indexwc</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0</span>
       </span>
     </div>
 
@@ -37,10 +37,13 @@ disk in the same directory structure as the original indexwc code."><!-- mathjax
       <a href="../articles/a1_configuration.html">Configuration File</a>
     </li>
     <li>
-      <a href="../articles/a2_single_index.html">Coastwide indices</a>
+      <a href="../articles/a2_coastwide_simple.html">Coastwide indices: simple example</a>
     </li>
     <li>
-      <a href="../articles/a3_multiple_area_indices.html">Index example with multiple areas</a>
+      <a href="../articles/a3_coastwide_detailed.html">Coastwide indices: detailed example</a>
+    </li>
+    <li>
+      <a href="../articles/a4_multiple_area_indices.html">Index example with multiple areas</a>
     </li>
   </ul></li>
       </ul><ul class="nav navbar-nav navbar-right"><li>
@@ -70,7 +73,14 @@ disk in the same directory structure as the original indexwc code.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">save_index_outputs</span><span class="op">(</span><span class="va">fit</span>, <span class="va">diagnostics</span>, <span class="va">indices</span>, <span class="va">dir_main</span>, overwrite <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">save_index_outputs</span><span class="op">(</span></span>
+<span>  <span class="va">fit</span>,</span>
+<span>  <span class="va">diagnostics</span>,</span>
+<span>  <span class="va">indices</span>,</span>
+<span>  dir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  dir_main <span class="op">=</span> <span class="fu">lifecycle</span><span class="fu">::</span><span class="fu"><a href="https://lifecycle.r-lib.org/reference/deprecated.html" class="external-link">deprecated</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  overwrite <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -78,7 +88,7 @@ disk in the same directory structure as the original indexwc code.</p>
 
 
 <dl><dt id="arg-fit">fit<a class="anchor" aria-label="anchor" href="#arg-fit"></a></dt>
-<dd><p>An sdmTMB model object returned by <code><a href="run_sdmtmb.html">run_sdmtmb()</a></code> with <code>dir_main = NULL</code></p></dd>
+<dd><p>An sdmTMB model object returned by <code><a href="run_sdmtmb.html">run_sdmtmb()</a></code> with <code>dir = NULL</code></p></dd>
 
 
 <dt id="arg-diagnostics">diagnostics<a class="anchor" aria-label="anchor" href="#arg-diagnostics"></a></dt>
@@ -89,10 +99,18 @@ disk in the same directory structure as the original indexwc code.</p>
 <dd><p>A list returned by <code><a href="calc_index_areas.html">calc_index_areas()</a></code> with <code>dir = NULL</code></p></dd>
 
 
+<dt id="arg-dir">dir<a class="anchor" aria-label="anchor" href="#arg-dir"></a></dt>
+<dd><p>A string specifying a path where results will be saved. The
+default is your current working directory. A subdirectory structure will be
+created based on the species, survey, and model family. If <code>NULL</code>, the fitted
+object is returned with nothing saved to disk</p></dd>
+
+
 <dt id="arg-dir-main">dir_main<a class="anchor" aria-label="anchor" href="#arg-dir-main"></a></dt>
-<dd><p>A string specifying the base directory where results will be saved.
-The function will create a subdirectory structure based on species, survey, and
-model family (same as <code><a href="run_sdmtmb.html">run_sdmtmb()</a></code> creates when <code>dir_main</code> is specified)</p></dd>
+<dd><p>Deprecated. A string specifying a path where results will be saved. The
+default is your current working directory. A subdirectory structure will be
+created based on the species, survey, and model family. If <code>NULL</code>, the fitted
+object is returned with nothing saved to disk</p></dd>
 
 
 <dt id="arg-overwrite">overwrite<a class="anchor" aria-label="anchor" href="#arg-overwrite"></a></dt>
@@ -105,7 +123,7 @@ model family (same as <code><a href="run_sdmtmb.html">run_sdmtmb()</a></code> cr
 run <code><a href="run_sdmtmb.html">run_sdmtmb()</a></code>, <code><a href="diagnose.html">diagnose()</a></code>, and <code><a href="calc_index_areas.html">calc_index_areas()</a></code> with directory arguments
 specified from the start.</p>
 <p>The directory structure created is:</p>
-<p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>dir_main<span class="sc">/</span></span>
+<p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>dir<span class="sc">/</span></span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>└── species_name<span class="sc">/</span></span>
 <span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>    └── survey_name<span class="sc">/</span></span>
 <span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>        └── family_name<span class="sc">/</span></span>
@@ -146,36 +164,37 @@ specified from the start.</p>
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Pull and format data</span></span></span>
+<span class="r-in"><span><span class="va">my_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="pull_and_format_data.html">pull_and_format_data</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>   configuration_to_run <span class="op">=</span> <span class="va">configuration</span><span class="op">[</span><span class="fl">1</span>,<span class="op">]</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Fit model without saving</span></span></span>
 <span class="r-in"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="run_sdmtmb.html">run_sdmtmb</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>  dir_main <span class="op">=</span> <span class="cn">NULL</span>,</span></span>
-<span class="r-in"><span>  data <span class="op">=</span> <span class="va">my_data</span>,</span></span>
-<span class="r-in"><span>  family <span class="op">=</span> <span class="fu">sdmTMB</span><span class="fu">::</span><span class="fu"><a href="https://sdmTMB.github.io/sdmTMB/reference/families.html" class="external-link">delta_gamma</a></span><span class="op">(</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  formula <span class="op">=</span> <span class="va">catch_weight</span> <span class="op">~</span> <span class="fl">0</span> <span class="op">+</span> <span class="va">fyear</span></span></span>
+<span class="r-in"><span>  data <span class="op">=</span> <span class="va">my_data</span><span class="op">$</span><span class="va">data_filtered</span>,</span></span>
+<span class="r-in"><span>  family <span class="op">=</span> <span class="va">my_data</span><span class="op">$</span><span class="va">family</span>,</span></span>
+<span class="r-in"><span>  formula <span class="op">=</span> <span class="va">my_data</span><span class="op">$</span><span class="va">formula</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Run diagnostics without saving</span></span></span>
 <span class="r-in"><span><span class="va">diag</span> <span class="op">&lt;-</span> <span class="fu"><a href="diagnose.html">diagnose</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>  dir <span class="op">=</span> <span class="cn">NULL</span>,</span></span>
-<span class="r-in"><span>  fit <span class="op">=</span> <span class="va">fit</span>,</span></span>
-<span class="r-in"><span>  prediction_grid <span class="op">=</span> <span class="va">my_grid</span></span></span>
+<span class="r-in"><span>  fit <span class="op">=</span> <span class="va">fit</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Calculate indices without saving</span></span></span>
-<span class="r-in"><span><span class="va">idx</span> <span class="op">&lt;-</span> <span class="fu"><a href="calc_index_areas.html">calc_index_areas</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span><span class="va">index</span> <span class="op">&lt;-</span> <span class="fu"><a href="calc_index_areas.html">calc_index_areas</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  data <span class="op">=</span> <span class="va">fit</span><span class="op">$</span><span class="va">data</span>,</span></span>
 <span class="r-in"><span>  fit <span class="op">=</span> <span class="va">fit</span>,</span></span>
-<span class="r-in"><span>  prediction_grid <span class="op">=</span> <span class="va">my_grid</span>,</span></span>
-<span class="r-in"><span>  dir <span class="op">=</span> <span class="cn">NULL</span>,</span></span>
-<span class="r-in"><span>  boundaries <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Coastwide"</span>, <span class="st">"CA"</span>, <span class="st">"OR"</span>, <span class="st">"WA"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  boundaries <span class="op">=</span> <span class="st">"Coastwide"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Now save everything to disk</span></span></span>
 <span class="r-in"><span><span class="va">paths</span> <span class="op">&lt;-</span> <span class="fu">save_index_outputs</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  fit <span class="op">=</span> <span class="va">fit</span>,</span></span>
 <span class="r-in"><span>  diagnostics <span class="op">=</span> <span class="va">diag</span>,</span></span>
-<span class="r-in"><span>  indices <span class="op">=</span> <span class="va">idx</span>,</span></span>
-<span class="r-in"><span>  dir_main <span class="op">=</span> <span class="st">"~/my_indices"</span></span></span>
+<span class="r-in"><span>  indices <span class="op">=</span> <span class="va">index</span>,</span></span>
+<span class="r-in"><span>  dir <span class="op">=</span> <span class="va">fit</span><span class="op">$</span><span class="va">dir</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>

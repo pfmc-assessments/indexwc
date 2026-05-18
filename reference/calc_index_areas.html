@@ -20,7 +20,7 @@ The more boundaries there are the longer the function will take to run."><!-- ma
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">indexwc</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0</span>
       </span>
     </div>
 
@@ -38,10 +38,13 @@ The more boundaries there are the longer the function will take to run."><!-- ma
       <a href="../articles/a1_configuration.html">Configuration File</a>
     </li>
     <li>
-      <a href="../articles/a2_single_index.html">Coastwide indices</a>
+      <a href="../articles/a2_coastwide_simple.html">Coastwide indices: simple example</a>
     </li>
     <li>
-      <a href="../articles/a3_multiple_area_indices.html">Index example with multiple areas</a>
+      <a href="../articles/a3_coastwide_detailed.html">Coastwide indices: detailed example</a>
+    </li>
+    <li>
+      <a href="../articles/a4_multiple_area_indices.html">Index example with multiple areas</a>
     </li>
   </ul></li>
       </ul><ul class="nav navbar-nav navbar-right"><li>
@@ -75,8 +78,8 @@ The more boundaries there are the longer the function will take to run.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">calc_index_areas</span><span class="op">(</span></span>
 <span>  <span class="va">data</span>,</span>
 <span>  <span class="va">fit</span>,</span>
-<span>  <span class="va">prediction_grid</span>,</span>
-<span>  <span class="va">dir</span>,</span>
+<span>  dir <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  prediction_grid <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  boundaries <span class="op">=</span> <span class="st">"Coastwide"</span>,</span>
 <span>  cog <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  bias_correct <span class="op">=</span> <span class="cn">TRUE</span></span>
@@ -95,14 +98,16 @@ The more boundaries there are the longer the function will take to run.</p>
 <dd><p>A fitted sdmTMB model object</p></dd>
 
 
-<dt id="arg-prediction-grid">prediction_grid<a class="anchor" aria-label="anchor" href="#arg-prediction-grid"></a></dt>
-<dd><p>The prediction grid for the survey that sdmTMB will
-use to make model predictions to</p></dd>
-
-
 <dt id="arg-dir">dir<a class="anchor" aria-label="anchor" href="#arg-dir"></a></dt>
 <dd><p>Directory path where results will be saved. If <code>NULL</code>, results
 will only be returned (not saved to a file)</p></dd>
+
+
+<dt id="arg-prediction-grid">prediction_grid<a class="anchor" aria-label="anchor" href="#arg-prediction-grid"></a></dt>
+<dd><p>The prediction grid for the survey that sdmTMB will
+use to make model predictions to. Default is <code>NULL</code> where the data
+ranges from the fit object will be used to create a prediction grid
+using <code><a href="lookup_grid.html">lookup_grid()</a></code>.</p></dd>
 
 
 <dt id="arg-boundaries">boundaries<a class="anchor" aria-label="anchor" href="#arg-boundaries"></a></dt>
@@ -171,7 +176,7 @@ convergence is poor when there are a lot of zeros.</p>
     </div>
     <div id="author">
     <h2>Author</h2>
-    <p>Kelli F. Johnson</p>
+    <p>Kelli F. Johnson, Chantel Wetzel, and Eric Ward</p>
     </div>
 
     <div id="ref-examples">

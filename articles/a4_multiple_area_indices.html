@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">indexwc</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0</span>
       </span>
     </div>
 
@@ -52,10 +52,13 @@
       <a href="../articles/a1_configuration.html">Configuration File</a>
     </li>
     <li>
-      <a href="../articles/a2_single_index.html">Coastwide indices</a>
+      <a href="../articles/a2_coastwide_simple.html">Coastwide indices: simple example</a>
     </li>
     <li>
-      <a href="../articles/a3_multiple_area_indices.html">Index example with multiple areas</a>
+      <a href="../articles/a3_coastwide_detailed.html">Coastwide indices: detailed example</a>
+    </li>
+    <li>
+      <a href="../articles/a4_multiple_area_indices.html">Index example with multiple areas</a>
     </li>
   </ul>
 </li>
@@ -82,10 +85,10 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Index example with multiple areas</h1>
             
-            <h4 data-toc-skip class="date">2026-04-08</h4>
+            <h4 data-toc-skip class="date">2026-05-18</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/pfmc-assessments/indexwc/blob/main/vignettes/a3_multiple_area_indices.Rmd" class="external-link"><code>vignettes/a3_multiple_area_indices.Rmd</code></a></small>
-      <div class="hidden name"><code>a3_multiple_area_indices.Rmd</code></div>
+      <small class="dont-index">Source: <a href="https://github.com/pfmc-assessments/indexwc/blob/main/vignettes/a4_multiple_area_indices.Rmd" class="external-link"><code>vignettes/a4_multiple_area_indices.Rmd</code></a></small>
+      <div class="hidden name"><code>a4_multiple_area_indices.Rmd</code></div>
 
     </div>
 
@@ -304,7 +307,7 @@ may be useful to adjust the <code>newton_loops</code>, etc.</p>
 <code class="sourceCode R"><span><span class="va">family_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/eval.html" class="external-link">eval</a></span><span class="op">(</span><span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/parse_expr.html" class="external-link">parse_expr</a></span><span class="op">(</span><span class="va">configuration_to_run</span><span class="op">$</span><span class="va">family</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/run_sdmtmb.html">run_sdmtmb</a></span><span class="op">(</span></span>
-<span>  dir_main <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  dir <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">data</span>,</span>
 <span>  family <span class="op">=</span> <span class="va">family_obj</span>,</span>
 <span>  formula <span class="op">=</span> <span class="va">configuration_to_run</span><span class="op">$</span><span class="va">formula</span>,</span>

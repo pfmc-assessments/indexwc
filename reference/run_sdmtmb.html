@@ -20,7 +20,7 @@ attachments for downstream diagnostic and index calculations."><!-- mathjax --><
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">indexwc</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0</span>
       </span>
     </div>
 
@@ -38,10 +38,13 @@ attachments for downstream diagnostic and index calculations."><!-- mathjax --><
       <a href="../articles/a1_configuration.html">Configuration File</a>
     </li>
     <li>
-      <a href="../articles/a2_single_index.html">Coastwide indices</a>
+      <a href="../articles/a2_coastwide_simple.html">Coastwide indices: simple example</a>
     </li>
     <li>
-      <a href="../articles/a3_multiple_area_indices.html">Index example with multiple areas</a>
+      <a href="../articles/a3_coastwide_detailed.html">Coastwide indices: detailed example</a>
+    </li>
+    <li>
+      <a href="../articles/a4_multiple_area_indices.html">Index example with multiple areas</a>
     </li>
   </ul></li>
       </ul><ul class="nav navbar-nav navbar-right"><li>
@@ -73,11 +76,15 @@ attachments for downstream diagnostic and index calculations.</p>
 
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">run_sdmtmb</span><span class="op">(</span></span>
-<span>  dir_main <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  <span class="va">data</span>,</span>
 <span>  <span class="va">family</span>,</span>
 <span>  <span class="va">formula</span>,</span>
+<span>  dir <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  dir_main <span class="op">=</span> <span class="fu">lifecycle</span><span class="fu">::</span><span class="fu"><a href="https://lifecycle.r-lib.org/reference/deprecated.html" class="external-link">deprecated</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  n_knots <span class="op">=</span> <span class="fl">500</span>,</span>
+<span>  spatial <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"on"</span>, <span class="st">"on"</span><span class="op">)</span>,</span>
+<span>  spatiotemporal <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"iid"</span>, <span class="st">"iid"</span><span class="op">)</span>,</span>
+<span>  anisotropy <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  share_range <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  sdmtmb_control <span class="op">=</span> <span class="fu">sdmTMB</span><span class="fu">::</span><span class="fu"><a href="https://sdmTMB.github.io/sdmTMB/reference/sdmTMBcontrol.html" class="external-link">sdmTMBcontrol</a></span><span class="op">(</span>newton_loops <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>,</span>
 <span>  <span class="va">...</span></span>
@@ -88,14 +95,7 @@ attachments for downstream diagnostic and index calculations.</p>
     <h2>Arguments</h2>
 
 
-<dl><dt id="arg-dir-main">dir_main<a class="anchor" aria-label="anchor" href="#arg-dir-main"></a></dt>
-<dd><p>A string specifying a path where results will be saved. The
-default is your current working directory. A subdirectory structure will be
-created based on the species, survey, and model family. If <code>NULL</code>, the fitted
-object is returned with nothing saved to disk</p></dd>
-
-
-<dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
+<dl><dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
 <dd><p>A data frame containing the survey data. Must include columns:
 <code>year</code>, <code>fyear</code>, <code>survey_name</code>, <code>common_name</code>, <code>catch_weight</code>, <code>effort</code>,
 <code>x</code>, <code>y</code>, <code>latitude</code>, <code>longitude</code>, and <code>depth</code>.</p></dd>
@@ -112,11 +112,49 @@ See <code><a href="https://sdmTMB.github.io/sdmTMB/reference/sdmTMB.html" class=
 reference columns in <code>data</code>. See <code><a href="https://sdmTMB.github.io/sdmTMB/reference/sdmTMB.html" class="external-link">sdmTMB::sdmTMB()</a></code> for details.</p></dd>
 
 
+<dt id="arg-dir">dir<a class="anchor" aria-label="anchor" href="#arg-dir"></a></dt>
+<dd><p>A string specifying a path where results will be saved. The
+default is your current working directory. A subdirectory structure will be
+created based on the species, survey, and model family. If <code>NULL</code>, the fitted
+object is returned with nothing saved to disk</p></dd>
+
+
+<dt id="arg-dir-main">dir_main<a class="anchor" aria-label="anchor" href="#arg-dir-main"></a></dt>
+<dd><p>Deprecated. A string specifying a path where results will be saved. The
+default is your current working directory. A subdirectory structure will be
+created based on the species, survey, and model family. If <code>NULL</code>, the fitted
+object is returned with nothing saved to disk</p></dd>
+
+
 <dt id="arg-n-knots">n_knots<a class="anchor" aria-label="anchor" href="#arg-n-knots"></a></dt>
 <dd><p>An integer specifying the number of knots you want in your
 mesh that is created by <span class="pkg">fmesher</span>. More knots is not always better. The
 default is to use 500 knots. Future work will look at specifying a
 threshold distance between points rather than number of knots.</p></dd>
+
+
+<dt id="arg-spatial">spatial<a class="anchor" aria-label="anchor" href="#arg-spatial"></a></dt>
+<dd><p>Estimate spatial random fields? Options are 'on' / 'off'
+or TRUE / FALSE. Optionally, a list for delta models, e.g. list('on', 'off').
+Default is list('on', 'on') to estimate spatial random fields for a delta
+model.</p></dd>
+
+
+<dt id="arg-spatiotemporal">spatiotemporal<a class="anchor" aria-label="anchor" href="#arg-spatiotemporal"></a></dt>
+<dd><p>Estimate the spatiotemporal random fields as 'iid'
+(independent and identically distributed; default), stationary 'ar1'
+(first-order autoregressive), a random walk ('rw'), or fixed at 0 'off'.
+If a delta model, can be a list. Default is list('iid', 'iid') to estimate
+spatiotemporal random fields for a delta model. These settings are
+available in the configuration file under spatiotemporal1 for the presence
+absence model and spatiotemporal2 for the catch rate model.</p></dd>
+
+
+<dt id="arg-anisotropy">anisotropy<a class="anchor" aria-label="anchor" href="#arg-anisotropy"></a></dt>
+<dd><p>Logical: allow for anisotropy (spatial correlation that is
+directionally dependent).  This is commonly needed for West Coast groundfish
+stocks that have a coastwide range due to the directionality of the coast
+line. Default is TRUE.</p></dd>
 
 
 <dt id="arg-share-range">share_range<a class="anchor" aria-label="anchor" href="#arg-share-range"></a></dt>

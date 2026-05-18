@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">indexwc</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0</span>
       </span>
     </div>
 
@@ -35,10 +35,13 @@
       <a href="../articles/a1_configuration.html">Configuration File</a>
     </li>
     <li>
-      <a href="../articles/a2_single_index.html">Coastwide indices</a>
+      <a href="../articles/a2_coastwide_simple.html">Coastwide indices: simple example</a>
     </li>
     <li>
-      <a href="../articles/a3_multiple_area_indices.html">Index example with multiple areas</a>
+      <a href="../articles/a3_coastwide_detailed.html">Coastwide indices: detailed example</a>
+    </li>
+    <li>
+      <a href="../articles/a4_multiple_area_indices.html">Index example with multiple areas</a>
     </li>
   </ul></li>
       </ul><ul class="nav navbar-nav navbar-right"><li>
@@ -66,20 +69,23 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">diagnose</span><span class="op">(</span><span class="va">dir</span>, <span class="va">fit</span>, prediction_grid <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">diagnose</span><span class="op">(</span><span class="va">fit</span>, dir <span class="op">=</span> <span class="cn">NULL</span>, prediction_grid <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
 
 
-<dl><dt id="arg-dir">dir<a class="anchor" aria-label="anchor" href="#arg-dir"></a></dt>
-<dd><p>Directory path where results will be saved. If <code>NULL</code>,
-results are only returned as a list (not saved to disk).</p></dd>
-
-
-<dt id="arg-fit">fit<a class="anchor" aria-label="anchor" href="#arg-fit"></a></dt>
+<dl><dt id="arg-fit">fit<a class="anchor" aria-label="anchor" href="#arg-fit"></a></dt>
 <dd><p>An object of class <code>sdmTMB</code> returned by <code><a href="https://sdmTMB.github.io/sdmTMB/reference/sdmTMB.html" class="external-link">sdmTMB::sdmTMB()</a></code>.</p></dd>
+
+
+<dt id="arg-dir">dir<a class="anchor" aria-label="anchor" href="#arg-dir"></a></dt>
+<dd><p>Directory path where results will be saved. If <code>NULL</code>,
+results are only returned as a list (not saved to disk). The directory
+should be the top folder where diagnostic figures will be saved to
+directory in the fit object list (fit$dir) if available which is set as:
+dir/common_name_latitude_range/survey/error_structure</p></dd>
 
 
 <dt id="arg-prediction-grid">prediction_grid<a class="anchor" aria-label="anchor" href="#arg-prediction-grid"></a></dt>
