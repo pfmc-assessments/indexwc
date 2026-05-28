@@ -2,16 +2,18 @@ Package: indexwc
 Title: Run indices for West Coast Groundfish assessments
 Version: 1.0
 Authors@R: c(
-    person(c("Kelli", "F."), "Johnson", , "kelli.johnson@noaa.gov", role = c("aut", "cre"),
-           comment = c(ORCID = "0000-0002-5149-451X")),
-    person(c("Sean", "C."), "Anderson", role = "aut",
-           comment = c(ORCID = "0000-0001-9563-1937")),
-    person(c("Chantel", "R."), "Wetzel", , "chantel.wetzel@noaa.gov", role = "aut",
+    person(c("Chantel", "R."), "Wetzel", , "chantel.wetzel@noaa.gov", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-7573-8240")),
+    person(c("R.", "Claire"), "Rosemond", role = "aut",
+           comment = c(ORCID = "0000-0001-6382-091X")),
     person(c("Eric", "J."), "Ward", role = "aut",
            comment = c(ORCID = "0000-0002-4359-0296")),
-    person(c("Ian", "G."), "Taylor", , "Ian.Taylor@noaa.gov", role = "aut",
-           comment = c(ORCID = "0000-0002-4232-5669"))
+    person(c("Ian", "G."), "Taylor", role = "aut",
+           comment = c(ORCID = "0000-0002-4232-5669")),
+    person(c("Sean", "C."), "Anderson", role = "aut",
+           comment = c(ORCID = "0000-0001-9563-1937")),
+    person(c("Kelli", "F."), "Johnson", role = "aut",
+           comment = c(ORCID = "0000-0002-5149-451X"))
   )
 Description: A system to run and summarize models that estimate indices of
     abundance for various data sources specific to populations off the
@@ -61,4 +63,4 @@ Encoding: UTF-8
 LazyData: true
 LazyDataCompression: xz
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.3
+Config/roxygen2/version: 8.0.0
