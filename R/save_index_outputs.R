@@ -135,20 +135,21 @@ save_index_outputs <- function(
   # Extract metadata from fit object to create directory structure
   data <- fit$data
   family_obj <- fit$family
-  dir_save <- data |>
-    dplyr::group_by(.data$survey_name, .data$common_name) |>
-    dplyr::count() |>
-    dplyr::mutate(
-      common_without = format_common_name(.data$common_name),
-      survey_without = format_common_name(.data$survey_name),
-      directory = fs::path(
-        dir,
-        .data$common_without,
-        .data$survey_without,
-        format_family(family_obj)
-      )
-    ) |>
-    dplyr::pull(.data$directory)
+  dir_save <- fit$dir
+  #dir_save <- data |>
+  #  dplyr::group_by(.data$survey_name, .data$common_name) |>
+  #  dplyr::count() |>
+  #  dplyr::mutate(
+  #    common_without = format_common_name(.data$common_name),
+  #    survey_without = format_common_name(.data$survey_name),
+  #    directory = fs::path(
+  #      dir,
+  #      .data$common_without,
+  #      .data$survey_without,
+  #      format_family(family_obj)
+  #    )
+  #  ) |>
+  #  dplyr::pull(.data$directory)
 
   if (length(dir_save) != 1) {
     cli::cli_abort(c(
@@ -293,6 +294,29 @@ save_index_outputs <- function(
     ))
   }
 
+  # Save anisotropy plot
+  if (
+    !is.null(diagnostics$anisotropy_plot) &&
+      inherits(diagnostics$anisotropy_plot, "ggplot")
+  ) {
+    suppressMessages(ggplot2::ggsave(
+      filename = fs::path(dir_diagnostics, "anisotropy.png"),
+      plot = diagnostics$anisotropy_plot,
+      height = 7,
+      width = 7
+    ))
+  }
+
+  # Save fixed effects plot
+  if (!is.null(diagnostics$fixed_effects_plot)) {
+    suppressMessages(ggplot2::ggsave(
+      filename = fs::path(dir_diagnostics, "fixed_effects.png"),
+      plot = diagnostics$fixed_effects_plot,
+      height = 7,
+      width = 7
+    ))
+  }
+
   # Save residual maps
   if (!is.null(diagnostics$residual_maps_by_year)) {
     for (i in seq_along(diagnostics$residual_maps_by_year)) {
@@ -322,42 +346,31 @@ save_index_outputs <- function(
     }
   }
 
-  # Save anisotropy plot
-  if (
-    !is.null(diagnostics$anisotropy_plot) &&
-      inherits(diagnostics$anisotropy_plot, "ggplot")
-  ) {
-    suppressMessages(ggplot2::ggsave(
-      filename = fs::path(dir_diagnostics, "anisotropy.png"),
-      plot = diagnostics$anisotropy_plot,
-      height = 7,
-      width = 7
-    ))
-  }
-
-  # Save fixed effects plot
-  if (!is.null(diagnostics$fixed_effects_plot)) {
-    suppressMessages(ggplot2::ggsave(
-      filename = fs::path(dir_diagnostics, "fixed_effects.png"),
-      plot = diagnostics$fixed_effects_plot,
-      height = 7,
-      width = 7
-    ))
-  }
-
-  # Save density plots
   if (!is.null(diagnostics$density_plots)) {
     for (i in seq_along(diagnostics$density_plots)) {
-      filename <- fs::path(
-        dir_diagnostics,
-        sprintf("density_page_%02d.png", i)
-      )
-      suppressMessages(ggplot2::ggsave(
-        filename = filename,
-        plot = diagnostics$density_plots[[i]],
-        height = 8,
-        width = 10
-      ))
+      density_plots <- diagnostics$density_plots
+      if (!is.null(density_plots)) {
+        # Get number of pages in the plot
+        n_pages <- ggforce::n_pages(density_plots)
+        for (page in 1:n_pages) {
+          filename <- fs::path(
+            dir_diagnostics,
+            sprintf("density_page_%02d.png", i, page)
+          )
+          suppressMessages(ggplot2::ggsave(
+            filename = filename,
+            plot = density_plots +
+              ggforce::facet_wrap_paginate(
+                "year",
+                nrow = 1,
+                ncol = 2,
+                page = page
+              ),
+            height = 5,
+            width = 10
+          ))
+        }
+      }
     }
   }
 
