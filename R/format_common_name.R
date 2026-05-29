@@ -1,3 +1,8 @@
+#' Format common name for directory management
+#'
+#' @author Chantel R. Wetzel
+#' @export
+#'
 format_common_name <- function(x) {
   tolower(
     gsub(
