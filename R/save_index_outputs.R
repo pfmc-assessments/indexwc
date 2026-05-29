@@ -98,7 +98,7 @@ save_index_outputs <- function(
   fit,
   diagnostics,
   indices,
-  dir = getwd(),
+  dir = NULL,
   dir_main = lifecycle::deprecated(),
   overwrite = FALSE
 ) {
@@ -135,27 +135,20 @@ save_index_outputs <- function(
   # Extract metadata from fit object to create directory structure
   data <- fit$data
   family_obj <- fit$family
-  dir_save <- fit$dir
-  #dir_save <- data |>
-  #  dplyr::group_by(.data$survey_name, .data$common_name) |>
-  #  dplyr::count() |>
-  #  dplyr::mutate(
-  #    common_without = format_common_name(.data$common_name),
-  #    survey_without = format_common_name(.data$survey_name),
-  #    directory = fs::path(
-  #      dir,
-  #      .data$common_without,
-  #      .data$survey_without,
-  #      format_family(family_obj)
-  #    )
-  #  ) |>
-  #  dplyr::pull(.data$directory)
+  dir_save <- ifelse(
+    !is.null(dir),
+    yes = dir,
+    no = fit$dir)
 
   if (length(dir_save) != 1) {
     cli::cli_abort(c(
       "x" = "Multiple species or surveys detected in data",
       "i" = "This function expects a single species/survey combination"
     ))
+  } else {
+    cli::cli_alert_info(
+      "Output will be saved to {dir_save}:"
+    )
   }
 
   # Create directory structure, following indexwc
