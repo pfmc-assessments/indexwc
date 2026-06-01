@@ -98,7 +98,7 @@ save_index_outputs <- function(
   fit,
   diagnostics,
   indices,
-  dir = getwd(),
+  dir = NULL,
   dir_main = lifecycle::deprecated(),
   overwrite = FALSE
 ) {
@@ -135,26 +135,28 @@ save_index_outputs <- function(
   # Extract metadata from fit object to create directory structure
   data <- fit$data
   family_obj <- fit$family
-  dir_save <- data |>
-    dplyr::group_by(.data$survey_name, .data$common_name) |>
-    dplyr::count() |>
-    dplyr::mutate(
-      common_without = format_common_name(.data$common_name),
-      survey_without = format_common_name(.data$survey_name),
-      directory = fs::path(
-        dir,
-        .data$common_without,
-        .data$survey_without,
-        format_family(family_obj)
-      )
-    ) |>
-    dplyr::pull(.data$directory)
-
+  if(is.null(dir)) {
+    dir_save <- fit$dir
+  } else {
+    dir_save <- fs::path(dir, fit$dir )
+  }
+  fs::dir.create(dir_save, showWarnings = FALSE, recursive = TRUE)
+  if (!file.exists(dir_save)) {
+    dir_save <- fs::path(getwd(), fit$dir)
+    fs::dir.create(dir_save, showWarnings = FALSE, recursive = TRUE)
+  }
+  if (!file.exists(dir_save)) {
+    cli::cli_abort("A directory could not be created based upon the dir argument and the fit$dir object.")
+  }
   if (length(dir_save) != 1) {
     cli::cli_abort(c(
       "x" = "Multiple species or surveys detected in data",
       "i" = "This function expects a single species/survey combination"
     ))
+  } else {
+    cli::cli_alert_info(
+      "Output will be saved to {dir_save}:"
+    )
   }
 
   # Create directory structure, following indexwc
@@ -175,7 +177,7 @@ save_index_outputs <- function(
     existing <- existing_files[fs::file_exists(existing_files)]
     if (length(existing) > 0) {
       cli::cli_abort(c(
-        "x" = "Files already exist in {.path {dir}}",
+        "x" = "Files already exist in {.path {dir_save}}",
         "i" = "Set {.code overwrite = TRUE} to replace existing files",
         "i" = "Or choose a different {.arg dir}"
       ))
@@ -293,6 +295,29 @@ save_index_outputs <- function(
     ))
   }
 
+  # Save anisotropy plot
+  if (
+    !is.null(diagnostics$anisotropy_plot) &&
+      inherits(diagnostics$anisotropy_plot, "ggplot")
+  ) {
+    suppressMessages(ggplot2::ggsave(
+      filename = fs::path(dir_diagnostics, "anisotropy.png"),
+      plot = diagnostics$anisotropy_plot,
+      height = 7,
+      width = 7
+    ))
+  }
+
+  # Save fixed effects plot
+  if (!is.null(diagnostics$fixed_effects_plot)) {
+    suppressMessages(ggplot2::ggsave(
+      filename = fs::path(dir_diagnostics, "fixed_effects.png"),
+      plot = diagnostics$fixed_effects_plot,
+      height = 7,
+      width = 7
+    ))
+  }
+
   # Save residual maps
   if (!is.null(diagnostics$residual_maps_by_year)) {
     for (i in seq_along(diagnostics$residual_maps_by_year)) {
@@ -322,42 +347,29 @@ save_index_outputs <- function(
     }
   }
 
-  # Save anisotropy plot
-  if (
-    !is.null(diagnostics$anisotropy_plot) &&
-      inherits(diagnostics$anisotropy_plot, "ggplot")
-  ) {
-    suppressMessages(ggplot2::ggsave(
-      filename = fs::path(dir_diagnostics, "anisotropy.png"),
-      plot = diagnostics$anisotropy_plot,
-      height = 7,
-      width = 7
-    ))
-  }
-
-  # Save fixed effects plot
-  if (!is.null(diagnostics$fixed_effects_plot)) {
-    suppressMessages(ggplot2::ggsave(
-      filename = fs::path(dir_diagnostics, "fixed_effects.png"),
-      plot = diagnostics$fixed_effects_plot,
-      height = 7,
-      width = 7
-    ))
-  }
-
-  # Save density plots
   if (!is.null(diagnostics$density_plots)) {
-    for (i in seq_along(diagnostics$density_plots)) {
-      filename <- fs::path(
-        dir_diagnostics,
-        sprintf("density_page_%02d.png", i)
-      )
-      suppressMessages(ggplot2::ggsave(
-        filename = filename,
-        plot = diagnostics$density_plots[[i]],
-        height = 8,
-        width = 10
-      ))
+    density_plots <- diagnostics$density_plots[[1]]
+      if (!is.null(density_plots)) {
+        # Get number of pages in the plot
+        n_pages <- ggforce::n_pages(density_plots)
+        for (page in 1:n_pages) {
+          filename <- fs::path(
+            dir_diagnostics,
+            sprintf("density_page_%02d.png", page)
+          )
+          suppressMessages(ggplot2::ggsave(
+            filename = filename,
+            plot = density_plots +
+              ggforce::facet_wrap_paginate(
+                "year",
+                nrow = 1,
+                ncol = 2,
+                page = page
+              ),
+            height = 5,
+            width = 10
+          ))
+        }
     }
   }
 
