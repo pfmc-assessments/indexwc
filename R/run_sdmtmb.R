@@ -122,7 +122,7 @@ run_sdmtmb <- function(
     dir_new <- data |>
       dplyr::group_by(.data$survey_name, .data$common_name) |>
       dplyr::summarise(
-        range = paste0(min(.data$latitude), "-", max(.data$latitude)),
+        range = paste0(round(min(.data$latitude), 2), "-", round(max(.data$latitude), 2),
         .groups = "drop_last"
       ) |>
       dplyr::mutate(
