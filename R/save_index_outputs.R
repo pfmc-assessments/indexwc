@@ -135,11 +135,19 @@ save_index_outputs <- function(
   # Extract metadata from fit object to create directory structure
   data <- fit$data
   family_obj <- fit$family
-  dir_save <- ifelse(
-    !is.null(dir),
-    yes = dir,
-    no = fit$dir)
-
+  if(is.null(dir)) {
+    dir_save <- fit$dir
+  } else {
+    dir_save <- fs::path(dir, fit$dir )
+  }
+  fs::dir.create(dir_save, showWarnings = FALSE, recursive = TRUE)
+  if (!file.exists(dir_save)) {
+    dir_save <- fs::path(getwd(), fit$dir)
+    fs::dir.create(dir_save, showWarnings = FALSE, recursive = TRUE)
+  }
+  if (!file.exists(dir_save)) {
+    cli::cli_abort("A directory could not be created based upon the dir argument and the fit$dir object.")
+  }
   if (length(dir_save) != 1) {
     cli::cli_abort(c(
       "x" = "Multiple species or surveys detected in data",
@@ -169,7 +177,7 @@ save_index_outputs <- function(
     existing <- existing_files[fs::file_exists(existing_files)]
     if (length(existing) > 0) {
       cli::cli_abort(c(
-        "x" = "Files already exist in {.path {dir}}",
+        "x" = "Files already exist in {.path {dir_save}}",
         "i" = "Set {.code overwrite = TRUE} to replace existing files",
         "i" = "Or choose a different {.arg dir}"
       ))
@@ -340,7 +348,6 @@ save_index_outputs <- function(
   }
 
   if (!is.null(diagnostics$density_plots)) {
-    for (i in seq_along(diagnostics$density_plots)) {
       density_plots <- diagnostics$density_plots
       if (!is.null(density_plots)) {
         # Get number of pages in the plot
@@ -348,7 +355,7 @@ save_index_outputs <- function(
         for (page in 1:n_pages) {
           filename <- fs::path(
             dir_diagnostics,
-            sprintf("density_page_%02d.png", i, page)
+            sprintf("density_page_%02d.png", page)
           )
           suppressMessages(ggplot2::ggsave(
             filename = filename,
@@ -364,7 +371,6 @@ save_index_outputs <- function(
           ))
         }
       }
-    }
   }
 
   # Save data with residuals
