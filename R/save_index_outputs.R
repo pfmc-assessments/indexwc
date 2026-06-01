@@ -348,7 +348,7 @@ save_index_outputs <- function(
   }
 
   if (!is.null(diagnostics$density_plots)) {
-      density_plots <- diagnostics$density_plots
+    density_plots <- diagnostics$density_plots[[1]]
       if (!is.null(density_plots)) {
         # Get number of pages in the plot
         n_pages <- ggforce::n_pages(density_plots)
@@ -370,7 +370,7 @@ save_index_outputs <- function(
             width = 10
           ))
         }
-      }
+    }
   }
 
   # Save data with residuals
