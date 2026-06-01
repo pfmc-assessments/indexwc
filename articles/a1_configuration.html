@@ -85,7 +85,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Configuration File</h1>
             
-            <h4 data-toc-skip class="date">2026-05-28</h4>
+            <h4 data-toc-skip class="date">2026-06-01</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/pfmc-assessments/indexwc/blob/main/vignettes/a1_configuration.Rmd" class="external-link"><code>vignettes/a1_configuration.Rmd</code></a></small>
       <div class="hidden name"><code>a1_configuration.Rmd</code></div>
@@ -594,6 +594,38 @@
 <td headers="knots" class="gt_row gt_right">300</td>
 <td headers="spatiotemporal1" class="gt_row gt_left">iid</td>
 <td headers="spatiotemporal2" class="gt_row gt_left">off</td>
+<td headers="share_range" class="gt_row gt_center">TRUE</td>
+<td headers="used" class="gt_row gt_center">TRUE</td>
+</tr>
+<tr>
+<td headers="species" class="gt_row gt_left">petrale sole</td>
+<td headers="family" class="gt_row gt_left">sdmTMB::delta_lognormal()</td>
+<td headers="min_depth" class="gt_row gt_right">-55</td>
+<td headers="max_depth" class="gt_row gt_right">-675</td>
+<td headers="min_latitude" class="gt_row gt_right">31.9</td>
+<td headers="max_latitude" class="gt_row gt_right">49.00</td>
+<td headers="min_year" class="gt_row gt_right">2003</td>
+<td headers="max_year" class="gt_row gt_right">2050</td>
+<td headers="anisotropy" class="gt_row gt_center">TRUE</td>
+<td headers="knots" class="gt_row gt_right">500</td>
+<td headers="spatiotemporal1" class="gt_row gt_left">iid</td>
+<td headers="spatiotemporal2" class="gt_row gt_left">iid</td>
+<td headers="share_range" class="gt_row gt_center">FALSE</td>
+<td headers="used" class="gt_row gt_center">TRUE</td>
+</tr>
+<tr>
+<td headers="species" class="gt_row gt_left">rex sole</td>
+<td headers="family" class="gt_row gt_left">sdmTMB::delta_gamma()</td>
+<td headers="min_depth" class="gt_row gt_right">-55</td>
+<td headers="max_depth" class="gt_row gt_right">-700</td>
+<td headers="min_latitude" class="gt_row gt_right">31.9</td>
+<td headers="max_latitude" class="gt_row gt_right">49.00</td>
+<td headers="min_year" class="gt_row gt_right">2003</td>
+<td headers="max_year" class="gt_row gt_right">2050</td>
+<td headers="anisotropy" class="gt_row gt_center">TRUE</td>
+<td headers="knots" class="gt_row gt_right">500</td>
+<td headers="spatiotemporal1" class="gt_row gt_left">iid</td>
+<td headers="spatiotemporal2" class="gt_row gt_left">iid</td>
 <td headers="share_range" class="gt_row gt_center">TRUE</td>
 <td headers="used" class="gt_row gt_center">TRUE</td>
 </tr>
@@ -2712,7 +2744,7 @@ used in the most recent assessment:</p>
 <td headers="min_depth" class="gt_row gt_right">-55</td>
 <td headers="max_depth" class="gt_row gt_right">-1280</td>
 <td headers="min_latitude" class="gt_row gt_right">34.0000</td>
-<td headers="max_latitude" class="gt_row gt_right">49.00</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
 <td headers="min_year" class="gt_row gt_right">2003</td>
 <td headers="max_year" class="gt_row gt_right">2050</td>
 <td headers="anisotropy" class="gt_row gt_center">TRUE</td>
@@ -2729,7 +2761,7 @@ used in the most recent assessment:</p>
 <td headers="min_depth" class="gt_row gt_right">-183</td>
 <td headers="max_depth" class="gt_row gt_right">-1280</td>
 <td headers="min_latitude" class="gt_row gt_right">31.9000</td>
-<td headers="max_latitude" class="gt_row gt_right">49.00</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
 <td headers="min_year" class="gt_row gt_right">2003</td>
 <td headers="max_year" class="gt_row gt_right">2050</td>
 <td headers="anisotropy" class="gt_row gt_center">TRUE</td>
@@ -2746,7 +2778,7 @@ used in the most recent assessment:</p>
 <td headers="min_depth" class="gt_row gt_right">-55</td>
 <td headers="max_depth" class="gt_row gt_right">-500</td>
 <td headers="min_latitude" class="gt_row gt_right">31.9000</td>
-<td headers="max_latitude" class="gt_row gt_right">49.00</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
 <td headers="min_year" class="gt_row gt_right">2003</td>
 <td headers="max_year" class="gt_row gt_right">2050</td>
 <td headers="anisotropy" class="gt_row gt_center">TRUE</td>
@@ -2763,7 +2795,7 @@ used in the most recent assessment:</p>
 <td headers="min_depth" class="gt_row gt_right">-183</td>
 <td headers="max_depth" class="gt_row gt_right">-850</td>
 <td headers="min_latitude" class="gt_row gt_right">35.0000</td>
-<td headers="max_latitude" class="gt_row gt_right">49.00</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
 <td headers="min_year" class="gt_row gt_right">2003</td>
 <td headers="max_year" class="gt_row gt_right">2050</td>
 <td headers="anisotropy" class="gt_row gt_center">TRUE</td>
@@ -2780,7 +2812,41 @@ used in the most recent assessment:</p>
 <td headers="min_depth" class="gt_row gt_right">-55</td>
 <td headers="max_depth" class="gt_row gt_right">-500</td>
 <td headers="min_latitude" class="gt_row gt_right">31.9000</td>
-<td headers="max_latitude" class="gt_row gt_right">49.00</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
+<td headers="min_year" class="gt_row gt_right">2003</td>
+<td headers="max_year" class="gt_row gt_right">2050</td>
+<td headers="anisotropy" class="gt_row gt_center">TRUE</td>
+<td headers="knots" class="gt_row gt_right">500</td>
+<td headers="spatiotemporal1" class="gt_row gt_left">iid</td>
+<td headers="spatiotemporal2" class="gt_row gt_left">iid</td>
+<td headers="share_range" class="gt_row gt_center">FALSE</td>
+<td headers="used" class="gt_row gt_center">FALSE</td>
+</tr>
+<tr>
+<td headers="species" class="gt_row gt_left">bocaccio</td>
+<td headers="source" class="gt_row gt_left">NWFSC.Combo</td>
+<td headers="family" class="gt_row gt_left">sdmTMB::delta_gengamma()</td>
+<td headers="min_depth" class="gt_row gt_right">-55</td>
+<td headers="max_depth" class="gt_row gt_right">-500</td>
+<td headers="min_latitude" class="gt_row gt_right">31.9000</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
+<td headers="min_year" class="gt_row gt_right">2003</td>
+<td headers="max_year" class="gt_row gt_right">2050</td>
+<td headers="anisotropy" class="gt_row gt_center">TRUE</td>
+<td headers="knots" class="gt_row gt_right">500</td>
+<td headers="spatiotemporal1" class="gt_row gt_left">iid</td>
+<td headers="spatiotemporal2" class="gt_row gt_left">iid</td>
+<td headers="share_range" class="gt_row gt_center">FALSE</td>
+<td headers="used" class="gt_row gt_center">FALSE</td>
+</tr>
+<tr>
+<td headers="species" class="gt_row gt_left">bocaccio</td>
+<td headers="source" class="gt_row gt_left">NWFSC.Combo</td>
+<td headers="family" class="gt_row gt_left">sdmTMB::delta_lognormal()</td>
+<td headers="min_depth" class="gt_row gt_right">-55</td>
+<td headers="max_depth" class="gt_row gt_right">-500</td>
+<td headers="min_latitude" class="gt_row gt_right">31.9000</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
 <td headers="min_year" class="gt_row gt_right">2003</td>
 <td headers="max_year" class="gt_row gt_right">2050</td>
 <td headers="anisotropy" class="gt_row gt_center">TRUE</td>
@@ -2792,12 +2858,46 @@ used in the most recent assessment:</p>
 </tr>
 <tr>
 <td headers="species" class="gt_row gt_left">canary rockfish</td>
+<td headers="source" class="gt_row gt_left">NWFSC.Combo</td>
+<td headers="family" class="gt_row gt_left">sdmTMB::delta_gamma()</td>
+<td headers="min_depth" class="gt_row gt_right">-55</td>
+<td headers="max_depth" class="gt_row gt_right">-275</td>
+<td headers="min_latitude" class="gt_row gt_right">31.9000</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
+<td headers="min_year" class="gt_row gt_right">2003</td>
+<td headers="max_year" class="gt_row gt_right">2050</td>
+<td headers="anisotropy" class="gt_row gt_center">FALSE</td>
+<td headers="knots" class="gt_row gt_right">200</td>
+<td headers="spatiotemporal1" class="gt_row gt_left">iid</td>
+<td headers="spatiotemporal2" class="gt_row gt_left">off</td>
+<td headers="share_range" class="gt_row gt_center">FALSE</td>
+<td headers="used" class="gt_row gt_center">FALSE</td>
+</tr>
+<tr>
+<td headers="species" class="gt_row gt_left">canary rockfish</td>
+<td headers="source" class="gt_row gt_left">NWFSC.Combo</td>
+<td headers="family" class="gt_row gt_left">sdmTMB::delta_gengamma()</td>
+<td headers="min_depth" class="gt_row gt_right">-55</td>
+<td headers="max_depth" class="gt_row gt_right">-275</td>
+<td headers="min_latitude" class="gt_row gt_right">31.9000</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
+<td headers="min_year" class="gt_row gt_right">2003</td>
+<td headers="max_year" class="gt_row gt_right">2050</td>
+<td headers="anisotropy" class="gt_row gt_center">FALSE</td>
+<td headers="knots" class="gt_row gt_right">200</td>
+<td headers="spatiotemporal1" class="gt_row gt_left">iid</td>
+<td headers="spatiotemporal2" class="gt_row gt_left">off</td>
+<td headers="share_range" class="gt_row gt_center">FALSE</td>
+<td headers="used" class="gt_row gt_center">FALSE</td>
+</tr>
+<tr>
+<td headers="species" class="gt_row gt_left">canary rockfish</td>
 <td headers="source" class="gt_row gt_left">Triennial</td>
 <td headers="family" class="gt_row gt_left">sdmTMB::delta_lognormal()</td>
 <td headers="min_depth" class="gt_row gt_right">-55</td>
 <td headers="max_depth" class="gt_row gt_right">-366</td>
 <td headers="min_latitude" class="gt_row gt_right">37.0000</td>
-<td headers="max_latitude" class="gt_row gt_right">49.00</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
 <td headers="min_year" class="gt_row gt_right">1980</td>
 <td headers="max_year" class="gt_row gt_right">2050</td>
 <td headers="anisotropy" class="gt_row gt_center">TRUE</td>
@@ -2814,7 +2914,7 @@ used in the most recent assessment:</p>
 <td headers="min_depth" class="gt_row gt_right">-183</td>
 <td headers="max_depth" class="gt_row gt_right">-1280</td>
 <td headers="min_latitude" class="gt_row gt_right">34.5000</td>
-<td headers="max_latitude" class="gt_row gt_right">49.00</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
 <td headers="min_year" class="gt_row gt_right">1997</td>
 <td headers="max_year" class="gt_row gt_right">2050</td>
 <td headers="anisotropy" class="gt_row gt_center">FALSE</td>
@@ -2831,7 +2931,7 @@ used in the most recent assessment:</p>
 <td headers="min_depth" class="gt_row gt_right">-183</td>
 <td headers="max_depth" class="gt_row gt_right">-1280</td>
 <td headers="min_latitude" class="gt_row gt_right">34.5000</td>
-<td headers="max_latitude" class="gt_row gt_right">49.00</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
 <td headers="min_year" class="gt_row gt_right">1997</td>
 <td headers="max_year" class="gt_row gt_right">2050</td>
 <td headers="anisotropy" class="gt_row gt_center">FALSE</td>
@@ -2848,7 +2948,7 @@ used in the most recent assessment:</p>
 <td headers="min_depth" class="gt_row gt_right">-55</td>
 <td headers="max_depth" class="gt_row gt_right">-500</td>
 <td headers="min_latitude" class="gt_row gt_right">31.9000</td>
-<td headers="max_latitude" class="gt_row gt_right">46.25</td>
+<td headers="max_latitude" class="gt_row gt_right">46.2500</td>
 <td headers="min_year" class="gt_row gt_right">2003</td>
 <td headers="max_year" class="gt_row gt_right">2050</td>
 <td headers="anisotropy" class="gt_row gt_center">TRUE</td>
@@ -2865,7 +2965,7 @@ used in the most recent assessment:</p>
 <td headers="min_depth" class="gt_row gt_right">-55</td>
 <td headers="max_depth" class="gt_row gt_right">-500</td>
 <td headers="min_latitude" class="gt_row gt_right">31.9000</td>
-<td headers="max_latitude" class="gt_row gt_right">46.25</td>
+<td headers="max_latitude" class="gt_row gt_right">46.2500</td>
 <td headers="min_year" class="gt_row gt_right">2003</td>
 <td headers="max_year" class="gt_row gt_right">2050</td>
 <td headers="anisotropy" class="gt_row gt_center">TRUE</td>
@@ -2882,7 +2982,7 @@ used in the most recent assessment:</p>
 <td headers="min_depth" class="gt_row gt_right">-183</td>
 <td headers="max_depth" class="gt_row gt_right">-520</td>
 <td headers="min_latitude" class="gt_row gt_right">34.5000</td>
-<td headers="max_latitude" class="gt_row gt_right">49.00</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
 <td headers="min_year" class="gt_row gt_right">1999</td>
 <td headers="max_year" class="gt_row gt_right">2050</td>
 <td headers="anisotropy" class="gt_row gt_center">FALSE</td>
@@ -2899,7 +2999,7 @@ used in the most recent assessment:</p>
 <td headers="min_depth" class="gt_row gt_right">-183</td>
 <td headers="max_depth" class="gt_row gt_right">-520</td>
 <td headers="min_latitude" class="gt_row gt_right">34.5000</td>
-<td headers="max_latitude" class="gt_row gt_right">49.00</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
 <td headers="min_year" class="gt_row gt_right">1999</td>
 <td headers="max_year" class="gt_row gt_right">2050</td>
 <td headers="anisotropy" class="gt_row gt_center">FALSE</td>
@@ -2916,7 +3016,7 @@ used in the most recent assessment:</p>
 <td headers="min_depth" class="gt_row gt_right">-55</td>
 <td headers="max_depth" class="gt_row gt_right">-1280</td>
 <td headers="min_latitude" class="gt_row gt_right">31.9000</td>
-<td headers="max_latitude" class="gt_row gt_right">49.00</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
 <td headers="min_year" class="gt_row gt_right">1980</td>
 <td headers="max_year" class="gt_row gt_right">2050</td>
 <td headers="anisotropy" class="gt_row gt_center">FALSE</td>
@@ -2933,7 +3033,7 @@ used in the most recent assessment:</p>
 <td headers="min_depth" class="gt_row gt_right">-55</td>
 <td headers="max_depth" class="gt_row gt_right">-1280</td>
 <td headers="min_latitude" class="gt_row gt_right">31.9000</td>
-<td headers="max_latitude" class="gt_row gt_right">49.00</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
 <td headers="min_year" class="gt_row gt_right">1980</td>
 <td headers="max_year" class="gt_row gt_right">2050</td>
 <td headers="anisotropy" class="gt_row gt_center">FALSE</td>
@@ -2950,7 +3050,7 @@ used in the most recent assessment:</p>
 <td headers="min_depth" class="gt_row gt_right">-55</td>
 <td headers="max_depth" class="gt_row gt_right">-450</td>
 <td headers="min_latitude" class="gt_row gt_right">31.9000</td>
-<td headers="max_latitude" class="gt_row gt_right">49.00</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
 <td headers="min_year" class="gt_row gt_right">2003</td>
 <td headers="max_year" class="gt_row gt_right">2050</td>
 <td headers="anisotropy" class="gt_row gt_center">TRUE</td>
@@ -2967,7 +3067,7 @@ used in the most recent assessment:</p>
 <td headers="min_depth" class="gt_row gt_right">-55</td>
 <td headers="max_depth" class="gt_row gt_right">-675</td>
 <td headers="min_latitude" class="gt_row gt_right">33.5000</td>
-<td headers="max_latitude" class="gt_row gt_right">49.00</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
 <td headers="min_year" class="gt_row gt_right">2003</td>
 <td headers="max_year" class="gt_row gt_right">2050</td>
 <td headers="anisotropy" class="gt_row gt_center">TRUE</td>
@@ -2984,7 +3084,7 @@ used in the most recent assessment:</p>
 <td headers="min_depth" class="gt_row gt_right">-55</td>
 <td headers="max_depth" class="gt_row gt_right">-1280</td>
 <td headers="min_latitude" class="gt_row gt_right">31.9000</td>
-<td headers="max_latitude" class="gt_row gt_right">49.00</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
 <td headers="min_year" class="gt_row gt_right">2003</td>
 <td headers="max_year" class="gt_row gt_right">2050</td>
 <td headers="anisotropy" class="gt_row gt_center">TRUE</td>
@@ -3001,7 +3101,7 @@ used in the most recent assessment:</p>
 <td headers="min_depth" class="gt_row gt_right">-55</td>
 <td headers="max_depth" class="gt_row gt_right">-475</td>
 <td headers="min_latitude" class="gt_row gt_right">31.9000</td>
-<td headers="max_latitude" class="gt_row gt_right">49.00</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
 <td headers="min_year" class="gt_row gt_right">2003</td>
 <td headers="max_year" class="gt_row gt_right">2050</td>
 <td headers="anisotropy" class="gt_row gt_center">TRUE</td>
@@ -3018,7 +3118,7 @@ used in the most recent assessment:</p>
 <td headers="min_depth" class="gt_row gt_right">-55</td>
 <td headers="max_depth" class="gt_row gt_right">-450</td>
 <td headers="min_latitude" class="gt_row gt_right">41.0000</td>
-<td headers="max_latitude" class="gt_row gt_right">49.00</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
 <td headers="min_year" class="gt_row gt_right">2003</td>
 <td headers="max_year" class="gt_row gt_right">2050</td>
 <td headers="anisotropy" class="gt_row gt_center">TRUE</td>
@@ -3035,7 +3135,7 @@ used in the most recent assessment:</p>
 <td headers="min_depth" class="gt_row gt_right">-55</td>
 <td headers="max_depth" class="gt_row gt_right">-350</td>
 <td headers="min_latitude" class="gt_row gt_right">31.9000</td>
-<td headers="max_latitude" class="gt_row gt_right">49.00</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
 <td headers="min_year" class="gt_row gt_right">2003</td>
 <td headers="max_year" class="gt_row gt_right">2050</td>
 <td headers="anisotropy" class="gt_row gt_center">TRUE</td>
@@ -3052,11 +3152,164 @@ used in the most recent assessment:</p>
 <td headers="min_depth" class="gt_row gt_right">-55</td>
 <td headers="max_depth" class="gt_row gt_right">-675</td>
 <td headers="min_latitude" class="gt_row gt_right">31.9000</td>
-<td headers="max_latitude" class="gt_row gt_right">49.00</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
 <td headers="min_year" class="gt_row gt_right">2003</td>
 <td headers="max_year" class="gt_row gt_right">2050</td>
 <td headers="anisotropy" class="gt_row gt_center">TRUE</td>
 <td headers="knots" class="gt_row gt_right">300</td>
+<td headers="spatiotemporal1" class="gt_row gt_left">iid</td>
+<td headers="spatiotemporal2" class="gt_row gt_left">iid</td>
+<td headers="share_range" class="gt_row gt_center">FALSE</td>
+<td headers="used" class="gt_row gt_center">FALSE</td>
+</tr>
+<tr>
+<td headers="species" class="gt_row gt_left">lingcod</td>
+<td headers="source" class="gt_row gt_left">Triennial</td>
+<td headers="family" class="gt_row gt_left">sdmTMB::delta_gamma()</td>
+<td headers="min_depth" class="gt_row gt_right">-55</td>
+<td headers="max_depth" class="gt_row gt_right">-450</td>
+<td headers="min_latitude" class="gt_row gt_right">31.9000</td>
+<td headers="max_latitude" class="gt_row gt_right">40.1667</td>
+<td headers="min_year" class="gt_row gt_right">1980</td>
+<td headers="max_year" class="gt_row gt_right">2004</td>
+<td headers="anisotropy" class="gt_row gt_center">TRUE</td>
+<td headers="knots" class="gt_row gt_right">250</td>
+<td headers="spatiotemporal1" class="gt_row gt_left">iid</td>
+<td headers="spatiotemporal2" class="gt_row gt_left">iid</td>
+<td headers="share_range" class="gt_row gt_center">FALSE</td>
+<td headers="used" class="gt_row gt_center">FALSE</td>
+</tr>
+<tr>
+<td headers="species" class="gt_row gt_left">lingcod</td>
+<td headers="source" class="gt_row gt_left">Triennial</td>
+<td headers="family" class="gt_row gt_left">sdmTMB::delta_lognormal()</td>
+<td headers="min_depth" class="gt_row gt_right">-55</td>
+<td headers="max_depth" class="gt_row gt_right">-450</td>
+<td headers="min_latitude" class="gt_row gt_right">31.9000</td>
+<td headers="max_latitude" class="gt_row gt_right">40.1667</td>
+<td headers="min_year" class="gt_row gt_right">1980</td>
+<td headers="max_year" class="gt_row gt_right">2004</td>
+<td headers="anisotropy" class="gt_row gt_center">TRUE</td>
+<td headers="knots" class="gt_row gt_right">250</td>
+<td headers="spatiotemporal1" class="gt_row gt_left">iid</td>
+<td headers="spatiotemporal2" class="gt_row gt_left">iid</td>
+<td headers="share_range" class="gt_row gt_center">FALSE</td>
+<td headers="used" class="gt_row gt_center">FALSE</td>
+</tr>
+<tr>
+<td headers="species" class="gt_row gt_left">lingcod</td>
+<td headers="source" class="gt_row gt_left">Triennial</td>
+<td headers="family" class="gt_row gt_left">sdmTMB::delta_gengamma()</td>
+<td headers="min_depth" class="gt_row gt_right">-55</td>
+<td headers="max_depth" class="gt_row gt_right">-450</td>
+<td headers="min_latitude" class="gt_row gt_right">31.9000</td>
+<td headers="max_latitude" class="gt_row gt_right">40.1667</td>
+<td headers="min_year" class="gt_row gt_right">1980</td>
+<td headers="max_year" class="gt_row gt_right">2004</td>
+<td headers="anisotropy" class="gt_row gt_center">TRUE</td>
+<td headers="knots" class="gt_row gt_right">250</td>
+<td headers="spatiotemporal1" class="gt_row gt_left">iid</td>
+<td headers="spatiotemporal2" class="gt_row gt_left">iid</td>
+<td headers="share_range" class="gt_row gt_center">FALSE</td>
+<td headers="used" class="gt_row gt_center">FALSE</td>
+</tr>
+<tr>
+<td headers="species" class="gt_row gt_left">lingcod</td>
+<td headers="source" class="gt_row gt_left">NWFSC.Combo</td>
+<td headers="family" class="gt_row gt_left">sdmTMB::delta_gamma()</td>
+<td headers="min_depth" class="gt_row gt_right">-55</td>
+<td headers="max_depth" class="gt_row gt_right">-450</td>
+<td headers="min_latitude" class="gt_row gt_right">31.9000</td>
+<td headers="max_latitude" class="gt_row gt_right">40.1667</td>
+<td headers="min_year" class="gt_row gt_right">2003</td>
+<td headers="max_year" class="gt_row gt_right">2050</td>
+<td headers="anisotropy" class="gt_row gt_center">TRUE</td>
+<td headers="knots" class="gt_row gt_right">500</td>
+<td headers="spatiotemporal1" class="gt_row gt_left">iid</td>
+<td headers="spatiotemporal2" class="gt_row gt_left">iid</td>
+<td headers="share_range" class="gt_row gt_center">FALSE</td>
+<td headers="used" class="gt_row gt_center">FALSE</td>
+</tr>
+<tr>
+<td headers="species" class="gt_row gt_left">lingcod</td>
+<td headers="source" class="gt_row gt_left">NWFSC.Combo</td>
+<td headers="family" class="gt_row gt_left">sdmTMB::delta_lognormal()</td>
+<td headers="min_depth" class="gt_row gt_right">-55</td>
+<td headers="max_depth" class="gt_row gt_right">-450</td>
+<td headers="min_latitude" class="gt_row gt_right">31.9000</td>
+<td headers="max_latitude" class="gt_row gt_right">40.1667</td>
+<td headers="min_year" class="gt_row gt_right">2003</td>
+<td headers="max_year" class="gt_row gt_right">2050</td>
+<td headers="anisotropy" class="gt_row gt_center">TRUE</td>
+<td headers="knots" class="gt_row gt_right">500</td>
+<td headers="spatiotemporal1" class="gt_row gt_left">iid</td>
+<td headers="spatiotemporal2" class="gt_row gt_left">iid</td>
+<td headers="share_range" class="gt_row gt_center">FALSE</td>
+<td headers="used" class="gt_row gt_center">FALSE</td>
+</tr>
+<tr>
+<td headers="species" class="gt_row gt_left">lingcod</td>
+<td headers="source" class="gt_row gt_left">NWFSC.Combo</td>
+<td headers="family" class="gt_row gt_left">sdmTMB::delta_gengamma()</td>
+<td headers="min_depth" class="gt_row gt_right">-55</td>
+<td headers="max_depth" class="gt_row gt_right">-450</td>
+<td headers="min_latitude" class="gt_row gt_right">31.9000</td>
+<td headers="max_latitude" class="gt_row gt_right">40.1667</td>
+<td headers="min_year" class="gt_row gt_right">2003</td>
+<td headers="max_year" class="gt_row gt_right">2050</td>
+<td headers="anisotropy" class="gt_row gt_center">TRUE</td>
+<td headers="knots" class="gt_row gt_right">500</td>
+<td headers="spatiotemporal1" class="gt_row gt_left">iid</td>
+<td headers="spatiotemporal2" class="gt_row gt_left">iid</td>
+<td headers="share_range" class="gt_row gt_center">FALSE</td>
+<td headers="used" class="gt_row gt_center">FALSE</td>
+</tr>
+<tr>
+<td headers="species" class="gt_row gt_left">lingcod</td>
+<td headers="source" class="gt_row gt_left">Triennial</td>
+<td headers="family" class="gt_row gt_left">sdmTMB::delta_gengamma()</td>
+<td headers="min_depth" class="gt_row gt_right">-55</td>
+<td headers="max_depth" class="gt_row gt_right">-450</td>
+<td headers="min_latitude" class="gt_row gt_right">40.1667</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
+<td headers="min_year" class="gt_row gt_right">1980</td>
+<td headers="max_year" class="gt_row gt_right">2050</td>
+<td headers="anisotropy" class="gt_row gt_center">TRUE</td>
+<td headers="knots" class="gt_row gt_right">250</td>
+<td headers="spatiotemporal1" class="gt_row gt_left">iid</td>
+<td headers="spatiotemporal2" class="gt_row gt_left">iid</td>
+<td headers="share_range" class="gt_row gt_center">FALSE</td>
+<td headers="used" class="gt_row gt_center">FALSE</td>
+</tr>
+<tr>
+<td headers="species" class="gt_row gt_left">lingcod</td>
+<td headers="source" class="gt_row gt_left">Triennial</td>
+<td headers="family" class="gt_row gt_left">sdmTMB::delta_lognormal()</td>
+<td headers="min_depth" class="gt_row gt_right">-55</td>
+<td headers="max_depth" class="gt_row gt_right">-450</td>
+<td headers="min_latitude" class="gt_row gt_right">40.1667</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
+<td headers="min_year" class="gt_row gt_right">1980</td>
+<td headers="max_year" class="gt_row gt_right">2050</td>
+<td headers="anisotropy" class="gt_row gt_center">TRUE</td>
+<td headers="knots" class="gt_row gt_right">250</td>
+<td headers="spatiotemporal1" class="gt_row gt_left">iid</td>
+<td headers="spatiotemporal2" class="gt_row gt_left">iid</td>
+<td headers="share_range" class="gt_row gt_center">FALSE</td>
+<td headers="used" class="gt_row gt_center">FALSE</td>
+</tr>
+<tr>
+<td headers="species" class="gt_row gt_left">lingcod</td>
+<td headers="source" class="gt_row gt_left">Triennial</td>
+<td headers="family" class="gt_row gt_left">sdmTMB::delta_gamma()</td>
+<td headers="min_depth" class="gt_row gt_right">-55</td>
+<td headers="max_depth" class="gt_row gt_right">-450</td>
+<td headers="min_latitude" class="gt_row gt_right">40.1667</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
+<td headers="min_year" class="gt_row gt_right">1980</td>
+<td headers="max_year" class="gt_row gt_right">2050</td>
+<td headers="anisotropy" class="gt_row gt_center">TRUE</td>
+<td headers="knots" class="gt_row gt_right">250</td>
 <td headers="spatiotemporal1" class="gt_row gt_left">iid</td>
 <td headers="spatiotemporal2" class="gt_row gt_left">iid</td>
 <td headers="share_range" class="gt_row gt_center">FALSE</td>
@@ -3069,7 +3322,41 @@ used in the most recent assessment:</p>
 <td headers="min_depth" class="gt_row gt_right">-55</td>
 <td headers="max_depth" class="gt_row gt_right">-450</td>
 <td headers="min_latitude" class="gt_row gt_right">40.1667</td>
-<td headers="max_latitude" class="gt_row gt_right">49.00</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
+<td headers="min_year" class="gt_row gt_right">2003</td>
+<td headers="max_year" class="gt_row gt_right">2050</td>
+<td headers="anisotropy" class="gt_row gt_center">TRUE</td>
+<td headers="knots" class="gt_row gt_right">500</td>
+<td headers="spatiotemporal1" class="gt_row gt_left">iid</td>
+<td headers="spatiotemporal2" class="gt_row gt_left">iid</td>
+<td headers="share_range" class="gt_row gt_center">FALSE</td>
+<td headers="used" class="gt_row gt_center">FALSE</td>
+</tr>
+<tr>
+<td headers="species" class="gt_row gt_left">lingcod</td>
+<td headers="source" class="gt_row gt_left">NWFSC.Combo</td>
+<td headers="family" class="gt_row gt_left">sdmTMB::delta_gengamma()</td>
+<td headers="min_depth" class="gt_row gt_right">-55</td>
+<td headers="max_depth" class="gt_row gt_right">-450</td>
+<td headers="min_latitude" class="gt_row gt_right">40.1667</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
+<td headers="min_year" class="gt_row gt_right">2003</td>
+<td headers="max_year" class="gt_row gt_right">2050</td>
+<td headers="anisotropy" class="gt_row gt_center">TRUE</td>
+<td headers="knots" class="gt_row gt_right">500</td>
+<td headers="spatiotemporal1" class="gt_row gt_left">iid</td>
+<td headers="spatiotemporal2" class="gt_row gt_left">iid</td>
+<td headers="share_range" class="gt_row gt_center">FALSE</td>
+<td headers="used" class="gt_row gt_center">FALSE</td>
+</tr>
+<tr>
+<td headers="species" class="gt_row gt_left">lingcod</td>
+<td headers="source" class="gt_row gt_left">NWFSC.Combo</td>
+<td headers="family" class="gt_row gt_left">sdmTMB::delta_lognormal()</td>
+<td headers="min_depth" class="gt_row gt_right">-55</td>
+<td headers="max_depth" class="gt_row gt_right">-450</td>
+<td headers="min_latitude" class="gt_row gt_right">40.1667</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
 <td headers="min_year" class="gt_row gt_right">2003</td>
 <td headers="max_year" class="gt_row gt_right">2050</td>
 <td headers="anisotropy" class="gt_row gt_center">TRUE</td>
@@ -3086,7 +3373,7 @@ used in the most recent assessment:</p>
 <td headers="min_depth" class="gt_row gt_right">-55</td>
 <td headers="max_depth" class="gt_row gt_right">-1280</td>
 <td headers="min_latitude" class="gt_row gt_right">31.9000</td>
-<td headers="max_latitude" class="gt_row gt_right">49.00</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
 <td headers="min_year" class="gt_row gt_right">2003</td>
 <td headers="max_year" class="gt_row gt_right">2050</td>
 <td headers="anisotropy" class="gt_row gt_center">TRUE</td>
@@ -3103,7 +3390,7 @@ used in the most recent assessment:</p>
 <td headers="min_depth" class="gt_row gt_right">-300</td>
 <td headers="max_depth" class="gt_row gt_right">-1280</td>
 <td headers="min_latitude" class="gt_row gt_right">31.9000</td>
-<td headers="max_latitude" class="gt_row gt_right">49.00</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
 <td headers="min_year" class="gt_row gt_right">2003</td>
 <td headers="max_year" class="gt_row gt_right">2050</td>
 <td headers="anisotropy" class="gt_row gt_center">TRUE</td>
@@ -3120,7 +3407,7 @@ used in the most recent assessment:</p>
 <td headers="min_depth" class="gt_row gt_right">-55</td>
 <td headers="max_depth" class="gt_row gt_right">-300</td>
 <td headers="min_latitude" class="gt_row gt_right">39.0000</td>
-<td headers="max_latitude" class="gt_row gt_right">49.00</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
 <td headers="min_year" class="gt_row gt_right">2003</td>
 <td headers="max_year" class="gt_row gt_right">2050</td>
 <td headers="anisotropy" class="gt_row gt_center">TRUE</td>
@@ -3137,7 +3424,7 @@ used in the most recent assessment:</p>
 <td headers="min_depth" class="gt_row gt_right">-55</td>
 <td headers="max_depth" class="gt_row gt_right">-500</td>
 <td headers="min_latitude" class="gt_row gt_right">35.0000</td>
-<td headers="max_latitude" class="gt_row gt_right">49.00</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
 <td headers="min_year" class="gt_row gt_right">2003</td>
 <td headers="max_year" class="gt_row gt_right">2050</td>
 <td headers="anisotropy" class="gt_row gt_center">TRUE</td>
@@ -3154,7 +3441,7 @@ used in the most recent assessment:</p>
 <td headers="min_depth" class="gt_row gt_right">-55</td>
 <td headers="max_depth" class="gt_row gt_right">-500</td>
 <td headers="min_latitude" class="gt_row gt_right">31.9000</td>
-<td headers="max_latitude" class="gt_row gt_right">49.00</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
 <td headers="min_year" class="gt_row gt_right">2003</td>
 <td headers="max_year" class="gt_row gt_right">2050</td>
 <td headers="anisotropy" class="gt_row gt_center">TRUE</td>
@@ -3171,7 +3458,41 @@ used in the most recent assessment:</p>
 <td headers="min_depth" class="gt_row gt_right">-55</td>
 <td headers="max_depth" class="gt_row gt_right">-700</td>
 <td headers="min_latitude" class="gt_row gt_right">31.9000</td>
-<td headers="max_latitude" class="gt_row gt_right">49.00</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
+<td headers="min_year" class="gt_row gt_right">2003</td>
+<td headers="max_year" class="gt_row gt_right">2050</td>
+<td headers="anisotropy" class="gt_row gt_center">TRUE</td>
+<td headers="knots" class="gt_row gt_right">500</td>
+<td headers="spatiotemporal1" class="gt_row gt_left">iid</td>
+<td headers="spatiotemporal2" class="gt_row gt_left">iid</td>
+<td headers="share_range" class="gt_row gt_center">FALSE</td>
+<td headers="used" class="gt_row gt_center">FALSE</td>
+</tr>
+<tr>
+<td headers="species" class="gt_row gt_left">Pacific spiny dogfish</td>
+<td headers="source" class="gt_row gt_left">NWFSC.Combo</td>
+<td headers="family" class="gt_row gt_left">sdmTMB::delta_gengamma()</td>
+<td headers="min_depth" class="gt_row gt_right">-55</td>
+<td headers="max_depth" class="gt_row gt_right">-700</td>
+<td headers="min_latitude" class="gt_row gt_right">31.9000</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
+<td headers="min_year" class="gt_row gt_right">2003</td>
+<td headers="max_year" class="gt_row gt_right">2050</td>
+<td headers="anisotropy" class="gt_row gt_center">TRUE</td>
+<td headers="knots" class="gt_row gt_right">500</td>
+<td headers="spatiotemporal1" class="gt_row gt_left">iid</td>
+<td headers="spatiotemporal2" class="gt_row gt_left">iid</td>
+<td headers="share_range" class="gt_row gt_center">FALSE</td>
+<td headers="used" class="gt_row gt_center">FALSE</td>
+</tr>
+<tr>
+<td headers="species" class="gt_row gt_left">Pacific spiny dogfish</td>
+<td headers="source" class="gt_row gt_left">NWFSC.Combo</td>
+<td headers="family" class="gt_row gt_left">sdmTMB::delta_gamma()</td>
+<td headers="min_depth" class="gt_row gt_right">-55</td>
+<td headers="max_depth" class="gt_row gt_right">-700</td>
+<td headers="min_latitude" class="gt_row gt_right">31.9000</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
 <td headers="min_year" class="gt_row gt_right">2003</td>
 <td headers="max_year" class="gt_row gt_right">2050</td>
 <td headers="anisotropy" class="gt_row gt_center">TRUE</td>
@@ -3184,11 +3505,28 @@ used in the most recent assessment:</p>
 <tr>
 <td headers="species" class="gt_row gt_left">petrale sole</td>
 <td headers="source" class="gt_row gt_left">NWFSC.Combo</td>
-<td headers="family" class="gt_row gt_left">sdmTMB::delta_lognormal()</td>
+<td headers="family" class="gt_row gt_left">sdmTMB::delta_gamma()</td>
 <td headers="min_depth" class="gt_row gt_right">-55</td>
 <td headers="max_depth" class="gt_row gt_right">-675</td>
 <td headers="min_latitude" class="gt_row gt_right">31.9000</td>
-<td headers="max_latitude" class="gt_row gt_right">49.00</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
+<td headers="min_year" class="gt_row gt_right">2003</td>
+<td headers="max_year" class="gt_row gt_right">2050</td>
+<td headers="anisotropy" class="gt_row gt_center">TRUE</td>
+<td headers="knots" class="gt_row gt_right">500</td>
+<td headers="spatiotemporal1" class="gt_row gt_left">iid</td>
+<td headers="spatiotemporal2" class="gt_row gt_left">iid</td>
+<td headers="share_range" class="gt_row gt_center">FALSE</td>
+<td headers="used" class="gt_row gt_center">FALSE</td>
+</tr>
+<tr>
+<td headers="species" class="gt_row gt_left">petrale sole</td>
+<td headers="source" class="gt_row gt_left">NWFSC.Combo</td>
+<td headers="family" class="gt_row gt_left">sdmTMB::delta_gengamma()</td>
+<td headers="min_depth" class="gt_row gt_right">-55</td>
+<td headers="max_depth" class="gt_row gt_right">-675</td>
+<td headers="min_latitude" class="gt_row gt_right">31.9000</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
 <td headers="min_year" class="gt_row gt_right">2003</td>
 <td headers="max_year" class="gt_row gt_right">2050</td>
 <td headers="anisotropy" class="gt_row gt_center">TRUE</td>
@@ -3205,7 +3543,7 @@ used in the most recent assessment:</p>
 <td headers="min_depth" class="gt_row gt_right">-55</td>
 <td headers="max_depth" class="gt_row gt_right">-366</td>
 <td headers="min_latitude" class="gt_row gt_right">37.0000</td>
-<td headers="max_latitude" class="gt_row gt_right">49.00</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
 <td headers="min_year" class="gt_row gt_right">1980</td>
 <td headers="max_year" class="gt_row gt_right">2050</td>
 <td headers="anisotropy" class="gt_row gt_center">TRUE</td>
@@ -3217,12 +3555,97 @@ used in the most recent assessment:</p>
 </tr>
 <tr>
 <td headers="species" class="gt_row gt_left">redbanded rockfish</td>
+<td headers="source" class="gt_row gt_left">Triennial</td>
+<td headers="family" class="gt_row gt_left">sdmTMB::delta_lognormal()</td>
+<td headers="min_depth" class="gt_row gt_right">-55</td>
+<td headers="max_depth" class="gt_row gt_right">-675</td>
+<td headers="min_latitude" class="gt_row gt_right">33.5000</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
+<td headers="min_year" class="gt_row gt_right">1980</td>
+<td headers="max_year" class="gt_row gt_right">2050</td>
+<td headers="anisotropy" class="gt_row gt_center">TRUE</td>
+<td headers="knots" class="gt_row gt_right">200</td>
+<td headers="spatiotemporal1" class="gt_row gt_left">off</td>
+<td headers="spatiotemporal2" class="gt_row gt_left">iid</td>
+<td headers="share_range" class="gt_row gt_center">FALSE</td>
+<td headers="used" class="gt_row gt_center">FALSE</td>
+</tr>
+<tr>
+<td headers="species" class="gt_row gt_left">redbanded rockfish</td>
+<td headers="source" class="gt_row gt_left">Triennial</td>
+<td headers="family" class="gt_row gt_left">sdmTMB::delta_gamma()</td>
+<td headers="min_depth" class="gt_row gt_right">-55</td>
+<td headers="max_depth" class="gt_row gt_right">-675</td>
+<td headers="min_latitude" class="gt_row gt_right">33.5000</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
+<td headers="min_year" class="gt_row gt_right">1980</td>
+<td headers="max_year" class="gt_row gt_right">2050</td>
+<td headers="anisotropy" class="gt_row gt_center">TRUE</td>
+<td headers="knots" class="gt_row gt_right">200</td>
+<td headers="spatiotemporal1" class="gt_row gt_left">off</td>
+<td headers="spatiotemporal2" class="gt_row gt_left">iid</td>
+<td headers="share_range" class="gt_row gt_center">FALSE</td>
+<td headers="used" class="gt_row gt_center">FALSE</td>
+</tr>
+<tr>
+<td headers="species" class="gt_row gt_left">redbanded rockfish</td>
+<td headers="source" class="gt_row gt_left">Triennial</td>
+<td headers="family" class="gt_row gt_left">sdmTMB::delta_gengamma()</td>
+<td headers="min_depth" class="gt_row gt_right">-55</td>
+<td headers="max_depth" class="gt_row gt_right">-675</td>
+<td headers="min_latitude" class="gt_row gt_right">33.5000</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
+<td headers="min_year" class="gt_row gt_right">1980</td>
+<td headers="max_year" class="gt_row gt_right">2050</td>
+<td headers="anisotropy" class="gt_row gt_center">TRUE</td>
+<td headers="knots" class="gt_row gt_right">200</td>
+<td headers="spatiotemporal1" class="gt_row gt_left">off</td>
+<td headers="spatiotemporal2" class="gt_row gt_left">iid</td>
+<td headers="share_range" class="gt_row gt_center">FALSE</td>
+<td headers="used" class="gt_row gt_center">FALSE</td>
+</tr>
+<tr>
+<td headers="species" class="gt_row gt_left">redbanded rockfish</td>
+<td headers="source" class="gt_row gt_left">NWFSC.Combo</td>
+<td headers="family" class="gt_row gt_left">sdmTMB::delta_lognormal()</td>
+<td headers="min_depth" class="gt_row gt_right">-55</td>
+<td headers="max_depth" class="gt_row gt_right">-675</td>
+<td headers="min_latitude" class="gt_row gt_right">33.5000</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
+<td headers="min_year" class="gt_row gt_right">2003</td>
+<td headers="max_year" class="gt_row gt_right">2050</td>
+<td headers="anisotropy" class="gt_row gt_center">TRUE</td>
+<td headers="knots" class="gt_row gt_right">200</td>
+<td headers="spatiotemporal1" class="gt_row gt_left">off</td>
+<td headers="spatiotemporal2" class="gt_row gt_left">iid</td>
+<td headers="share_range" class="gt_row gt_center">FALSE</td>
+<td headers="used" class="gt_row gt_center">FALSE</td>
+</tr>
+<tr>
+<td headers="species" class="gt_row gt_left">redbanded rockfish</td>
 <td headers="source" class="gt_row gt_left">NWFSC.Combo</td>
 <td headers="family" class="gt_row gt_left">sdmTMB::delta_gamma()</td>
 <td headers="min_depth" class="gt_row gt_right">-55</td>
 <td headers="max_depth" class="gt_row gt_right">-675</td>
 <td headers="min_latitude" class="gt_row gt_right">33.5000</td>
-<td headers="max_latitude" class="gt_row gt_right">49.00</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
+<td headers="min_year" class="gt_row gt_right">2003</td>
+<td headers="max_year" class="gt_row gt_right">2050</td>
+<td headers="anisotropy" class="gt_row gt_center">TRUE</td>
+<td headers="knots" class="gt_row gt_right">200</td>
+<td headers="spatiotemporal1" class="gt_row gt_left">off</td>
+<td headers="spatiotemporal2" class="gt_row gt_left">iid</td>
+<td headers="share_range" class="gt_row gt_center">FALSE</td>
+<td headers="used" class="gt_row gt_center">FALSE</td>
+</tr>
+<tr>
+<td headers="species" class="gt_row gt_left">redbanded rockfish</td>
+<td headers="source" class="gt_row gt_left">NWFSC.Combo</td>
+<td headers="family" class="gt_row gt_left">sdmTMB::delta_gengamma()</td>
+<td headers="min_depth" class="gt_row gt_right">-55</td>
+<td headers="max_depth" class="gt_row gt_right">-675</td>
+<td headers="min_latitude" class="gt_row gt_right">33.5000</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
 <td headers="min_year" class="gt_row gt_right">2003</td>
 <td headers="max_year" class="gt_row gt_right">2050</td>
 <td headers="anisotropy" class="gt_row gt_center">TRUE</td>
@@ -3234,29 +3657,12 @@ used in the most recent assessment:</p>
 </tr>
 <tr>
 <td headers="species" class="gt_row gt_left">rex sole</td>
-<td headers="source" class="gt_row gt_left">NWFSC.Combo</td>
-<td headers="family" class="gt_row gt_left">sdmTMB::delta_gamma()</td>
-<td headers="min_depth" class="gt_row gt_right">-55</td>
-<td headers="max_depth" class="gt_row gt_right">-700</td>
-<td headers="min_latitude" class="gt_row gt_right">31.9000</td>
-<td headers="max_latitude" class="gt_row gt_right">49.00</td>
-<td headers="min_year" class="gt_row gt_right">2003</td>
-<td headers="max_year" class="gt_row gt_right">2050</td>
-<td headers="anisotropy" class="gt_row gt_center">TRUE</td>
-<td headers="knots" class="gt_row gt_right">500</td>
-<td headers="spatiotemporal1" class="gt_row gt_left">iid</td>
-<td headers="spatiotemporal2" class="gt_row gt_left">iid</td>
-<td headers="share_range" class="gt_row gt_center">TRUE</td>
-<td headers="used" class="gt_row gt_center">FALSE</td>
-</tr>
-<tr>
-<td headers="species" class="gt_row gt_left">rex sole</td>
 <td headers="source" class="gt_row gt_left">Triennial</td>
 <td headers="family" class="gt_row gt_left">sdmTMB::delta_lognormal()</td>
 <td headers="min_depth" class="gt_row gt_right">-55</td>
 <td headers="max_depth" class="gt_row gt_right">-500</td>
 <td headers="min_latitude" class="gt_row gt_right">31.9000</td>
-<td headers="max_latitude" class="gt_row gt_right">49.00</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
 <td headers="min_year" class="gt_row gt_right">1980</td>
 <td headers="max_year" class="gt_row gt_right">2050</td>
 <td headers="anisotropy" class="gt_row gt_center">TRUE</td>
@@ -3273,7 +3679,7 @@ used in the most recent assessment:</p>
 <td headers="min_depth" class="gt_row gt_right">-55</td>
 <td headers="max_depth" class="gt_row gt_right">-675</td>
 <td headers="min_latitude" class="gt_row gt_right">31.9000</td>
-<td headers="max_latitude" class="gt_row gt_right">49.00</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
 <td headers="min_year" class="gt_row gt_right">2003</td>
 <td headers="max_year" class="gt_row gt_right">2050</td>
 <td headers="anisotropy" class="gt_row gt_center">TRUE</td>
@@ -3290,7 +3696,7 @@ used in the most recent assessment:</p>
 <td headers="min_depth" class="gt_row gt_right">-183</td>
 <td headers="max_depth" class="gt_row gt_right">-1280</td>
 <td headers="min_latitude" class="gt_row gt_right">34.5000</td>
-<td headers="max_latitude" class="gt_row gt_right">49.00</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
 <td headers="min_year" class="gt_row gt_right">1997</td>
 <td headers="max_year" class="gt_row gt_right">2050</td>
 <td headers="anisotropy" class="gt_row gt_center">FALSE</td>
@@ -3307,7 +3713,7 @@ used in the most recent assessment:</p>
 <td headers="min_depth" class="gt_row gt_right">-55</td>
 <td headers="max_depth" class="gt_row gt_right">-500</td>
 <td headers="min_latitude" class="gt_row gt_right">42.0000</td>
-<td headers="max_latitude" class="gt_row gt_right">49.00</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
 <td headers="min_year" class="gt_row gt_right">1980</td>
 <td headers="max_year" class="gt_row gt_right">2050</td>
 <td headers="anisotropy" class="gt_row gt_center">FALSE</td>
@@ -3324,7 +3730,7 @@ used in the most recent assessment:</p>
 <td headers="min_depth" class="gt_row gt_right">-55</td>
 <td headers="max_depth" class="gt_row gt_right">-875</td>
 <td headers="min_latitude" class="gt_row gt_right">42.0000</td>
-<td headers="max_latitude" class="gt_row gt_right">49.00</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
 <td headers="min_year" class="gt_row gt_right">2003</td>
 <td headers="max_year" class="gt_row gt_right">2050</td>
 <td headers="anisotropy" class="gt_row gt_center">TRUE</td>
@@ -3341,7 +3747,7 @@ used in the most recent assessment:</p>
 <td headers="min_depth" class="gt_row gt_right">-183</td>
 <td headers="max_depth" class="gt_row gt_right">-1280</td>
 <td headers="min_latitude" class="gt_row gt_right">34.5000</td>
-<td headers="max_latitude" class="gt_row gt_right">49.00</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
 <td headers="min_year" class="gt_row gt_right">1999</td>
 <td headers="max_year" class="gt_row gt_right">2050</td>
 <td headers="anisotropy" class="gt_row gt_center">TRUE</td>
@@ -3358,7 +3764,7 @@ used in the most recent assessment:</p>
 <td headers="min_depth" class="gt_row gt_right">-183</td>
 <td headers="max_depth" class="gt_row gt_right">-1280</td>
 <td headers="min_latitude" class="gt_row gt_right">34.5000</td>
-<td headers="max_latitude" class="gt_row gt_right">49.00</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
 <td headers="min_year" class="gt_row gt_right">1997</td>
 <td headers="max_year" class="gt_row gt_right">2050</td>
 <td headers="anisotropy" class="gt_row gt_center">TRUE</td>
@@ -3375,7 +3781,7 @@ used in the most recent assessment:</p>
 <td headers="min_depth" class="gt_row gt_right">-183</td>
 <td headers="max_depth" class="gt_row gt_right">-1280</td>
 <td headers="min_latitude" class="gt_row gt_right">34.5000</td>
-<td headers="max_latitude" class="gt_row gt_right">49.00</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
 <td headers="min_year" class="gt_row gt_right">1997</td>
 <td headers="max_year" class="gt_row gt_right">2050</td>
 <td headers="anisotropy" class="gt_row gt_center">TRUE</td>
@@ -3392,7 +3798,7 @@ used in the most recent assessment:</p>
 <td headers="min_depth" class="gt_row gt_right">-183</td>
 <td headers="max_depth" class="gt_row gt_right">-1280</td>
 <td headers="min_latitude" class="gt_row gt_right">34.5000</td>
-<td headers="max_latitude" class="gt_row gt_right">49.00</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
 <td headers="min_year" class="gt_row gt_right">1997</td>
 <td headers="max_year" class="gt_row gt_right">2050</td>
 <td headers="anisotropy" class="gt_row gt_center">TRUE</td>
@@ -3409,7 +3815,7 @@ used in the most recent assessment:</p>
 <td headers="min_depth" class="gt_row gt_right">-55</td>
 <td headers="max_depth" class="gt_row gt_right">-1280</td>
 <td headers="min_latitude" class="gt_row gt_right">31.9000</td>
-<td headers="max_latitude" class="gt_row gt_right">49.00</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
 <td headers="min_year" class="gt_row gt_right">2003</td>
 <td headers="max_year" class="gt_row gt_right">2050</td>
 <td headers="anisotropy" class="gt_row gt_center">TRUE</td>
@@ -3426,7 +3832,7 @@ used in the most recent assessment:</p>
 <td headers="min_depth" class="gt_row gt_right">-183</td>
 <td headers="max_depth" class="gt_row gt_right">-1280</td>
 <td headers="min_latitude" class="gt_row gt_right">34.5000</td>
-<td headers="max_latitude" class="gt_row gt_right">49.00</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
 <td headers="min_year" class="gt_row gt_right">1999</td>
 <td headers="max_year" class="gt_row gt_right">2050</td>
 <td headers="anisotropy" class="gt_row gt_center">TRUE</td>
@@ -3443,7 +3849,7 @@ used in the most recent assessment:</p>
 <td headers="min_depth" class="gt_row gt_right">-55</td>
 <td headers="max_depth" class="gt_row gt_right">-1280</td>
 <td headers="min_latitude" class="gt_row gt_right">31.9000</td>
-<td headers="max_latitude" class="gt_row gt_right">49.00</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
 <td headers="min_year" class="gt_row gt_right">1980</td>
 <td headers="max_year" class="gt_row gt_right">2050</td>
 <td headers="anisotropy" class="gt_row gt_center">TRUE</td>
@@ -3460,7 +3866,7 @@ used in the most recent assessment:</p>
 <td headers="min_depth" class="gt_row gt_right">-55</td>
 <td headers="max_depth" class="gt_row gt_right">-475</td>
 <td headers="min_latitude" class="gt_row gt_right">33.0000</td>
-<td headers="max_latitude" class="gt_row gt_right">49.00</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
 <td headers="min_year" class="gt_row gt_right">2003</td>
 <td headers="max_year" class="gt_row gt_right">2050</td>
 <td headers="anisotropy" class="gt_row gt_center">TRUE</td>
@@ -3477,7 +3883,7 @@ used in the most recent assessment:</p>
 <td headers="min_depth" class="gt_row gt_right">-55</td>
 <td headers="max_depth" class="gt_row gt_right">-1280</td>
 <td headers="min_latitude" class="gt_row gt_right">31.9000</td>
-<td headers="max_latitude" class="gt_row gt_right">49.00</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
 <td headers="min_year" class="gt_row gt_right">2003</td>
 <td headers="max_year" class="gt_row gt_right">2050</td>
 <td headers="anisotropy" class="gt_row gt_center">TRUE</td>
@@ -3494,7 +3900,7 @@ used in the most recent assessment:</p>
 <td headers="min_depth" class="gt_row gt_right">-55</td>
 <td headers="max_depth" class="gt_row gt_right">-1280</td>
 <td headers="min_latitude" class="gt_row gt_right">31.9000</td>
-<td headers="max_latitude" class="gt_row gt_right">49.00</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
 <td headers="min_year" class="gt_row gt_right">2003</td>
 <td headers="max_year" class="gt_row gt_right">2050</td>
 <td headers="anisotropy" class="gt_row gt_center">TRUE</td>
@@ -3511,7 +3917,7 @@ used in the most recent assessment:</p>
 <td headers="min_depth" class="gt_row gt_right">-55</td>
 <td headers="max_depth" class="gt_row gt_right">-1280</td>
 <td headers="min_latitude" class="gt_row gt_right">31.9000</td>
-<td headers="max_latitude" class="gt_row gt_right">49.00</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
 <td headers="min_year" class="gt_row gt_right">1980</td>
 <td headers="max_year" class="gt_row gt_right">2050</td>
 <td headers="anisotropy" class="gt_row gt_center">TRUE</td>
@@ -3528,7 +3934,7 @@ used in the most recent assessment:</p>
 <td headers="min_depth" class="gt_row gt_right">-55</td>
 <td headers="max_depth" class="gt_row gt_right">-1280</td>
 <td headers="min_latitude" class="gt_row gt_right">31.9000</td>
-<td headers="max_latitude" class="gt_row gt_right">49.00</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
 <td headers="min_year" class="gt_row gt_right">1980</td>
 <td headers="max_year" class="gt_row gt_right">2050</td>
 <td headers="anisotropy" class="gt_row gt_center">TRUE</td>
@@ -3545,7 +3951,7 @@ used in the most recent assessment:</p>
 <td headers="min_depth" class="gt_row gt_right">-55</td>
 <td headers="max_depth" class="gt_row gt_right">-700</td>
 <td headers="min_latitude" class="gt_row gt_right">31.9000</td>
-<td headers="max_latitude" class="gt_row gt_right">49.00</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
 <td headers="min_year" class="gt_row gt_right">2003</td>
 <td headers="max_year" class="gt_row gt_right">2050</td>
 <td headers="anisotropy" class="gt_row gt_center">TRUE</td>
@@ -3562,7 +3968,7 @@ used in the most recent assessment:</p>
 <td headers="min_depth" class="gt_row gt_right">-55</td>
 <td headers="max_depth" class="gt_row gt_right">-500</td>
 <td headers="min_latitude" class="gt_row gt_right">31.9000</td>
-<td headers="max_latitude" class="gt_row gt_right">49.00</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
 <td headers="min_year" class="gt_row gt_right">2003</td>
 <td headers="max_year" class="gt_row gt_right">2050</td>
 <td headers="anisotropy" class="gt_row gt_center">TRUE</td>
@@ -3573,13 +3979,47 @@ used in the most recent assessment:</p>
 <td headers="used" class="gt_row gt_center">FALSE</td>
 </tr>
 <tr>
+<td headers="species" class="gt_row gt_left">widow rockfish</td>
+<td headers="source" class="gt_row gt_left">NWFSC.Combo</td>
+<td headers="family" class="gt_row gt_left">sdmTMB::delta_gamma()</td>
+<td headers="min_depth" class="gt_row gt_right">-55</td>
+<td headers="max_depth" class="gt_row gt_right">-500</td>
+<td headers="min_latitude" class="gt_row gt_right">33.5000</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
+<td headers="min_year" class="gt_row gt_right">2003</td>
+<td headers="max_year" class="gt_row gt_right">2050</td>
+<td headers="anisotropy" class="gt_row gt_center">FALSE</td>
+<td headers="knots" class="gt_row gt_right">200</td>
+<td headers="spatiotemporal1" class="gt_row gt_left">iid</td>
+<td headers="spatiotemporal2" class="gt_row gt_left">off</td>
+<td headers="share_range" class="gt_row gt_center">TRUE</td>
+<td headers="used" class="gt_row gt_center">FALSE</td>
+</tr>
+<tr>
+<td headers="species" class="gt_row gt_left">widow rockfish</td>
+<td headers="source" class="gt_row gt_left">NWFSC.Combo</td>
+<td headers="family" class="gt_row gt_left">sdmTMB::delta_gengamma()</td>
+<td headers="min_depth" class="gt_row gt_right">-55</td>
+<td headers="max_depth" class="gt_row gt_right">-500</td>
+<td headers="min_latitude" class="gt_row gt_right">33.5000</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
+<td headers="min_year" class="gt_row gt_right">2003</td>
+<td headers="max_year" class="gt_row gt_right">2050</td>
+<td headers="anisotropy" class="gt_row gt_center">FALSE</td>
+<td headers="knots" class="gt_row gt_right">200</td>
+<td headers="spatiotemporal1" class="gt_row gt_left">iid</td>
+<td headers="spatiotemporal2" class="gt_row gt_left">off</td>
+<td headers="share_range" class="gt_row gt_center">TRUE</td>
+<td headers="used" class="gt_row gt_center">FALSE</td>
+</tr>
+<tr>
 <td headers="species" class="gt_row gt_left">yelloweye rockfish</td>
 <td headers="source" class="gt_row gt_left">NWFSC.Combo</td>
 <td headers="family" class="gt_row gt_left">sdmTMB::delta_gamma()</td>
 <td headers="min_depth" class="gt_row gt_right">-55</td>
 <td headers="max_depth" class="gt_row gt_right">-325</td>
 <td headers="min_latitude" class="gt_row gt_right">34.5000</td>
-<td headers="max_latitude" class="gt_row gt_right">49.00</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
 <td headers="min_year" class="gt_row gt_right">2003</td>
 <td headers="max_year" class="gt_row gt_right">2050</td>
 <td headers="anisotropy" class="gt_row gt_center">TRUE</td>
@@ -3596,7 +4036,7 @@ used in the most recent assessment:</p>
 <td headers="min_depth" class="gt_row gt_right">-55</td>
 <td headers="max_depth" class="gt_row gt_right">-425</td>
 <td headers="min_latitude" class="gt_row gt_right">33.5000</td>
-<td headers="max_latitude" class="gt_row gt_right">49.00</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
 <td headers="min_year" class="gt_row gt_right">2003</td>
 <td headers="max_year" class="gt_row gt_right">2050</td>
 <td headers="anisotropy" class="gt_row gt_center">TRUE</td>
@@ -3613,7 +4053,7 @@ used in the most recent assessment:</p>
 <td headers="min_depth" class="gt_row gt_right">-55</td>
 <td headers="max_depth" class="gt_row gt_right">-425</td>
 <td headers="min_latitude" class="gt_row gt_right">40.1667</td>
-<td headers="max_latitude" class="gt_row gt_right">49.00</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
 <td headers="min_year" class="gt_row gt_right">2003</td>
 <td headers="max_year" class="gt_row gt_right">2050</td>
 <td headers="anisotropy" class="gt_row gt_center">TRUE</td>
@@ -3630,7 +4070,7 @@ used in the most recent assessment:</p>
 <td headers="min_depth" class="gt_row gt_right">-55</td>
 <td headers="max_depth" class="gt_row gt_right">-425</td>
 <td headers="min_latitude" class="gt_row gt_right">40.1667</td>
-<td headers="max_latitude" class="gt_row gt_right">49.00</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
 <td headers="min_year" class="gt_row gt_right">2003</td>
 <td headers="max_year" class="gt_row gt_right">2050</td>
 <td headers="anisotropy" class="gt_row gt_center">TRUE</td>
@@ -3647,28 +4087,11 @@ used in the most recent assessment:</p>
 <td headers="min_depth" class="gt_row gt_right">-55</td>
 <td headers="max_depth" class="gt_row gt_right">-425</td>
 <td headers="min_latitude" class="gt_row gt_right">33.5000</td>
-<td headers="max_latitude" class="gt_row gt_right">49.00</td>
+<td headers="max_latitude" class="gt_row gt_right">49.0000</td>
 <td headers="min_year" class="gt_row gt_right">1980</td>
 <td headers="max_year" class="gt_row gt_right">2050</td>
 <td headers="anisotropy" class="gt_row gt_center">TRUE</td>
 <td headers="knots" class="gt_row gt_right">400</td>
-<td headers="spatiotemporal1" class="gt_row gt_left">iid</td>
-<td headers="spatiotemporal2" class="gt_row gt_left">off</td>
-<td headers="share_range" class="gt_row gt_center">TRUE</td>
-<td headers="used" class="gt_row gt_center">FALSE</td>
-</tr>
-<tr>
-<td headers="species" class="gt_row gt_left">widow rockfish</td>
-<td headers="source" class="gt_row gt_left">NWFSC.Combo</td>
-<td headers="family" class="gt_row gt_left">sdmTMB::delta_gamma()</td>
-<td headers="min_depth" class="gt_row gt_right">-55</td>
-<td headers="max_depth" class="gt_row gt_right">-500</td>
-<td headers="min_latitude" class="gt_row gt_right">33.5000</td>
-<td headers="max_latitude" class="gt_row gt_right">49.00</td>
-<td headers="min_year" class="gt_row gt_right">2003</td>
-<td headers="max_year" class="gt_row gt_right">2050</td>
-<td headers="anisotropy" class="gt_row gt_center">FALSE</td>
-<td headers="knots" class="gt_row gt_right">200</td>
 <td headers="spatiotemporal1" class="gt_row gt_left">iid</td>
 <td headers="spatiotemporal2" class="gt_row gt_left">off</td>
 <td headers="share_range" class="gt_row gt_center">TRUE</td>
