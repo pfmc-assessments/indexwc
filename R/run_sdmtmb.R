@@ -118,32 +118,34 @@ run_sdmtmb <- function(
   ))
   nwfscSurvey::check_dir(dir = dir, verbose = TRUE)
   # Create directory structure
+  dir_location <- data |>
+    dplyr::group_by(.data$survey_name, .data$common_name) |>
+    dplyr::summarise(
+      year_range = paste0(min(.data$year), "-", max(.data$year)),
+      range = paste0(round(min(.data$latitude), 1), "-", round(max(.data$latitude), 1)),
+      .groups = "drop_last"
+    ) |>
+    dplyr::mutate(
+      common_without = format_common_name(.data$common_name),
+      year_without = year_range,
+      range_without = range,
+      survey_without = format_common_name(.data$survey_name),
+      directory = fs::path(
+        .data$common_without,
+        .data$survey_without,
+        paste0("lat_", range_without, "_years_", year_without),
+        format_family(family)
+      )
+    ) |>
+    dplyr::pull(.data$directory)
   if (!is.null(dir)) {
-    dir_new <- data |>
-      dplyr::group_by(.data$survey_name, .data$common_name) |>
-      dplyr::summarise(
-        year_range = paste0(min(.data$year), "-", max(.data$year)),
-        range = paste0(round(min(.data$latitude), 1), "-", round(max(.data$latitude), 1)),
-        .groups = "drop_last"
-      ) |>
-      dplyr::mutate(
-        common_without = format_common_name(.data$common_name),
-        year_without = year_range,
-        range_without = range,
-        survey_without = format_common_name(.data$survey_name),
-        directory = fs::path(
-          dir,
-          .data$common_without,
-          .data$survey_without,
-          paste0("lat_", range_without, "_years_", year_without),
-          format_family(family)
-        )
-      ) |>
-      dplyr::pull(.data$directory)
+    dir_new <- fs::path(dir, dir_location)
     stopifnot(length(dir_new) == 1)
     dir_data <- fs::path(dir_new, "data")
     fs::dir_create(dir_data)
     save(data, file = file.path(dir_data, "data.rdata"))
+  } else {
+    dir_new <- dir_location
   }
   formula <- format_formula(formula)
   cli::cli_inform(c(
@@ -197,11 +199,8 @@ run_sdmtmb <- function(
   # Attach mesh for downstream use
   fit$mesh <- mesh
   fit$ranges <- ranges
-  if (!is.null(dir)) {
-    fit$dir <- dir_new
-  } else {
-    fit$dir <- dir
-  }
+  fit$dir <- dir_new
+
   # Save model output
   if (!is.null(dir)) {
     saveRDS(fit, file = fs::path(dir_data, "fit.rds"))
