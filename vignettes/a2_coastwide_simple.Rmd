@@ -145,29 +145,29 @@ save_index_outputs(
 The directory structure created is:
 
 ```{r save-output-files, eval = FALSE, echo = TRUE}
- dir/
- └── species_name/
-     └── survey_name/
-         └── family_name/
-             ├── data/
-             │   ├── data.rdata
-             │   └── fit.rds
-             ├── diagnostics/
-             │   ├── mesh.png
-             │   ├── sanity_data_frame.csv
-             │   ├── aic_nll.txt
-             │   ├── run_diagnostics_and_estimates.rdata
-             │   ├── qq.png
-             │   ├── residuals_1_*.png
-             │   ├── residuals_2_*.png (if delta model)
-             │   ├── anisotropy.png
-             │   ├── fixed_effects.png
-             │   ├── density_*.png
-             │   ├── data_with_residuals.rdata
-             │   └── predictions.rdata
-             └── index/
-                 ├── est_by_area.csv
-                 ├── index_coastwide.png (if Coastwide calculated)
-                 └── index_all_areas.png
+#  dir/
+#  └── species_name/
+#      └── survey_name/
+#          └── family_name/
+#              ├── data/
+#              │   ├── data.rdata
+#              │   └── fit.rds
+#              ├── diagnostics/
+#              │   ├── mesh.png
+#              │   ├── sanity_data_frame.csv
+#              │   ├── aic_nll.txt
+#              │   ├── run_diagnostics_and_estimates.rdata
+#              │   ├── qq.png
+#              │   ├── residuals_1_*.png
+#              │   ├── residuals_2_*.png (if delta model)
+#              │   ├── anisotropy.png
+#              │   ├── fixed_effects.png
+#              │   ├── density_*.png
+#              │   ├── data_with_residuals.rdata
+#              │   └── predictions.rdata
+#              └── index/
+#                  ├── est_by_area.csv
+#                  ├── index_coastwide.png (if Coastwide calculated)
+#                  └── index_all_areas.png
 ```
 
