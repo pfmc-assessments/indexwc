@@ -140,10 +140,10 @@ save_index_outputs <- function(
   } else {
     dir_save <- fs::path(dir, fit$dir )
   }
-  fs::dir.create(dir_save, showWarnings = FALSE, recursive = TRUE)
+  dir.create(dir_save, showWarnings = FALSE, recursive = TRUE)
   if (!file.exists(dir_save)) {
     dir_save <- fs::path(getwd(), fit$dir)
-    fs::dir.create(dir_save, showWarnings = FALSE, recursive = TRUE)
+    dir.create(dir_save, showWarnings = FALSE, recursive = TRUE)
   }
   if (!file.exists(dir_save)) {
     cli::cli_abort("A directory could not be created based upon the dir argument and the fit$dir object.")
