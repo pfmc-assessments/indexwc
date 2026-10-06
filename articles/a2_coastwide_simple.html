@@ -247,30 +247,31 @@ using <code><a href="../reference/save_index_outputs.html">save_index_outputs()<
 <span> dir <span class="op">=</span> <span class="st">"C:/indices"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>The directory structure created is:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a> dir<span class="sc">/</span></span>
-<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a> └── species_name<span class="sc">/</span></span>
-<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>     └── survey_name<span class="sc">/</span></span>
-<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a>         └── family_name<span class="sc">/</span></span>
-<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a>             ├── data<span class="sc">/</span></span>
-<span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a>             │   ├── data.rdata</span>
-<span id="cb12-7"><a href="#cb12-7" tabindex="-1"></a>             │   └── fit.rds</span>
-<span id="cb12-8"><a href="#cb12-8" tabindex="-1"></a>             ├── diagnostics<span class="sc">/</span></span>
-<span id="cb12-9"><a href="#cb12-9" tabindex="-1"></a>             │   ├── mesh.png</span>
-<span id="cb12-10"><a href="#cb12-10" tabindex="-1"></a>             │   ├── sanity_data_frame.csv</span>
-<span id="cb12-11"><a href="#cb12-11" tabindex="-1"></a>             │   ├── aic_nll.txt</span>
-<span id="cb12-12"><a href="#cb12-12" tabindex="-1"></a>             │   ├── run_diagnostics_and_estimates.rdata</span>
-<span id="cb12-13"><a href="#cb12-13" tabindex="-1"></a>             │   ├── qq.png</span>
-<span id="cb12-14"><a href="#cb12-14" tabindex="-1"></a>             │   ├── residuals_1_<span class="sc">*</span>.png</span>
-<span id="cb12-15"><a href="#cb12-15" tabindex="-1"></a>             │   ├── residuals_2_<span class="sc">*</span><span class="fu">.png</span> (<span class="cf">if</span> delta model)</span>
-<span id="cb12-16"><a href="#cb12-16" tabindex="-1"></a>             │   ├── anisotropy.png</span>
-<span id="cb12-17"><a href="#cb12-17" tabindex="-1"></a>             │   ├── fixed_effects.png</span>
-<span id="cb12-18"><a href="#cb12-18" tabindex="-1"></a>             │   ├── density_<span class="sc">*</span>.png</span>
-<span id="cb12-19"><a href="#cb12-19" tabindex="-1"></a>             │   ├── data_with_residuals.rdata</span>
-<span id="cb12-20"><a href="#cb12-20" tabindex="-1"></a>             │   └── predictions.rdata</span>
-<span id="cb12-21"><a href="#cb12-21" tabindex="-1"></a>             └── index<span class="sc">/</span></span>
-<span id="cb12-22"><a href="#cb12-22" tabindex="-1"></a>                 ├── est_by_area.csv</span>
-<span id="cb12-23"><a href="#cb12-23" tabindex="-1"></a>                 ├── <span class="fu">index_coastwide.png</span> (<span class="cf">if</span> Coastwide calculated)</span>
-<span id="cb12-24"><a href="#cb12-24" tabindex="-1"></a>                 └── index_all_areas.png</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#  dir/</span></span>
+<span><span class="co">#  └── species_name/</span></span>
+<span><span class="co">#      └── survey_name/</span></span>
+<span><span class="co">#          └── family_name/</span></span>
+<span><span class="co">#              ├── data/</span></span>
+<span><span class="co">#              │   ├── data.rdata</span></span>
+<span><span class="co">#              │   └── fit.rds</span></span>
+<span><span class="co">#              ├── diagnostics/</span></span>
+<span><span class="co">#              │   ├── mesh.png</span></span>
+<span><span class="co">#              │   ├── sanity_data_frame.csv</span></span>
+<span><span class="co">#              │   ├── aic_nll.txt</span></span>
+<span><span class="co">#              │   ├── run_diagnostics_and_estimates.rdata</span></span>
+<span><span class="co">#              │   ├── qq.png</span></span>
+<span><span class="co">#              │   ├── residuals_1_*.png</span></span>
+<span><span class="co">#              │   ├── residuals_2_*.png (if delta model)</span></span>
+<span><span class="co">#              │   ├── anisotropy.png</span></span>
+<span><span class="co">#              │   ├── fixed_effects.png</span></span>
+<span><span class="co">#              │   ├── density_*.png</span></span>
+<span><span class="co">#              │   ├── data_with_residuals.rdata</span></span>
+<span><span class="co">#              │   └── predictions.rdata</span></span>
+<span><span class="co">#              └── index/</span></span>
+<span><span class="co">#                  ├── est_by_area.csv</span></span>
+<span><span class="co">#                  ├── index_coastwide.png (if Coastwide calculated)</span></span>
+<span><span class="co">#                  └── index_all_areas.png</span></span></code></pre></div>
 </div>
   </div>
 
