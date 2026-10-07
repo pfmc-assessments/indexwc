@@ -102,3 +102,27 @@ lingcod,"nwfscSurvey::pull_catch(common_name = species,survey=source)",Triennial
 lingcod,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear*split_mendocino + pass_scaled,-55,-450,31.9,49,2003,2050,TRUE,250,iid,iid,FALSE,FALSE
 lingcod,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_lognormal(),catch_weight ~ 0 + fyear*split_mendocino + pass_scaled,-55,-450,31.9,49,2003,2050,TRUE,250,iid,iid,FALSE,FALSE
 lingcod,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_gengamma(),catch_weight ~ 0 + fyear*split_mendocino + pass_scaled,-55,-450,31.9,49,2003,2050,TRUE,250,iid,iid,FALSE,FALSE
+lingcod,"nwfscSurvey::pull_catch(common_name = species,survey=source)",Triennial,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear,-55,-450,31.9,40.1667,1980,1992,TRUE,250,iid,iid,FALSE,FALSE
+lingcod,"nwfscSurvey::pull_catch(common_name = species,survey=source)",Triennial,sdmTMB::delta_lognormal(),catch_weight ~ 0 + fyear,-55,-450,31.9,40.1667,1980,1992,TRUE,250,iid,iid,FALSE,FALSE
+lingcod,"nwfscSurvey::pull_catch(common_name = species,survey=source)",Triennial,sdmTMB::delta_gengamma(),catch_weight ~ 0 + fyear,-55,-450,31.9,40.1667,1980,1992,TRUE,250,iid,iid,FALSE,FALSE
+lingcod,"nwfscSurvey::pull_catch(common_name = species,survey=source)",Triennial,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear,-55,-450,31.9,40.1667,1995,2004,TRUE,250,iid,iid,FALSE,FALSE
+lingcod,"nwfscSurvey::pull_catch(common_name = species,survey=source)",Triennial,sdmTMB::delta_lognormal(),catch_weight ~ 0 + fyear,-55,-450,31.9,40.1667,1995,2004,TRUE,250,iid,iid,FALSE,FALSE
+lingcod,"nwfscSurvey::pull_catch(common_name = species,survey=source)",Triennial,sdmTMB::delta_gengamma(),catch_weight ~ 0 + fyear,-55,-450,31.9,40.1667,1995,2004,TRUE,250,iid,iid,FALSE,FALSE
+lingcod,"nwfscSurvey::pull_catch(common_name = species,survey=source)",Triennial,sdmTMB::delta_gengamma(),catch_weight ~ 0 + fyear,-55,-450,40.1667,49,1980,1992,TRUE,250,iid,iid,FALSE,FALSE
+lingcod,"nwfscSurvey::pull_catch(common_name = species,survey=source)",Triennial,sdmTMB::delta_lognormal(),catch_weight ~ 0 + fyear,-55,-450,40.1667,49,1980,1992,TRUE,250,iid,iid,FALSE,FALSE
+lingcod,"nwfscSurvey::pull_catch(common_name = species,survey=source)",Triennial,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear,-55,-450,40.1667,49,1980,1992,TRUE,250,iid,iid,FALSE,FALSE
+lingcod,"nwfscSurvey::pull_catch(common_name = species,survey=source)",Triennial,sdmTMB::delta_gengamma(),catch_weight ~ 0 + fyear,-55,-450,40.1667,49,1995,2050,TRUE,250,iid,iid,FALSE,FALSE
+lingcod,"nwfscSurvey::pull_catch(common_name = species,survey=source)",Triennial,sdmTMB::delta_lognormal(),catch_weight ~ 0 + fyear,-55,-450,40.1667,49,1995,2050,TRUE,250,iid,iid,FALSE,FALSE
+lingcod,"nwfscSurvey::pull_catch(common_name = species,survey=source)",Triennial,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear,-55,-450,40.1667,49,1995,2050,TRUE,250,iid,iid,FALSE,FALSE
+lingcod,"nwfscSurvey::pull_catch(common_name = species,survey=source)",Triennial,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear*split_mendocino,-55,-450,31.9,49,1980,1992,TRUE,250,iid,iid,FALSE,FALSE
+lingcod,"nwfscSurvey::pull_catch(common_name = species,survey=source)",Triennial,sdmTMB::delta_lognormal(),catch_weight ~ 0 + fyear*split_mendocino,-55,-450,31.9,49,1980,1992,TRUE,250,iid,iid,FALSE,FALSE
+lingcod,"nwfscSurvey::pull_catch(common_name = species,survey=source)",Triennial,sdmTMB::delta_gemgamma(),catch_weight ~ 0 + fyear*split_mendocino,-55,-450,31.9,49,1980,1992,TRUE,250,iid,iid,FALSE,FALSE
+lingcod,"nwfscSurvey::pull_catch(common_name = species,survey=source)",Triennial,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear*split_mendocino,-55,-450,31.9,49,1995,2050,TRUE,250,iid,iid,FALSE,FALSE
+lingcod,"nwfscSurvey::pull_catch(common_name = species,survey=source)",Triennial,sdmTMB::delta_lognormal(),catch_weight ~ 0 + fyear*split_mendocino,-55,-450,31.9,49,1995,2050,TRUE,250,iid,iid,FALSE,FALSE
+lingcod,"nwfscSurvey::pull_catch(common_name = species,survey=source)",Triennial,sdmTMB::delta_gemgamma(),catch_weight ~ 0 + fyear*split_mendocino,-55,-450,31.9,49,1995,2050,TRUE,250,iid,iid,FALSE,FALSE
+redbanded rockfish,"nwfscSurvey::pull_catch(common_name = species,survey=source)",Triennial,sdmTMB::delta_lognormal(),catch_weight ~ 0 + fyear,-55,-675,33.5,49,1980,1992,TRUE,200,off,iid,FALSE,FALSE
+redbanded rockfish,"nwfscSurvey::pull_catch(common_name = species,survey=source)",Triennial,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear,-55,-675,33.5,49,1980,1992,TRUE,200,off,iid,FALSE,FALSE
+redbanded rockfish,"nwfscSurvey::pull_catch(common_name = species,survey=source)",Triennial,sdmTMB::delta_gengamma(),catch_weight ~ 0 + fyear,-55,-675,33.5,49,1980,1992,TRUE,200,off,iid,FALSE,FALSE
+redbanded rockfish,"nwfscSurvey::pull_catch(common_name = species,survey=source)",Triennial,sdmTMB::delta_lognormal(),catch_weight ~ 0 + fyear,-55,-675,33.5,49,1995,2050,TRUE,200,off,iid,FALSE,FALSE
+redbanded rockfish,"nwfscSurvey::pull_catch(common_name = species,survey=source)",Triennial,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear,-55,-675,33.5,49,1995,2050,TRUE,200,off,iid,FALSE,FALSE
+redbanded rockfish,"nwfscSurvey::pull_catch(common_name = species,survey=source)",Triennial,sdmTMB::delta_gengamma(),catch_weight ~ 0 + fyear,-55,-675,33.5,49,1995,2050,TRUE,200,off,iid,FALSE,FALSE
