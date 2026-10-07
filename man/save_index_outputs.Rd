@@ -8,7 +8,7 @@ save_index_outputs(
   fit,
   diagnostics,
   indices,
-  dir = getwd(),
+  dir = NULL,
   dir_main = lifecycle::deprecated(),
   overwrite = FALSE
 )
@@ -75,7 +75,7 @@ The directory structure created is:
 
 # Pull and format data
 my_data <- pull_and_format_data(
-   configuration_to_run = configuration[1,]
+  configuration_to_run = configuration[1, ]
 )
 
 # Fit model without saving

@@ -29,7 +29,7 @@ placed on the figure if there is more than one model component.
 \itemize{
 \item \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}}
 \item \code{\link[stats:qqnorm]{stats::qqnorm()}}
-\item \code{\link[stats:qqnorm]{stats::qqline()}}
+\item \code{\link[stats:qqline]{stats::qqline()}}
 }
 }
 \author{
