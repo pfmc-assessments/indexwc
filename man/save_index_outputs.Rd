@@ -8,7 +8,7 @@ save_index_outputs(
   fit,
   diagnostics,
   indices,
-  dir = getwd(),
+  dir = NULL,
   dir_main = lifecycle::deprecated(),
   overwrite = FALSE
 )
