@@ -39,7 +39,7 @@ In the below example, the configuration file will be used to pull and run a mode
 ```{r config, eval = TRUE, echo = TRUE}
 # Load from the rda file
 configuration_to_run <- configuration |>
-  dplyr::filter(species == "sablefish", source == "NWFSC.Combo", family == "sdmTMB::delta_gamma()") 
+  dplyr::filter(species == "sablefish", source == "NWFSC.Combo", family == "sdmTMB::delta_gamma()")
 
 print(configuration_to_run)
 ```
@@ -48,7 +48,7 @@ The selected configuration is then passed to `pull_and_format_data()` that pulls
 
 ```{r pull-data, eval = TRUE, echo = TRUE}
 my_data <- pull_and_format_data(
-   configuration_to_run = configuration_to_run
+  configuration_to_run = configuration_to_run
 )
 ```
 
@@ -62,7 +62,6 @@ my_data$knots
 my_data$share_range
 my_data$anisotropy
 list(my_data$spatiotemporal1, my_data$spatiotemporal2)
-
 ```
 
 ## Estimate the model
@@ -94,7 +93,7 @@ A range of diagnostics are available and all diagnostics can be done using `diag
 
 ```{r diagnostics, eval = FALSE, echo = TRUE}
 diag <- diagnose(
- fit = fit
+  fit = fit
 )
 ```
 
@@ -114,9 +113,9 @@ Finally, an index of abundance is estimated using `calc_index_areas()`
 
 ```{r index, eval = FALSE, echo = TRUE}
 index <- calc_index_areas(
-   data = fit$data,
-   fit = fit,
-   boundaries = "Coastwide"
+  data = fit$data,
+  fit = fit,
+  boundaries = "Coastwide"
 )
 ```
 
@@ -135,10 +134,10 @@ Now that the model has been fit and diagnostics and an index of abundance has be
 
 ```{r save-output, eval = FALSE, echo = TRUE}
 save_index_outputs(
- fit = fit,
- diagnostics = diag,
- indices = index,
- dir = "C:/indices"
+  fit = fit,
+  diagnostics = diag,
+  indices = index,
+  dir = "C:/indices"
 )
 ```
 
