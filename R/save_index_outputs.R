@@ -62,7 +62,7 @@
 #'
 #' # Pull and format data
 #' my_data <- pull_and_format_data(
-#'    configuration_to_run = configuration[1,]
+#'   configuration_to_run = configuration[1, ]
 #' )
 #'
 #' # Fit model without saving
@@ -135,10 +135,10 @@ save_index_outputs <- function(
   # Extract metadata from fit object to create directory structure
   data <- fit$data
   family_obj <- fit$family
-  if(is.null(dir)) {
+  if (is.null(dir)) {
     dir_save <- fit$dir
   } else {
-    dir_save <- fs::path(dir, fit$dir )
+    dir_save <- fs::path(dir, fit$dir)
   }
   dir.create(dir_save, showWarnings = FALSE, recursive = TRUE)
   if (!file.exists(dir_save)) {
@@ -349,27 +349,27 @@ save_index_outputs <- function(
 
   if (!is.null(diagnostics$density_plots)) {
     density_plots <- diagnostics$density_plots[[1]]
-      if (!is.null(density_plots)) {
-        # Get number of pages in the plot
-        n_pages <- ggforce::n_pages(density_plots)
-        for (page in 1:n_pages) {
-          filename <- fs::path(
-            dir_diagnostics,
-            sprintf("density_page_%02d.png", page)
-          )
-          suppressMessages(ggplot2::ggsave(
-            filename = filename,
-            plot = density_plots +
-              ggforce::facet_wrap_paginate(
-                "year",
-                nrow = 1,
-                ncol = 2,
-                page = page
-              ),
-            height = 5,
-            width = 10
-          ))
-        }
+    if (!is.null(density_plots)) {
+      # Get number of pages in the plot
+      n_pages <- ggforce::n_pages(density_plots)
+      for (page in 1:n_pages) {
+        filename <- fs::path(
+          dir_diagnostics,
+          sprintf("density_page_%02d.png", page)
+        )
+        suppressMessages(ggplot2::ggsave(
+          filename = filename,
+          plot = density_plots +
+            ggforce::facet_wrap_paginate(
+              "year",
+              nrow = 1,
+              ncol = 2,
+              page = page
+            ),
+          height = 5,
+          width = 10
+        ))
+      }
     }
   }
 

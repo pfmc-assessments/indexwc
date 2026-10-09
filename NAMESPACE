@@ -8,6 +8,7 @@ export(available_areas)
 export(calc_index_areas)
 export(diagnose)
 export(filter_boundaries)
+export(format_common_name)
 export(format_data)
 export(format_family)
 export(format_strata)
@@ -34,12 +35,16 @@ import(here)
 import(sdmTMB)
 importFrom(rlang,.data)
 importFrom(rmarkdown,render)
-importFrom(stats,AIC)
-importFrom(stats,formula)
-importFrom(stats,logLik)
-importFrom(stats,predict)
-importFrom(stats,qnorm)
-importFrom(stats,quantile)
-importFrom(utils,sessionInfo)
-importFrom(utils,write.csv)
-importFrom(utils,write.table)
+importFrom(stats,
+  AIC,
+  formula,
+  logLik,
+  predict,
+  qnorm,
+  quantile
+)
+importFrom(utils,
+  sessionInfo,
+  write.csv,
+  write.table
+)
