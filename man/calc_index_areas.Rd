@@ -45,8 +45,8 @@ if set to \code{FALSE}, but is \code{TRUE} by default}
 A list with the following components:
 \describe{
 \item{\code{results}}{A named list with one element per area, each containing
-the sdmTMB prediction object, the raw \code{index} data frame, and (if
-\code{cog = TRUE}) the raw \code{cog} data frame.}
+the raw \code{index} data frame and (if \code{cog = TRUE}) the raw \code{cog} data
+frame.}
 \item{\code{indices}}{A data frame of biomass index estimates across all areas,
 with columns: \code{area}, \code{year}, \code{est}, \code{lwr}, \code{upr}, \code{log_est}, \code{se},
 \code{se_natural}, \code{type}. Saved to \code{est_by_area.csv} if \code{dir} is provided.}

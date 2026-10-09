@@ -10,8 +10,9 @@
 #'   `"Coastwide"`, which calculates only the Coastwide index
 #' @param area_bounds Prediction grid as modified by [filter_boundaries()] and
 #'   `boundaries`.
-#' @param full_pred Object of model predictions created by [stats::predict()].
-#' @param full_grid Filtered grid created by [filter_grid()].
+#' @param fit A fitted sdmTMB model object returned by [sdmTMB::sdmTMB()].
+#' @param full_grid Filtered grid created by [filter_grid()], passed to
+#'   [sdmTMB::get_index()] as `newdata`.
 #' @param calculate_cog Logical. If `TRUE`, center of gravity estimates will also be
 #'   calculated using [sdmTMB::get_cog()] for each area. Defaults to `FALSE`.
 #'   Note that COG results are returned in long format with separate rows for
@@ -27,7 +28,7 @@
 get_area_results <- function(
   area_name,
   area_bounds,
-  full_pred,
+  fit,
   full_grid,
   calculate_cog = FALSE,
   bias_correct = TRUE
@@ -42,19 +43,20 @@ get_area_results <- function(
   )
 
   index <- sdmTMB::get_index(
-    obj = full_pred,
+    obj = fit,
+    newdata = full_grid,
     bias_correct = bias_correct,
     area = area_weights
   )
 
   result <- list(
-    prediction = full_pred,
     index = index
   )
 
   if (calculate_cog) {
     result[["cog"]] <- sdmTMB::get_cog(
-      obj = full_pred,
+      obj = fit,
+      newdata = full_grid,
       bias_correct = bias_correct,
       area = area_weights
     )

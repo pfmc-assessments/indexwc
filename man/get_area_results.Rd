@@ -7,7 +7,7 @@
 get_area_results(
   area_name,
   area_bounds,
-  full_pred,
+  fit,
   full_grid,
   calculate_cog = FALSE,
   bias_correct = TRUE
@@ -21,9 +21,10 @@ indices for. These should be names from \link{boundaries_data}. The default is
 \item{area_bounds}{Prediction grid as modified by \code{\link[=filter_boundaries]{filter_boundaries()}} and
 \code{boundaries}.}
 
-\item{full_pred}{Object of model predictions created by \code{\link[stats:predict]{stats::predict()}}.}
+\item{fit}{A fitted sdmTMB model object returned by \code{\link[sdmTMB:sdmTMB]{sdmTMB::sdmTMB()}}.}
 
-\item{full_grid}{Filtered grid created by \code{\link[=filter_grid]{filter_grid()}}.}
+\item{full_grid}{Filtered grid created by \code{\link[=filter_grid]{filter_grid()}}, passed to
+\code{\link[sdmTMB:get_index]{sdmTMB::get_index()}} as \code{newdata}.}
 
 \item{calculate_cog}{Logical. If \code{TRUE}, center of gravity estimates will also be
 calculated using \code{\link[sdmTMB:get_cog]{sdmTMB::get_cog()}} for each area. Defaults to \code{FALSE}.

@@ -37,10 +37,10 @@ map_density <- function(
   tile_size = c(2000, 2000)
 ) {
   column <- grep(column_grep, colnames(predictions), value = TRUE)
-  predictions <- dplyr::rename(
-    .data = predictions,
-    plot_me = column
-  ) |>
+  predictions <- predictions |>
+    dplyr::rename(
+      plot_me = column
+    ) |>
     suppressWarnings(sdmTMB::add_utm_columns(
       ll_crs = utm_zone_10
     ))
@@ -70,7 +70,7 @@ map_density <- function(
     .f = ~ raster::rasterize(
       x = data.frame(.x[["X"]], .x[["Y"]]),
       y = data_raster,
-      field = .x[["plot_me"]],
+      field = .x[["plot_me2"]],
       fun = mean
     ) |>
       raster::rasterToPoints() |>

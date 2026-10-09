@@ -44,8 +44,8 @@
 #' A list with the following components:
 #' \describe{
 #'   \item{`results`}{A named list with one element per area, each containing
-#'     the sdmTMB prediction object, the raw `index` data frame, and (if
-#'     `cog = TRUE`) the raw `cog` data frame.}
+#'     the raw `index` data frame and (if `cog = TRUE`) the raw `cog` data
+#'     frame.}
 #'   \item{`indices`}{A data frame of biomass index estimates across all areas,
 #'     with columns: `area`, `year`, `est`, `lwr`, `upr`, `log_est`, `se`,
 #'     `se_natural`, `type`. Saved to `est_by_area.csv` if `dir` is provided.}
@@ -186,18 +186,12 @@ calc_index_areas <- function(
     grid = prediction_grid
   )
 
-  full_prediction <- stats::predict(
-    object = fit,
-    newdata = union_grid,
-    return_tmb_object = TRUE
-  )
-
   results <- purrr::imap(
     .x = as.list(rownames(boundaries_fixed)),
     .f = ~ get_area_results(
       area_name = .x,
       area_bounds = boundaries_fixed[.x, ],
-      full_pred = full_prediction,
+      fit = fit,
       full_grid = union_grid,
       calculate_cog = cog,
       bias_correct = bias_correct
