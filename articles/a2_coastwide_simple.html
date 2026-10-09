@@ -85,7 +85,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Coastwide indices: simple example</h1>
             
-            <h4 data-toc-skip class="date">2026-10-07</h4>
+            <h4 data-toc-skip class="date">2026-10-09</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/pfmc-assessments/indexwc/blob/main/vignettes/a2_coastwide_simple.Rmd" class="external-link"><code>vignettes/a2_coastwide_simple.Rmd</code></a></small>
       <div class="hidden name"><code>a2_coastwide_simple.Rmd</code></div>
@@ -125,7 +125,7 @@ error structure.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Load from the rda file</span></span>
 <span><span class="va">configuration_to_run</span> <span class="op">&lt;-</span> <span class="va">configuration</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">species</span> <span class="op">==</span> <span class="st">"sablefish"</span>, <span class="va">source</span> <span class="op">==</span> <span class="st">"NWFSC.Combo"</span>, <span class="va">family</span> <span class="op">==</span> <span class="st">"sdmTMB::delta_gamma()"</span><span class="op">)</span> </span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">species</span> <span class="op">==</span> <span class="st">"sablefish"</span>, <span class="va">source</span> <span class="op">==</span> <span class="st">"NWFSC.Combo"</span>, <span class="va">family</span> <span class="op">==</span> <span class="st">"sdmTMB::delta_gamma()"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">configuration_to_run</span><span class="op">)</span></span>
 <span><span class="co">#&gt;     species                                                          fxn</span></span>
@@ -141,7 +141,7 @@ error structure.</p>
 with entries for model settings based on the configuration file.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">my_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pull_and_format_data.html">pull_and_format_data</a></span><span class="op">(</span></span>
-<span>   configuration_to_run <span class="op">=</span> <span class="va">configuration_to_run</span></span>
+<span>  configuration_to_run <span class="op">=</span> <span class="va">configuration_to_run</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>Double check the items in the <code>my_data</code> list created
 above:</p>
@@ -201,7 +201,7 @@ type the assigned R object from <code><a href="../reference/run_sdmtmb.html">run
 using <code><a href="../reference/diagnose.html">diagnose()</a></code>:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">diag</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/diagnose.html">diagnose</a></span><span class="op">(</span></span>
-<span> fit <span class="op">=</span> <span class="va">fit</span></span>
+<span>  fit <span class="op">=</span> <span class="va">fit</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>A sanity check is performed to evaluate model convergence and the AIC
 is calculated and the fixed effects are evaluated. A prediction grid
@@ -222,9 +222,9 @@ output is saved at this point.</p>
 <code><a href="../reference/calc_index_areas.html">calc_index_areas()</a></code></p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">index</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_index_areas.html">calc_index_areas</a></span><span class="op">(</span></span>
-<span>   data <span class="op">=</span> <span class="va">fit</span><span class="op">$</span><span class="va">data</span>,</span>
-<span>   fit <span class="op">=</span> <span class="va">fit</span>,</span>
-<span>   boundaries <span class="op">=</span> <span class="st">"Coastwide"</span></span>
+<span>  data <span class="op">=</span> <span class="va">fit</span><span class="op">$</span><span class="va">data</span>,</span>
+<span>  fit <span class="op">=</span> <span class="va">fit</span>,</span>
+<span>  boundaries <span class="op">=</span> <span class="st">"Coastwide"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p><code><a href="../reference/calc_index_areas.html">calc_index_areas()</a></code> has the following arguments available
 for use:</p>
@@ -241,10 +241,10 @@ abundance has been calculated, all of the output objects can be written
 using <code><a href="../reference/save_index_outputs.html">save_index_outputs()</a></code>:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/save_index_outputs.html">save_index_outputs</a></span><span class="op">(</span></span>
-<span> fit <span class="op">=</span> <span class="va">fit</span>,</span>
-<span> diagnostics <span class="op">=</span> <span class="va">diag</span>,</span>
-<span> indices <span class="op">=</span> <span class="va">index</span>,</span>
-<span> dir <span class="op">=</span> <span class="st">"C:/indices"</span></span>
+<span>  fit <span class="op">=</span> <span class="va">fit</span>,</span>
+<span>  diagnostics <span class="op">=</span> <span class="va">diag</span>,</span>
+<span>  indices <span class="op">=</span> <span class="va">index</span>,</span>
+<span>  dir <span class="op">=</span> <span class="st">"C:/indices"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>The directory structure created is:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">

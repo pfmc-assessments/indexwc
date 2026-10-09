@@ -77,7 +77,7 @@ disk in the same directory structure as the original indexwc code.</p>
 <span>  <span class="va">fit</span>,</span>
 <span>  <span class="va">diagnostics</span>,</span>
 <span>  <span class="va">indices</span>,</span>
-<span>  dir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  dir <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  dir_main <span class="op">=</span> <span class="fu">lifecycle</span><span class="fu">::</span><span class="fu"><a href="https://lifecycle.r-lib.org/reference/deprecated.html" class="external-link">deprecated</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  overwrite <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -167,7 +167,7 @@ specified from the start.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Pull and format data</span></span></span>
 <span class="r-in"><span><span class="va">my_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="pull_and_format_data.html">pull_and_format_data</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>   configuration_to_run <span class="op">=</span> <span class="va">configuration</span><span class="op">[</span><span class="fl">1</span>,<span class="op">]</span></span></span>
+<span class="r-in"><span>  configuration_to_run <span class="op">=</span> <span class="va">configuration</span><span class="op">[</span><span class="fl">1</span>, <span class="op">]</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Fit model without saving</span></span></span>
