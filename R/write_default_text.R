@@ -50,24 +50,11 @@ write_default_text <- function(species_list = NULL) {
   # Loop through each species in the species_list
   for (species in species_list) {
     cli::cli_alert_info("writing file for {species}")
-    # Read the default text template file
-    default_text_lines <- readLines("inst/default_text.Rmd")
-
-    # Find the line containing the "common" field
-    line_index <- grep("  common: ", default_text_lines)
-    if (length(line_index) == 0) {
-      # Abort if no line containing "common" is found
-      cli::cli_abort("No line containing '  common: ' in inst/default_text.Rmd")
-    }
-
-    # Replace the "common" field with the current species name
-    default_text_lines[line_index] <- paste0("  common: ", species)
-
-    # Write the updated lines back to the template file
-    writeLines(default_text_lines, "inst/default_text.Rmd")
-
     # Render the R Markdown file to generate outputs
-    rmarkdown::render("inst/default_text.Rmd")
+    rmarkdown::render(
+      "inst/default_text.Rmd",
+      params = list(common = species)
+    )
 
     # Copy the generated Markdown file to a species-specific file
     file.rename(

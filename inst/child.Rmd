@@ -13,24 +13,91 @@ data_filtered <- data |>
   )
 data_discards <- data_filtered |>
   dplyr::filter(catch_weight > 0, depth < max_depth)
-# This step processes the 'formula' string by removing specific patterns such as 'catch_weight', '~', '0 +', 'fyear', '_scaled', and '*' using regular expressions.
-# It then splits the cleaned string into individual components based on whitespace, and unlists the result to create a character vector of formula terms.
-temp <- unlist(strsplit(gsub(
-  "catch_weight\\s*|\\s*~\\s*|0\\s*\\+|fyear\\s*\\+*\\s*|_scaled|\\*",
-  "",
-  formula
-), "\\s"))
-temp2 <- glue::glue_collapse(
-  temp[-which(temp %in% c("", "+"))],
+model_terms <- stats::terms(stats::as.formula(formula))
+term_factors <- attr(model_terms, "factors")
+split_descriptions <- c(
+  split_mendocino = "the regions north and south of Cape Mendocino (split at 40.1667 degrees N)",
+  split_conception = "the regions north and south of Point Conception (split at 34.45 degrees N)",
+  split_monterey = "the regions north and south of 36 degrees N",
+  split_state = "the Washington, Oregon, and California regions"
+)
+split_names <- intersect(names(split_descriptions), rownames(term_factors))
+has_term_interaction <- function(first, second) {
+  if (!all(c(first, second) %in% rownames(term_factors))) {
+    return(FALSE)
+  }
+  any(term_factors[first, ] > 0 & term_factors[second, ] > 0)
+}
+year_split_names <- split_names[vapply(
+  split_names,
+  function(split_name) has_term_interaction("fyear", split_name),
+  logical(1)
+)]
+region_names <- if (length(year_split_names) > 0) year_split_names else split_names
+region_description <- glue::glue_collapse(
+  split_descriptions[region_names],
   sep = ", ",
   last = " and "
-) 
-temp2 <- gsub("split_mendocino", "annual proportion north and south of Cape Mendocino", temp2)
-text_covariates <- ifelse(
-  temp2 == "" | length(temp2) == 0,
-  "No other covariates were modeled.",
-  glue::glue("The following additional covariates were included: {temp2}.")
 )
+text_year_effects <- if (length(year_split_names) > 0) {
+  glue::glue("Separate year-specific fixed effects were estimated for {region_description}.")
+} else if (length(split_names) > 0) {
+  glue::glue("Year-specific fixed effects were estimated. A regional effect was included for {region_description}.")
+} else {
+  "Year-specific fixed effects were estimated."
+}
+
+response_name <- as.character(stats::formula(model_terms)[[2]])
+covariate_names <- setdiff(rownames(term_factors), c(response_name, "fyear", split_names))
+regional_covariates <- covariate_names[vapply(
+  covariate_names,
+  function(covariate) any(vapply(
+    split_names,
+    function(split_name) has_term_interaction(covariate, split_name),
+    logical(1)
+  )),
+  logical(1)
+)]
+shared_covariates <- setdiff(covariate_names, regional_covariates)
+format_covariates <- function(x) {
+  x <- gsub("_scaled_squared$", " squared", x)
+  x <- gsub("_scaled$", "", x)
+  gsub("_", " ", x)
+}
+text_covariates <- if (length(covariate_names) == 0) {
+  "No other covariates were modeled."
+} else {
+  covariate_text <- glue::glue_collapse(
+    format_covariates(covariate_names),
+    sep = ", ",
+    last = " and "
+  )
+  covariate_sentence <- glue::glue("The following additional covariates were included: {covariate_text}.")
+  covariate_sentences <- covariate_sentence
+  if (length(split_names) > 0 && length(shared_covariates) > 0) {
+    shared_text <- glue::glue_collapse(
+      format_covariates(shared_covariates),
+      sep = ", ",
+      last = " and "
+    )
+    covariate_sentences <- c(
+      covariate_sentences,
+      glue::glue("Effects of {shared_text} were shared across regions.")
+    )
+  }
+  if (length(split_names) > 0 && length(regional_covariates) > 0) {
+    regional_text <- glue::glue_collapse(
+      format_covariates(regional_covariates),
+      sep = ", ",
+      last = " and "
+    )
+    covariate_sentences <- c(
+      covariate_sentences,
+      glue::glue("Effects of {regional_text} varied by region.")
+    )
+  }
+  paste(covariate_sentences, collapse = " ")
+}
 text_truncation <- ifelse(
   abs(max_depth) != "Inf",
   glue::glue("The data were truncated to depths less than {abs(max_depth)} m prior to modeling given that there were {xfun::numbers_to_words(NROW(data_discards))} positive encounters in depths deeper than {abs(max_depth)} m. The prediction grid was also truncated to only include available survey locations in depths between {abs(min_depth)}--{abs(max_depth)} m to limit extrapolating beyond the data and edge effects."),
@@ -48,7 +115,7 @@ text_distribution <- ifelse(
 `r text_truncation` 
 
 `r text_distribution`
-The response variable was catch (mt) with an offset of area (km^2^) to account for differences in effort. Fixed effects were estimated for each year.
+The response variable was catch (mt) with an offset of area (km^2^) to account for differences in effort. `r text_year_effects`
 `r text_covariates`
 Vessel-year effects, which were historically used for index standardization of this survey, were not included because the estimated variance for the random effect was close to zero. Vessel-year effects were more prominent when models did not include spatial effects and instead vessel-year terms accounted for the random selection of commercial vessels used during sampling [@helser_generalized_2004; @thorson_accounting_2014].
 

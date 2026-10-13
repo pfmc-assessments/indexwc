@@ -2,7 +2,7 @@
 author: indexwc team
 date: "`r Sys.Date()`"
 params:
-  common: rougheye and blackspotted rockfish
+  common: species name
 title: "`r stringr::str_to_sentence(params$common)`"
 header-includes:
   - \usepackage[acronym]{glossaries}
