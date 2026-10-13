@@ -4,17 +4,30 @@ title: "Child document"
 ---
 
 ```{r}
-data <- format_data(eval(parse(text = fxn)))
+# Reuse one formatted data pull for repeated configurations of this species and survey.
+data_cache_key <- paste(species, source, fxn, sep = " :: ")
+if (!exists(data_cache_key, envir = data_cache, inherits = FALSE)) {
+  assign(
+    data_cache_key,
+    format_data(eval(parse(text = fxn))),
+    envir = data_cache
+  )
+}
+data <- get(data_cache_key, envir = data_cache, inherits = FALSE)
+# Apply this configuration's depth, latitude, and year limits to the shared data.
 data_filtered <- data |>
   dplyr::filter(
     depth <= min_depth, depth >= max_depth,
     latitude >= min_latitude, latitude <= max_latitude,
     year >= min_year, year <= max_year
   )
+# Count positive catches beyond the depth cutoff for the truncation explanation.
 data_discards <- data_filtered |>
   dplyr::filter(catch_weight > 0, depth < max_depth)
+# Inspect formula terms without evaluating candidate families or predictors.
 model_terms <- stats::terms(stats::as.formula(formula))
 term_factors <- attr(model_terms, "factors")
+# Describe the regional splits supported by the model and prediction grid.
 split_descriptions <- c(
   split_mendocino = "the regions north and south of Cape Mendocino (split at 40.1667 degrees N)",
   split_conception = "the regions north and south of Point Conception (split at 34.45 degrees N)",
@@ -22,6 +35,7 @@ split_descriptions <- c(
   split_state = "the Washington, Oregon, and California regions"
 )
 split_names <- intersect(names(split_descriptions), rownames(term_factors))
+# Check whether two terms occur together in any formula interaction.
 has_term_interaction <- function(first, second) {
   if (!all(c(first, second) %in% rownames(term_factors))) {
     return(FALSE)
@@ -33,6 +47,7 @@ year_split_names <- split_names[vapply(
   function(split_name) has_term_interaction("fyear", split_name),
   logical(1)
 )]
+# Prefer splits that define regional year effects when composing the description.
 region_names <- if (length(year_split_names) > 0) year_split_names else split_names
 region_description <- glue::glue_collapse(
   split_descriptions[region_names],
@@ -49,6 +64,7 @@ text_year_effects <- if (length(year_split_names) > 0) {
 
 response_name <- as.character(stats::formula(model_terms)[[2]])
 covariate_names <- setdiff(rownames(term_factors), c(response_name, "fyear", split_names))
+# Separate region-varying covariates from effects shared across regions.
 regional_covariates <- covariate_names[vapply(
   covariate_names,
   function(covariate) any(vapply(
@@ -59,6 +75,7 @@ regional_covariates <- covariate_names[vapply(
   logical(1)
 )]
 shared_covariates <- setdiff(covariate_names, regional_covariates)
+# Convert internal predictor names into readable report text.
 format_covariates <- function(x) {
   x <- gsub("_scaled_squared$", " squared", x)
   x <- gsub("_scaled$", "", x)
@@ -98,11 +115,13 @@ text_covariates <- if (length(covariate_names) == 0) {
   }
   paste(covariate_sentences, collapse = " ")
 }
+# Describe the observation and prediction-grid depth limits.
 text_truncation <- ifelse(
   abs(max_depth) != "Inf",
   glue::glue("The data were truncated to depths less than {abs(max_depth)} m prior to modeling given that there were {xfun::numbers_to_words(NROW(data_discards))} positive encounters in depths deeper than {abs(max_depth)} m. The prediction grid was also truncated to only include available survey locations in depths between {abs(min_depth)}--{abs(max_depth)} m to limit extrapolating beyond the data and edge effects."),
   glue::glue("The prediction grid was truncated to only include available survey locations in depths deeper than {abs(min_depth)} to limit extrapolating beyond the data and edge effects.")
 )
+# Use the configuration-derived distribution label in the model description.
 text_distribution <- ifelse(
   tolower(distribution) == "tweedie",
   glue::glue("The chosen model used a {distribution} distribution."),
@@ -110,7 +129,7 @@ text_distribution <- ifelse(
 )
 ```
 
-### \gls{`r text_survey`}
+### \gls{`r text_survey`}`r text_survey_option`
 
 `r text_truncation` 
 

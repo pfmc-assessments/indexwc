@@ -5,67 +5,67 @@
 #' `inst/child.Rmd` files where the child file is populated with information for each survey
 #' associated with the species.
 #'
-#' @param species_list vector with strings matching a subset of those in the "species" column of the configuration file. If NULL, this will be the set of species that have at least one TRUE value in the "used" column.
+#' @param species_list Vector of species names in the configuration data. If NULL, species with at least one used configuration are selected when `used_only` is TRUE; otherwise all configured species are selected.
+#' @param dir Directory where the generated Markdown and PDF files are saved.
+#' @param used_only If TRUE, include only configurations marked as used. Set to FALSE to generate text for all configured model runs.
 #' @export
 #' @import cli
-#' @import here
 #' @importFrom rmarkdown render
 #' @author Ian G. Taylor
 #' @examples
 #' \dontrun{
 #' write_default_text()
 #' }
-write_default_text <- function(species_list = NULL) {
-  # check for internet connection
+write_default_text <- function(
+  species_list = NULL,
+  dir = "inst",
+  used_only = TRUE
+) {
+  # Survey data are fetched while rendering, so check connectivity before starting.
   if (!curl::has_internet()) {
     cli::cli_abort(
       "No internet connection detected. The function may not work."
     )
   }
-  # If species_list is NULL, read the configuration file and extract the list of species
+  # Use packaged configuration so this works outside a source checkout.
+  utils::data("configuration", package = "indexwc", envir = environment())
+
+  # Select configured species by default, or validate names supplied by the caller.
   if (is.null(species_list)) {
-    species_list <- read.csv(
-      # file = "https://raw.githubusercontent.com/pfmc-assessments/indexwc/main/data-raw/configuration.csv"
-      file = here::here("data-raw/configuration.csv") # Using local file because branch is not yet merged
-    ) |>
-      dplyr::filter(used) |>
+    species_list <- configuration |>
+      dplyr::filter(!used_only | used) |>
       dplyr::pull(species) |>
       unique() |>
-      sort() # Get unique and sorted list of species marked as "used"
+      sort()
   } else {
-    # confirm that user input species_list is contained within the species in the configuration file
-    all_species <- read.csv(
-      # file = "https://raw.githubusercontent.com/pfmc-assessments/indexwc/main/data-raw/configuration.csv"
-      file = here::here("data-raw/configuration.csv") # Using local file because branch is not yet merged
-    ) |>
-      dplyr::pull(species)
+    all_species <- configuration |>
+      dplyr::pull(species) |>
+      unique()
     if (!all(species_list %in% all_species)) {
       cli::cli_abort(
         "Some species in species_list are not found in the configuration file: {setdiff(species_list, all_species)}"
       )
     }
   }
+  if (!dir.exists(dir)) {
+    dir.create(dir, recursive = TRUE, showWarnings = FALSE)
+  }
+  # Stop before rendering if the requested output location is unavailable.
+  if (!dir.exists(dir)) {
+    cli::cli_abort("Could not create output directory {dir}.")
+  }
   cli::cli_alert_info("species_list: {paste(species_list, sep = ', ')}")
 
   # Loop through each species in the species_list
   for (species in species_list) {
     cli::cli_alert_info("writing file for {species}")
-    # Render the R Markdown file to generate outputs
+    output_file <- paste0(gsub(" ", "_", species), "_default_text.pdf")
+    # Pass parameters to the template instead of modifying its source file.
     rmarkdown::render(
       "inst/default_text.Rmd",
-      params = list(common = species)
-    )
-
-    # Copy the generated Markdown file to a species-specific file
-    file.rename(
-      "inst/default_text.md",
-      paste0("inst/", gsub(" ", "_", species), "_default_text.md")
-    )
-
-    # Copy the generated PDF file to a species-specific file
-    file.rename(
-      "inst/default_text.pdf",
-      paste0("inst/", gsub(" ", "_", species), "_default_text.pdf")
+      output_file = output_file,
+      output_dir = dir,
+      params = list(common = species, used_only = used_only)
     )
   }
 }
