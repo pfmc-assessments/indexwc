@@ -49,7 +49,7 @@ Pacific spiny dogfish,"nwfscSurvey::pull_catch(common_name = species,survey=sour
 petrale sole,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_lognormal(),catch_weight ~ 0 + fyear + pass_scaled,-55,-675,31.9,49,2003,2050,TRUE,500,iid,iid,FALSE,TRUE
 petrale sole,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear + pass_scaled,-55,-675,31.9,49,2003,2050,TRUE,500,iid,iid,FALSE,FALSE
 petrale sole,"nwfscSurvey::pull_catch(common_name = species,survey=source)",NWFSC.Combo,sdmTMB::delta_gengamma(),catch_weight ~ 0 + fyear + pass_scaled,-55,-675,31.9,49,2003,2050,TRUE,500,iid,iid,FALSE,FALSE
-petrale sole,"nwfscSurvey::pull_catch(common_name = species,survey=source)",Triennial,sdmTMB::delta_lognormal(),catch_weight ~ 0 + fyear,-55,-366,37,49,1980,2050,TRUE,500,iid,iid,FALSE,FALSE
+petrale sole,"nwfscSurvey::pull_catch(common_name = species,survey=source)",Triennial,sdmTMB::delta_lognormal(),catch_weight ~ 0 + fyear,-55,-366,37,49,1980,2050,TRUE,500,iid,iid,FALSE,TRUE
 redbanded rockfish,"nwfscSurvey::pull_catch(common_name = species,survey=source)",Triennial,sdmTMB::delta_lognormal(),catch_weight ~ 0 + fyear,-55,-675,33.5,49,1980,2050,TRUE,200,off,iid,FALSE,FALSE
 redbanded rockfish,"nwfscSurvey::pull_catch(common_name = species,survey=source)",Triennial,sdmTMB::delta_gamma(),catch_weight ~ 0 + fyear,-55,-675,33.5,49,1980,2050,TRUE,200,off,iid,FALSE,FALSE
 redbanded rockfish,"nwfscSurvey::pull_catch(common_name = species,survey=source)",Triennial,sdmTMB::delta_gengamma(),catch_weight ~ 0 + fyear,-55,-675,33.5,49,1980,2050,TRUE,200,off,iid,FALSE,FALSE
