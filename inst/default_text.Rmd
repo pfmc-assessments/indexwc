@@ -2,7 +2,8 @@
 author: indexwc team
 date: "`r Sys.Date()`"
 params:
-  common: rougheye and blackspotted rockfish
+  common: species name
+  used_only: true
 title: "`r stringr::str_to_sentence(params$common)`"
 header-includes:
   - \usepackage[acronym]{glossaries}
@@ -15,6 +16,7 @@ output:
 ---
 
 ```{r setup, echo = FALSE, warnings = FALSE, message = FALSE}
+# Load package helpers and libraries used to assemble and render the report.
 library(devtools)
 library(dplyr)
 library(glue)
@@ -25,29 +27,27 @@ library(stringr)
 library(tidyr)
 library(xfun)
 load_all()
+# Keep the generated report focused on its text, without routine chunk output.
 options(knitr.duplicate.label = "allow")
 knitr::opts_chunk$set(echo = FALSE)
 knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+# Select this species' configurations, optionally including unused alternatives.
 configuration <- read.csv(
   #file = "https://raw.githubusercontent.com/pfmc-assessments/indexwc/main/data-raw/configuration.csv"
   file = here::here("data-raw/configuration.csv") # using local file because branch is not yet merged 
 ) |>
   dplyr::filter(
     species == params$common,
-    used # TRUE/FALSE used in final assessment report?
+    !params$used_only | used
   ) |>
   dplyr::mutate(
-    family_parsed = purrr::map(
-      .x = family,
-      .f = ~ eval(parse(text = .x))
-    ),
-    distribution = gsub(
-      "_mix",
-      " mixture",
-      purrr::map(family_parsed, .f = ~ tail(.x[["family"]], 1))
-    ),
-    distribution = gsub("tweedie", "Tweedie", distribution),
-    distribution = gsub("Gamma", "gamma", distribution),
+    # Derive display labels without evaluating candidate family constructors.
+    distribution = gsub("^.*::", "", family),
+    distribution = gsub("\\(.*$", "", distribution),
+    distribution = sub("^delta_", "", distribution),
+    distribution = gsub("_mix$", " mixture", distribution),
+    distribution = gsub("^tweedie$", "Tweedie", distribution),
+    # Map internal survey names to glossary labels used in section headings.
     text_survey = dplyr::case_when(
       source == "NWFSC.Combo" ~ "s-wcgbt",
       source == "Triennial" ~ "s-tri",
@@ -55,6 +55,7 @@ configuration <- read.csv(
       source == "NWFSC.Slope" ~ "s-nwslope",
       TRUE ~ "unknown survey"
     ),
+    # Convert spatial-model settings into report-ready descriptions.
     text_spatiotemporal = dplyr::case_when(
       spatiotemporal1 == "iid" & spatiotemporal2 == "iid" ~
         "Spatial and spatiotemporal variation were included in the encounter probability and the positive catch rate model.",
@@ -66,9 +67,23 @@ configuration <- read.csv(
         "Spatiotemporal variation was not included in either the encounter probability nor the positive catch rate model (but spatial variation was included in both models)."
     )
   )
+# Number multiple configurations from one survey so their sections are distinguishable.
+configuration <- configuration |>
+  # Group survey sections together while retaining configuration order within each source.
+  dplyr::arrange(source) |>
+  dplyr::group_by(source) |>
+  dplyr::mutate(
+    text_survey_option = if (dplyr::n() > 1) {
+      paste0(" (Option ", dplyr::row_number(), ")")
+    } else {
+      rep("", dplyr::n())
+    }
+  ) |>
+  dplyr::ungroup()
 ```
 
 ```{r setup-asis, include=FALSE}
+# Pass generated child-document lines through as Markdown in the parent report.
 knit_engines$set(asis = function(options) {
   # if (options$echo && options$eval)
   paste(options$code, collapse = ' ')
@@ -79,8 +94,7 @@ knit_engines$set(asis = function(options) {
 
 Geostatistical models of biomass density were fit to survey data using the R package \gls{sdmtmb} [@Anderson:2022:SRP].
 These models can account for latent spatial factors with a constant spatial Gaussian Markov random
-field (GRMF) and spatiotemporal deviations as independent draws from the GRMF [@thorson_geostatistical_2015]. Tweedie, delta-binomial, delta-gamma, and mixture distributions, which
-allow for extreme catch events, were investigated. Results are only shown for
+field (GRMF) and spatiotemporal deviations as independent draws from the GRMF [@thorson_geostatistical_2015]. A range of alternative distributions were investigated. Results are only shown for
 the distribution that led to the best model diagnostics, e.g., similar
 distributions of theoretical normal quantiles and model quantiles, high
 precision, lack of extreme predictions that are incompatible with the life
@@ -91,11 +105,17 @@ reproduce the analysis is available at
 https://pfmc-assessments.github.io/indexwc/.
 
 ```{r, knit-child, results='asis'}
+# Share fetched survey data across the configuration rows rendered below.
+data_cache <- new.env(parent = emptyenv())
+
+# Render each configuration in its own child-document environment.
 knit_child_with_params <- function(data) {
   env_local <- new.env()
   assign("species", data[["species"]], envir = env_local)
   assign("fxn", data[["fxn"]], envir = env_local)
   assign("source", data[["source"]], envir = env_local)
+  assign("text_survey_option", data[["text_survey_option"]], envir = env_local)
+  assign("data_cache", data_cache, envir = env_local)
   assign("family", data[["family"]], envir = env_local)
   assign("formula", data[["formula"]], envir = env_local)
   assign("min_depth", data[["min_depth"]], envir = env_local)
@@ -106,10 +126,10 @@ knit_child_with_params <- function(data) {
   assign("max_year", data[["max_year"]], envir = env_local)
   assign("anisotropy", data[["anisotropy"]], envir = env_local)
   assign("n_knots", data[["knots"]], envir = env_local)
-  assign("family_parsed", data[["family_parsed"]], envir = env_local)
   assign("distribution", data[["distribution"]], envir = env_local)
   assign("text_survey", data[["text_survey"]], envir = env_local)
   assign("text_spatiotemporal", data[["text_spatiotemporal"]], envir = env_local)
+  # Knit the child document using this row's configuration values.
   knitr::knit_child(
     "child.Rmd",
     envir = env_local,
@@ -117,6 +137,7 @@ knit_child_with_params <- function(data) {
   )
 }
 
+# Nest each configuration row separately, then concatenate the rendered sections.
 res <- configuration |>
     dplyr::group_nest(dplyr::row_number()) |>
     dplyr::pull(data) |>
