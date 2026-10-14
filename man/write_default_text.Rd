@@ -4,10 +4,14 @@
 \alias{write_default_text}
 \title{Write default text describing the index standardizations run from the \pkg{indexwc} package}
 \usage{
-write_default_text(species_list = NULL)
+write_default_text(species_list = NULL, dir = "inst", used_only = TRUE)
 }
 \arguments{
-\item{species_list}{vector with strings matching a subset of those in the "species" column of the configuration file. If NULL, this will be the set of species that have at least one TRUE value in the "used" column.}
+\item{species_list}{Vector of species names in the configuration data. If NULL, species with at least one used configuration are selected when \code{used_only} is TRUE; otherwise all configured species are selected.}
+
+\item{dir}{Directory where the generated Markdown and PDF files are saved.}
+
+\item{used_only}{If TRUE, include only configurations marked as used. Set to FALSE to generate text for all configured model runs.}
 }
 \description{
 Writes both a markdown (.md) file which can be copied into an Quarto assessment report as
